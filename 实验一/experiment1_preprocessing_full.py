@@ -3,10 +3,31 @@
 ############################################################
 
 # use pandas to read the csv files
+import matplotlib
+import numpy as np
 import pandas as pd
+import seaborn as sns
+from pathlib import Path
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
+)
+from sklearn.model_selection import train_test_split
 
 # this one is for scaling the numeric features later
 from sklearn.preprocessing import StandardScaler
+
+# use a non-interactive backend so figures can be saved by script
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 # read train data and test data
 train = pd.read_csv("pfm_train.csv")
@@ -178,27 +199,322 @@ print(X_train.dtypes.value_counts())
 
 
 ############################################################
-# Part 9. Export preprocessing output for Experiment 2
+# Part 9. Prepare the final modeling matrix
 ############################################################
 
-from pathlib import Path
+# save the preprocessing output for the later linear-model practice
+# always write to the sibling experiment folder, so the files can be regenerated anytime
+output_dir = Path.cwd().parent / "实验二"
+output_dir.mkdir(parents=True, exist_ok=True)
 
-# save the preprocessing output for the next experiment
-base_dir = Path.cwd().parent
-exp2_dir = next(
-    p for p in base_dir.iterdir()
-    if p.is_dir()
-    and p != Path.cwd()
-    and (p / "pfm_train.csv").exists()
-    and (p / "pfm_test.csv").exists()
-    and any(child.suffix.lower() == ".pptx" for child in p.iterdir())
+X_train.to_csv(output_dir / "X_train_preprocessed.csv", index=False)
+y_train.to_frame(name="Attrition").to_csv(output_dir / "y_train_preprocessed.csv", index=False)
+X_test.to_csv(output_dir / "X_test_preprocessed.csv", index=False)
+
+print("saved:", output_dir / "X_train_preprocessed.csv")
+print("saved:", output_dir / "y_train_preprocessed.csv")
+print("saved:", output_dir / "X_test_preprocessed.csv")
+
+
+############################################################
+# Part 10. Prepare validation data and figure folder
+############################################################
+
+sns.set_theme(style="whitegrid", context="talk")
+plt.rcParams["figure.figsize"] = (10, 6)
+plt.rcParams["axes.titlesize"] = 16
+plt.rcParams["axes.labelsize"] = 13
+
+X_fit, X_valid, y_fit, y_valid = train_test_split(
+    X_train,
+    y_train,
+    test_size=0.25,
+    random_state=42,
+    stratify=y_train,
 )
-exp2_dir.mkdir(parents=True, exist_ok=True)
 
-X_train.to_csv(exp2_dir / "X_train_preprocessed.csv", index=False)
-y_train.to_frame(name="Attrition").to_csv(exp2_dir / "y_train_preprocessed.csv", index=False)
-X_test.to_csv(exp2_dir / "X_test_preprocessed.csv", index=False)
+figure_dir = Path.cwd() / "experiment1_figures"
+figure_dir.mkdir(exist_ok=True)
 
-print("saved:", exp2_dir / "X_train_preprocessed.csv")
-print("saved:", exp2_dir / "y_train_preprocessed.csv")
-print("saved:", exp2_dir / "X_test_preprocessed.csv")
+print("X_fit shape:", X_fit.shape)
+print("X_valid shape:", X_valid.shape)
+print("validation label distribution:")
+print(y_valid.value_counts(normalize=True).round(4))
+
+
+############################################################
+# Part 11. Draw and save the main figures
+############################################################
+
+fig, axes = plt.subplots(2, 2, figsize=(18, 13))
+
+sns.countplot(data=train, x="Attrition", hue="Attrition", palette="Set2", ax=axes[0, 0], legend=False)
+axes[0, 0].set_title("Attrition Label Distribution")
+axes[0, 0].set_xlabel("Attrition")
+axes[0, 0].set_ylabel("Count")
+
+sns.countplot(data=train, x="OverTime", hue="Attrition", palette="Set1", ax=axes[0, 1])
+axes[0, 1].set_title("OverTime vs Attrition")
+axes[0, 1].set_xlabel("OverTime")
+axes[0, 1].set_ylabel("Count")
+
+sns.histplot(data=train, x="Age", hue="Attrition", kde=True, bins=20, palette="Set2", ax=axes[1, 0], element="step")
+axes[1, 0].set_title("Age Distribution by Attrition")
+axes[1, 0].set_xlabel("Age")
+axes[1, 0].set_ylabel("Frequency")
+
+sns.boxplot(data=train, x="Attrition", y="MonthlyIncome", hue="Attrition", palette="Pastel1", ax=axes[1, 1], legend=False)
+axes[1, 1].set_title("Monthly Income by Attrition")
+axes[1, 1].set_xlabel("Attrition")
+axes[1, 1].set_ylabel("Monthly Income")
+
+plt.tight_layout()
+fig.savefig(figure_dir / "figure_01_label_and_basic_patterns.png", dpi=200, bbox_inches="tight")
+plt.close(fig)
+
+fig, axes = plt.subplots(1, 3, figsize=(22, 7))
+
+department_rate = (
+    train.groupby("Department")["Attrition"]
+    .mean()
+    .sort_values(ascending=False)
+    .mul(100)
+    .round(2)
+)
+sns.barplot(
+    x=department_rate.values,
+    y=department_rate.index,
+    palette="viridis",
+    ax=axes[0],
+)
+axes[0].set_title("Attrition Rate by Department")
+axes[0].set_xlabel("Attrition Rate (%)")
+axes[0].set_ylabel("Department")
+
+jobrole_rate = (
+    train.groupby("JobRole")["Attrition"]
+    .mean()
+    .sort_values(ascending=False)
+    .mul(100)
+    .round(2)
+)
+sns.barplot(
+    x=jobrole_rate.values,
+    y=jobrole_rate.index,
+    palette="magma",
+    ax=axes[1],
+)
+axes[1].set_title("Attrition Rate by Job Role")
+axes[1].set_xlabel("Attrition Rate (%)")
+axes[1].set_ylabel("Job Role")
+
+education_rate = (
+    train.groupby("EducationField")["Attrition"]
+    .mean()
+    .sort_values(ascending=False)
+    .mul(100)
+    .round(2)
+)
+sns.barplot(
+    x=education_rate.values,
+    y=education_rate.index,
+    palette="crest",
+    ax=axes[2],
+)
+axes[2].set_title("Attrition Rate by Education Field")
+axes[2].set_xlabel("Attrition Rate (%)")
+axes[2].set_ylabel("Education Field")
+
+plt.tight_layout()
+fig.savefig(figure_dir / "figure_02_attrition_rate_by_category.png", dpi=200, bbox_inches="tight")
+plt.close(fig)
+
+corr_source = train.select_dtypes(exclude="object").copy()
+corr_target = corr_source.corr(numeric_only=True)["Attrition"].drop("Attrition")
+top_corr_features = corr_target.abs().sort_values(ascending=False).head(10).index.tolist()
+heatmap_columns = top_corr_features + ["Attrition"]
+
+fig, ax = plt.subplots(figsize=(12, 9))
+sns.heatmap(
+    corr_source[heatmap_columns].corr(),
+    annot=True,
+    fmt=".2f",
+    cmap="RdBu_r",
+    center=0,
+    square=True,
+    ax=ax,
+)
+ax.set_title("Correlation Heatmap of the Most Relevant Numeric Features")
+plt.tight_layout()
+fig.savefig(figure_dir / "figure_03_correlation_heatmap.png", dpi=200, bbox_inches="tight")
+plt.close(fig)
+
+print("top numeric correlations with Attrition:")
+print(corr_target.sort_values(key=lambda s: s.abs(), ascending=False).head(10))
+
+
+############################################################
+# Part 12. Train multiple models and save the metrics
+############################################################
+
+models = {
+    "Logistic Regression (L2)": LogisticRegression(
+        max_iter=2000,
+        class_weight="balanced",
+        random_state=42,
+    ),
+    "Logistic Regression (L1)": LogisticRegression(
+        max_iter=3000,
+        class_weight="balanced",
+        penalty="l1",
+        solver="liblinear",
+        random_state=42,
+    ),
+    "SGD Log-Loss": SGDClassifier(
+        loss="log_loss",
+        class_weight="balanced",
+        max_iter=3000,
+        tol=1e-4,
+        random_state=42,
+    ),
+    "Random Forest": RandomForestClassifier(
+        n_estimators=400,
+        min_samples_leaf=2,
+        class_weight="balanced",
+        random_state=42,
+    ),
+}
+
+model_results = []
+fitted_models = {}
+
+for name, model in models.items():
+    model.fit(X_fit, y_fit)
+    fitted_models[name] = model
+
+    y_pred = model.predict(X_valid)
+    if hasattr(model, "predict_proba"):
+        y_score = model.predict_proba(X_valid)[:, 1]
+    else:
+        raw_score = model.decision_function(X_valid)
+        y_score = 1 / (1 + np.exp(-raw_score))
+
+    model_results.append(
+        {
+            "Model": name,
+            "Accuracy": accuracy_score(y_valid, y_pred),
+            "Precision": precision_score(y_valid, y_pred),
+            "Recall": recall_score(y_valid, y_pred),
+            "F1": f1_score(y_valid, y_pred),
+            "ROC_AUC": roc_auc_score(y_valid, y_score),
+        }
+    )
+
+metrics_df = pd.DataFrame(model_results).sort_values(
+    by=["ROC_AUC", "F1"],
+    ascending=False,
+).reset_index(drop=True)
+metrics_df.to_csv(Path.cwd() / "model_metrics.csv", index=False)
+
+print("\nmodel metrics:")
+print(metrics_df.round(4))
+
+
+############################################################
+# Part 13. Draw ROC curves and confusion matrices
+############################################################
+
+fig, ax = plt.subplots(figsize=(11, 8))
+
+for name, model in fitted_models.items():
+    if hasattr(model, "predict_proba"):
+        y_score = model.predict_proba(X_valid)[:, 1]
+    else:
+        raw_score = model.decision_function(X_valid)
+        y_score = 1 / (1 + np.exp(-raw_score))
+
+    fpr, tpr, _ = roc_curve(y_valid, y_score)
+    auc_value = roc_auc_score(y_valid, y_score)
+    ax.plot(fpr, tpr, linewidth=2.5, label=f"{name} (AUC={auc_value:.3f})")
+
+ax.plot([0, 1], [0, 1], linestyle="--", color="gray", linewidth=1.5, label="Random Guess")
+ax.set_title("ROC Curves of Different Models")
+ax.set_xlabel("False Positive Rate")
+ax.set_ylabel("True Positive Rate")
+ax.legend(loc="lower right")
+plt.tight_layout()
+fig.savefig(figure_dir / "figure_04_roc_curves.png", dpi=200, bbox_inches="tight")
+plt.close(fig)
+
+best_log_model = fitted_models["Logistic Regression (L2)"]
+rf_model = fitted_models["Random Forest"]
+
+cm_log = confusion_matrix(y_valid, best_log_model.predict(X_valid))
+cm_rf = confusion_matrix(y_valid, rf_model.predict(X_valid))
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+
+sns.heatmap(cm_log, annot=True, fmt="d", cmap="Blues", cbar=False, ax=axes[0])
+axes[0].set_title("Confusion Matrix: Logistic Regression (L2)")
+axes[0].set_xlabel("Predicted Label")
+axes[0].set_ylabel("True Label")
+
+sns.heatmap(cm_rf, annot=True, fmt="d", cmap="Greens", cbar=False, ax=axes[1])
+axes[1].set_title("Confusion Matrix: Random Forest")
+axes[1].set_xlabel("Predicted Label")
+axes[1].set_ylabel("True Label")
+
+plt.tight_layout()
+fig.savefig(figure_dir / "figure_05_confusion_matrices.png", dpi=200, bbox_inches="tight")
+plt.close(fig)
+
+
+############################################################
+# Part 14. Save coefficient and feature importance outputs
+############################################################
+
+log_coef = pd.Series(best_log_model.coef_[0], index=X_train.columns).sort_values()
+top_negative = log_coef.head(8).sort_values(ascending=True)
+top_positive = log_coef.tail(8).sort_values(ascending=False)
+
+rf_importance = (
+    pd.Series(rf_model.feature_importances_, index=X_train.columns)
+    .sort_values(ascending=False)
+    .head(12)
+)
+
+top_positive.to_csv(Path.cwd() / "logistic_top_positive_coefficients.csv", header=["coefficient"])
+top_negative.to_csv(Path.cwd() / "logistic_top_negative_coefficients.csv", header=["coefficient"])
+rf_importance.to_csv(Path.cwd() / "random_forest_feature_importances.csv", header=["importance"])
+
+fig, axes = plt.subplots(1, 2, figsize=(18, 8))
+
+coef_plot = pd.concat([top_positive, top_negative]).sort_values()
+sns.barplot(
+    x=coef_plot.values,
+    y=coef_plot.index,
+    palette=["#4c78a8" if value < 0 else "#e45756" for value in coef_plot.values],
+    ax=axes[0],
+)
+axes[0].set_title("Most Influential Logistic Regression Coefficients")
+axes[0].set_xlabel("Coefficient Value")
+axes[0].set_ylabel("Feature")
+
+sns.barplot(
+    x=rf_importance.values,
+    y=rf_importance.index,
+    palette="rocket",
+    ax=axes[1],
+)
+axes[1].set_title("Top Random Forest Feature Importances")
+axes[1].set_xlabel("Importance")
+axes[1].set_ylabel("Feature")
+
+plt.tight_layout()
+fig.savefig(figure_dir / "figure_06_model_interpretation.png", dpi=200, bbox_inches="tight")
+plt.close(fig)
+
+print("\ntop positive logistic coefficients:")
+print(top_positive)
+print("\ntop negative logistic coefficients:")
+print(top_negative)
