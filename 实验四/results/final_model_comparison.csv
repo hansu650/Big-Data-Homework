@@ -1,0 +1,6 @@
+model,setting,n_clusters,noise_ratio,silhouette_score,calinski_harabasz_score,davies_bouldin_score,training_time_seconds,notes
+DBSCAN,"eps=2.30, min_samples=10",2,0.3595505617977528,0.36411295156115975,64.74143009970243,1.048404938795447,0.007673699999941164,Best valid DBSCAN setting; noise ratio is considered because DBSCAN is sensitive to eps and min_samples.
+KMeans,k=3,3,0.0,0.2848589191898987,70.94000800315118,1.389187977718165,0.1948839999986376,Fixed k=3 retained for cluster interpretation.
+KMeans,"best by silhouette, k=3",3,0.0,0.2848589191898987,70.94000800315118,1.389187977718165,0.1948839999986376,Selected by internal clustering metrics only.
+AgglomerativeClustering,"linkage=ward, k=3",3,0.0,0.2774439826952265,67.6474675044098,1.4185919431857321,0.0029993000007380033,Ward linkage with k=3 retained as a hierarchical baseline.
+AgglomerativeClustering,"best by silhouette, linkage=ward, k=3",3,0.0,0.2774439826952265,67.6474675044098,1.4185919431857321,0.0029993000007380033,Selected by internal clustering metrics only.

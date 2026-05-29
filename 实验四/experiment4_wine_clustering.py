@@ -301,12 +301,20 @@ def plot_feature_boxplots(
     output_path: Path,
 ) -> Path:
     fig, ax = plt.subplots(figsize=(11, 6))
-    box = ax.boxplot(
-        frame.to_numpy(),
-        labels=frame.columns,
-        patch_artist=True,
-        showfliers=False,
-    )
+    boxplot_kwargs = {"patch_artist": True, "showfliers": False}
+    try:
+        # Matplotlib 3.9 renamed labels to tick_labels; keep a fallback for older versions.
+        box = ax.boxplot(
+            frame.to_numpy(),
+            tick_labels=frame.columns,
+            **boxplot_kwargs,
+        )
+    except TypeError:
+        box = ax.boxplot(
+            frame.to_numpy(),
+            labels=frame.columns,
+            **boxplot_kwargs,
+        )
     for patch in box["boxes"]:
         patch.set_facecolor("#7AA6C2")
         patch.set_alpha(0.75)

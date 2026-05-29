@@ -1,0 +1,19 @@
+item,value
+total_missing_values_in_original_data,0
+total_missing_values_in_X,0
+duplicate_rows_in_original_data,0
+duplicate_rows_in_X,0
+missing_values_class,0
+missing_values_Alcohol,0
+missing_values_Malic acid,0
+missing_values_Ash,0
+missing_values_Alcalinity of ash,0
+missing_values_Magnesium,0
+missing_values_Total phenols,0
+missing_values_Flavanoids,0
+missing_values_Nonflavanoid phenols,0
+missing_values_Proanthocyanins,0
+missing_values_Color intensity,0
+missing_values_Hue,0
+missing_values_OD280/OD315 of diluted wines,0
+missing_values_Proline,0

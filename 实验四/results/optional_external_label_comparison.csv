@@ -1,0 +1,6 @@
+model,adjusted_rand_index_optional,normalized_mutual_info_optional,homogeneity_optional,completeness_optional,v_measure_optional,note
+KMeans k=3,0.8974949815093207,0.8758935341223069,0.8788432003662366,0.8729636016078731,0.875893534122307,"Optional external comparison only; original labels were not used in clustering training, parameter selection, or main evaluation."
+Best KMeans,0.8974949815093207,0.8758935341223069,0.8788432003662366,0.8729636016078731,0.875893534122307,"Optional external comparison only; original labels were not used in clustering training, parameter selection, or main evaluation."
+Agglomerative ward k=3,0.7899332213582837,0.7864652657004837,0.790429271831654,0.7825408201875712,0.7864652657004838,"Optional external comparison only; original labels were not used in clustering training, parameter selection, or main evaluation."
+Best Agglomerative,0.7899332213582837,0.7864652657004837,0.790429271831654,0.7825408201875712,0.7864652657004838,"Optional external comparison only; original labels were not used in clustering training, parameter selection, or main evaluation."
+Best DBSCAN,0.28214436597967496,0.3773020810877838,0.36622549389338105,0.38906959415334064,0.3773020810877838,"Optional external comparison only; original labels were not used in clustering training, parameter selection, or main evaluation."

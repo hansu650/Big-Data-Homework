@@ -1,0 +1,25 @@
+item,value
+dataset_file,D:\daima\cursor\大数据分析\实验四\data\wine.data
+n_samples,178
+n_original_columns,14
+n_features_used_for_clustering,13
+removed_label_column,class
+feature_columns_used_for_clustering,Alcohol; Malic acid; Ash; Alcalinity of ash; Magnesium; Total phenols; Flavanoids; Nonflavanoid phenols; Proanthocyanins; Color intensity; Hue; OD280/OD315 of diluted wines; Proline
+optional_original_class_distribution_note,"Original class labels are optional information only and are not used for clustering training, parameter selection, or main evaluation."
+optional_original_class_1_count,59
+optional_original_class_2_count,71
+optional_original_class_3_count,48
+dtype_class,int64
+dtype_Alcohol,float64
+dtype_Malic acid,float64
+dtype_Ash,float64
+dtype_Alcalinity of ash,float64
+dtype_Magnesium,int64
+dtype_Total phenols,float64
+dtype_Flavanoids,float64
+dtype_Nonflavanoid phenols,float64
+dtype_Proanthocyanins,float64
+dtype_Color intensity,float64
+dtype_Hue,float64
+dtype_OD280/OD315 of diluted wines,float64
+dtype_Proline,int64

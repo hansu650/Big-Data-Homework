@@ -1,0 +1,5 @@
+Cluster profile interpretation based on KMeans k=3.
+The values are interpreted from standardized feature means; positive values are above the overall average and negative values are below the overall average.
+Cluster 0 contains 65 samples. It is relatively high in Hue (+0.46), OD280/OD315 of diluted wines (+0.27), Alcalinity of ash (+0.17), and relatively low in Alcohol (-0.93), Color intensity (-0.90), Proline (-0.75).
+Cluster 1 contains 51 samples. It is relatively high in Color intensity (+0.94), Malic acid (+0.87), Nonflavanoid phenols (+0.73), and relatively low in OD280/OD315 of diluted wines (-1.29), Flavanoids (-1.22), Hue (-1.16).
+Cluster 2 contains 62 samples. It is relatively high in Proline (+1.13), Flavanoids (+0.98), Total phenols (+0.89), and relatively low in Alcalinity of ash (-0.61), Nonflavanoid phenols (-0.56), Malic acid (-0.30).
