@@ -29,6 +29,7 @@ from sklearn.preprocessing import StandardScaler
 RANDOM_STATE = 42
 FIGURE_DPI = 300
 
+# Keep the dataset schema explicit so the label column can be separated safely.
 WINE_COLUMNS = [
     "class",
     "Alcohol",
@@ -47,6 +48,7 @@ WINE_COLUMNS = [
 ]
 FEATURE_COLUMNS = WINE_COLUMNS[1:]
 
+# Centralize search ranges and output names to keep the script/report aligned.
 KMEANS_K_VALUES = list(range(2, 11))
 AGGLOMERATIVE_LINKAGES = ["ward", "complete", "average", "single"]
 DBSCAN_EPS_VALUES = np.round(np.arange(0.3, 5.01, 0.1), 2)
@@ -106,6 +108,7 @@ def resolve_paths(exp4_dir: str | Path | None = None) -> dict[str, Path]:
         exp4_dir = Path(__file__).resolve().parent
     else:
         exp4_dir = Path(exp4_dir).resolve()
+        # Allow callers to pass either the repository root or the Experiment 4 folder.
         if exp4_dir.name != "实验四" and (exp4_dir / "实验四").exists():
             exp4_dir = exp4_dir / "实验四"
 
@@ -134,6 +137,7 @@ def extract_wine_zip_if_needed(paths: dict[str, Path]) -> Path | None:
     if paths["wine_data"].exists():
         return None
 
+    # The assignment forbids downloading data, so only local wine.zip files are used.
     zip_candidates = [
         paths["data_dir"] / "wine.zip",
         paths["exp4_dir"] / "wine.zip",
@@ -184,7 +188,9 @@ def load_wine_data(paths: dict[str, Path]) -> tuple[pd.DataFrame, pd.DataFrame, 
     df.columns = WINE_COLUMNS
     df = df.apply(pd.to_numeric, errors="coerce")
 
+    # The original class label is saved only for optional post-clustering comparison.
     y_true_optional = df["class"].copy()
+    # All clustering models must use only the 13 chemical features.
     X = df.drop(columns=["class"]).copy()
 
     if "class" in X.columns:
@@ -201,6 +207,7 @@ def standardize_and_project(
     X_scaled_array = scaler.fit_transform(X)
     X_scaled = pd.DataFrame(X_scaled_array, columns=X.columns, index=X.index)
 
+    # PCA is a visualization aid only; it is not used for model selection.
     pca = PCA(n_components=2, random_state=RANDOM_STATE)
     X_pca_2d = pca.fit_transform(X_scaled)
     X_pca_2d = pd.DataFrame(X_pca_2d, columns=["PC1", "PC2"], index=X.index)
@@ -216,6 +223,7 @@ def save_data_check_outputs(
     paths: dict[str, Path],
 ) -> list[Path]:
     """Save shape, missing value, duplicate, dtype, and feature statistics."""
+    # Class distribution is recorded as optional context, not as a training signal.
     class_distribution = y_true_optional.value_counts().sort_index()
 
     info_rows = [
@@ -343,6 +351,7 @@ def plot_pca_labels(
 
     for index, label in enumerate(unique_labels):
         mask = label_series == label
+        # Noise is shown only for DBSCAN; all other labels are cluster IDs.
         display_label = "Noise" if int(label) == -1 else f"Cluster {int(label)}"
         if "original" in output_path.name:
             display_label = f"Class {int(label)}"
@@ -401,6 +410,7 @@ def prepare_data(paths: dict[str, Path]) -> dict[str, Any]:
     """Read data, remove class labels, standardize features, and save checks."""
     ensure_output_dirs(paths)
     df, X, y_true_optional = load_wine_data(paths)
+    # From this point on, model inputs are based on X only, never on df["class"].
     scaler, X_scaled, X_pca_2d, pca = standardize_and_project(X)
 
     result_paths = save_data_check_outputs(df, X, y_true_optional, X_scaled, paths)
@@ -444,6 +454,7 @@ def compute_internal_metrics(
     """Compute internal clustering metrics; optionally ignore DBSCAN noise."""
     labels = np.asarray(labels)
     if exclude_noise:
+        # DBSCAN metrics are computed on non-noise samples when valid clusters exist.
         mask = labels != -1
         X_eval = X_scaled_array[mask]
         labels_eval = labels[mask]
@@ -453,6 +464,7 @@ def compute_internal_metrics(
 
     unique_labels = np.unique(labels_eval)
     if len(unique_labels) < 2 or len(unique_labels) >= len(labels_eval):
+        # Internal metrics are undefined for fewer than two usable clusters.
         return {
             "silhouette_score": np.nan,
             "calinski_harabasz_score": np.nan,
@@ -470,6 +482,7 @@ def select_best_by_internal_metrics(
     results_df: pd.DataFrame,
     extra_sort_columns: list[str] | None = None,
 ) -> pd.Series:
+    # Tie-breaking follows the report rule: Silhouette high, CH high, DB low.
     sort_columns = [
         "silhouette_score",
         "calinski_harabasz_score",
@@ -515,6 +528,7 @@ def run_kmeans_experiment(data: dict[str, Any], paths: dict[str, Path]) -> dict[
     labels_by_k: dict[int, np.ndarray] = {}
     records = []
 
+    # KMeans is evaluated across k values; inertia is kept only for the elbow curve.
     for k in KMEANS_K_VALUES:
         model = KMeans(n_clusters=k, n_init=50, random_state=RANDOM_STATE)
         start_time = time.perf_counter()
@@ -541,6 +555,7 @@ def run_kmeans_experiment(data: dict[str, Any], paths: dict[str, Path]) -> dict[
     best_row = select_best_by_internal_metrics(results_df)
     best_k = int(best_row["n_clusters"])
 
+    # Both the assignment-required k=3 result and the best-by-silhouette result are kept.
     figure_paths = [
         plot_single_metric_by_k(
             results_df,
@@ -651,6 +666,7 @@ def run_agglomerative_experiment(
     labels_by_setting: dict[tuple[str, int], np.ndarray] = {}
     records = []
 
+    # Linkage methods are compared on the same scaled feature matrix for fairness.
     for linkage in AGGLOMERATIVE_LINKAGES:
         for k in KMEANS_K_VALUES:
             model = AgglomerativeClustering(n_clusters=k, linkage=linkage)
@@ -679,6 +695,7 @@ def run_agglomerative_experiment(
     best_linkage = str(best_row["linkage"])
     best_k = int(best_row["n_clusters"])
 
+    # Ward k=3 is retained as the required final hierarchical baseline.
     figure_paths = [
         plot_agglomerative_metric_comparison(
             results_df,
@@ -727,6 +744,7 @@ def plot_dbscan_k_distance_curve(data: dict[str, Any], paths: dict[str, Path]) -
     neighbors = NearestNeighbors(n_neighbors=5)
     neighbors.fit(data["X_scaled"].to_numpy())
     distances, _ = neighbors.kneighbors(data["X_scaled"].to_numpy())
+    # Sorted kth-neighbor distances help explain a reasonable eps range.
     kth_distances = np.sort(distances[:, -1])
 
     fig, ax = plt.subplots(figsize=(7.5, 5))
@@ -746,6 +764,7 @@ def plot_dbscan_heatmap(
     output_path: Path,
     cmap_name: str = "viridis",
 ) -> Path:
+    # Pivot the grid search result into eps x min_samples matrices for reporting.
     pivot = results_df.pivot(
         index="min_samples",
         columns="eps",
@@ -776,6 +795,7 @@ def plot_dbscan_heatmap(
 
 def select_best_dbscan(results_df: pd.DataFrame) -> pd.Series:
     valid_df = results_df.dropna(subset=["silhouette_score"]).copy()
+    # Avoid recommending a DBSCAN setting that labels too many samples as noise.
     reasonable_df = valid_df[
         valid_df["noise_ratio"] <= DBSCAN_REASONABLE_NOISE_RATIO
     ].copy()
@@ -803,6 +823,7 @@ def run_dbscan_experiment(data: dict[str, Any], paths: dict[str, Path]) -> dict[
     labels_by_setting: dict[tuple[float, int], np.ndarray] = {}
     records = []
 
+    # DBSCAN is sensitive to eps/min_samples, so the full grid is retained.
     for eps in DBSCAN_EPS_VALUES:
         for min_samples in DBSCAN_MIN_SAMPLES_VALUES:
             model = DBSCAN(eps=float(eps), min_samples=int(min_samples))
@@ -815,6 +836,7 @@ def run_dbscan_experiment(data: dict[str, Any], paths: dict[str, Path]) -> dict[
             noise_ratio = noise_count / len(labels)
 
             if cluster_count < 2:
+                # Metrics are intentionally NaN when there are not enough valid clusters.
                 metrics = {
                     "silhouette_score": np.nan,
                     "calinski_harabasz_score": np.nan,
@@ -899,6 +921,7 @@ def make_final_model_comparison(
     agglomerative_outputs: dict[str, Any],
     dbscan_outputs: dict[str, Any],
 ) -> pd.DataFrame:
+    # The final table contains required fixed settings plus internally selected models.
     kmeans_results = kmeans_outputs["results"]
     agglomerative_results = agglomerative_outputs["results"]
     dbscan_best = dbscan_outputs["best_row"]
@@ -988,6 +1011,7 @@ def make_final_model_comparison(
 
 def sort_final_models(final_df: pd.DataFrame) -> pd.DataFrame:
     working_df = final_df.copy()
+    # High-noise DBSCAN settings are not preferred even when one metric looks strong.
     dbscan_high_noise = (
         (working_df["model"] == "DBSCAN")
         & (working_df["noise_ratio"] > DBSCAN_REASONABLE_NOISE_RATIO)
@@ -1032,6 +1056,7 @@ def save_final_cluster_assignments(
     paths: dict[str, Path],
 ) -> Path:
     n_samples = len(kmeans_outputs["k3_labels"])
+    # Do not include the original class label in this main clustering output.
     assignments = pd.DataFrame(
         {
             "sample_id": np.arange(1, n_samples + 1),
@@ -1052,6 +1077,7 @@ def save_cluster_profiles(
     kmeans_outputs: dict[str, Any],
     paths: dict[str, Path],
 ) -> dict[str, Any]:
+    # KMeans k=3 is used for interpretable cluster profiles in both feature spaces.
     labels = kmeans_outputs["k3_labels"]
     X = data["X"]
     X_scaled = data["X_scaled"]
@@ -1107,6 +1133,7 @@ def build_cluster_profile_interpretation(
     scaled_indexed = scaled_means.set_index("cluster")
     profile_indexed = profile_summary.set_index("cluster")
 
+    # The top positive and negative standardized means give a compact description.
     for cluster_id, row in scaled_indexed.iterrows():
         feature_values = row.drop(labels=[], errors="ignore").astype(float)
         high_features = feature_values.sort_values(ascending=False).head(3)
@@ -1153,6 +1180,7 @@ def save_optional_external_label_comparison(
     paths: dict[str, Path],
 ) -> list[Path]:
     """Use original labels only after clustering as optional external comparison."""
+    # This section is deliberately separate from training, selection, and main metrics.
     y_true_optional = data["y_true_optional"].to_numpy()
     label_sets = {
         "KMeans k=3": kmeans_outputs["k3_labels"],
@@ -1270,6 +1298,7 @@ def plot_final_model_metrics_comparison(
     ]
     colors = ["#4C78A8", "#59A14F", "#F58518"]
 
+    # Plot the three internal metrics separately because their scales are different.
     for ax, (metric, ylabel, subtitle), color in zip(axes, metric_specs, colors):
         ax.bar(x_positions, final_df[metric], color=color, alpha=0.85)
         ax.set_ylabel(ylabel)
@@ -1286,6 +1315,7 @@ def plot_cluster_size_comparison(
     labels_map: dict[str, np.ndarray],
     output_path: Path,
 ) -> Path:
+    # Stacked horizontal bars make cluster balance and DBSCAN noise easy to compare.
     all_cluster_labels = sorted(
         {int(label) for labels in labels_map.values() for label in np.unique(labels)}
     )
@@ -1360,6 +1390,7 @@ def run_final_analysis(
     dbscan_outputs: dict[str, Any],
     paths: dict[str, Path],
 ) -> dict[str, Any]:
+    # Collect the final tables, cluster assignments, profiles, and optional label checks.
     final_df = make_final_model_comparison(
         kmeans_outputs,
         agglomerative_outputs,
@@ -1450,6 +1481,7 @@ def run_experiment(exp4_dir: str | Path | None = None) -> dict[str, Any]:
     print(f"Data directory: {paths['data_dir']}")
     print("Original class labels will be removed before clustering.")
 
+    # The workflow mirrors the report: data checks, model grids, comparison, profiles.
     data_outputs = prepare_data(paths)
     data = data_outputs["data"]
     kmeans_outputs = run_kmeans_experiment(data, paths)
