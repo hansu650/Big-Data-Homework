@@ -1,0 +1,13 @@
+chapter,artifact_path,artifact_type,include_in_main_text,include_in_appendix,purpose,suggested_caption
+Dataset,results/dataset_compliance_summary.csv,table,True,False,"Document dataset source, scale, license, and reproducibility constraints.",Dataset compliance summary
+Preprocessing,results/preprocessing_quality_check.csv,table,True,False,"Provide missingness, duplicate, range, engineered feature, and feature-selection checks.",Preprocessing quality check
+Classification,results/classification_tuned_metrics.csv,table,True,False,Report tuned classification metrics under threshold policies.,Tuned classification metrics
+Classification,results/classification_threshold_tuning.csv,table,True,False,Show validation threshold selection evidence.,Threshold tuning results
+Regression,results/regression_target_comparison.csv,table,True,False,Compare productivity and digital dependence regression targets.,Regression target comparison
+Regression,results/regression_digital_dependence_metrics.csv,table,True,False,Report the stronger digital dependence regression target.,Digital dependence regression metrics
+Regression,results/regression_productivity_metrics.csv,table,True,False,Report productivity as weak/negative prediction evidence.,Productivity regression metrics
+Clustering,results/clustering_model_comparison.csv,table,True,False,Compare clustering algorithms and k values.,Clustering model comparison
+Clustering,results/clustering_lifestyle_profiles_compact.csv,table,True,False,Use compact profiles in main text.,Compact lifestyle cluster profiles
+PCA Supplement,results/pca_explained_variance.csv,table,False,True,Full PCA explained variance table for appendix.,PCA explained variance
+Appendix,results/classification_cv_results.csv,table,False,True,Full hyperparameter search evidence.,Classification CV search results
+Appendix,results/regression_digital_dependence_cv_results.csv,table,False,True,Full regression search evidence.,Digital dependence regression CV results

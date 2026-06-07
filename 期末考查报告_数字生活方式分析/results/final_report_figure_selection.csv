@@ -1,0 +1,21 @@
+chapter,artifact_path,artifact_type,include_in_main_text,include_in_appendix,purpose,suggested_caption
+EDA,figures/eda_high_risk_flag_distribution.png,figure,True,False,Show class balance for high_risk_flag.,Distribution of high-risk flag
+EDA,figures/eda_numeric_histograms.png,figure,False,True,Summarize numeric feature distributions; useful as appendix if main text space is limited.,Numeric feature distributions
+EDA,figures/eda_numeric_correlation_heatmap.png,figure,True,False,Show correlation structure and potential redundancy.,Numeric correlation heatmap
+EDA,figures/eda_boxplots_by_risk.png,figure,True,False,Compare behavior variables across risk groups.,Behavior variables by high-risk group
+EDA,figures/eda_category_risk_rate.png,figure,True,False,Compare descriptive risk rates across categories.,Category-level high-risk rates
+EDA,figures/eda_behavior_outcome_scatter.png,figure,False,True,Visualize behavior-outcome relationships without causal claims; useful as appendix if main text space is limited.,Behavior and outcome relationships
+Classification,figures/classification_tuned_metrics_comparison.png,figure,True,False,Compare threshold policies for high-risk screening.,Classification threshold policy metrics
+Classification,figures/classification_final_confusion_matrix.png,figure,True,False,Show final screening errors after threshold selection.,Final classification confusion matrix
+Classification,figures/classification_precision_recall_curve.png,figure,True,False,Support PR-AUC and threshold discussion.,Precision-Recall curve
+Classification,figures/classification_roc_curve.png,figure,True,False,Support ROC-AUC reporting.,ROC curve
+Regression,figures/regression_target_comparison.png,figure,True,False,Compare productivity and digital dependence targets.,Regression target comparison
+Regression,figures/regression_digital_dependence_observed_vs_predicted.png,figure,True,False,Show fit quality for the stronger regression target.,Observed vs predicted digital dependence
+Regression,figures/regression_digital_dependence_permutation_importance.png,figure,True,False,Show important features for digital dependence prediction.,Digital dependence permutation importance
+Clustering,figures/clustering_kmeans_elbow.png,figure,True,False,Show KMeans elbow evidence.,KMeans elbow curve
+Clustering,figures/clustering_silhouette_by_k.png,figure,True,False,Compare silhouette scores by algorithm and k.,Silhouette scores by clustering method
+Clustering,figures/clustering_lifestyle_pca.png,figure,True,False,Visualize cluster assignments in two PCA dimensions.,Lifestyle clusters in PCA space
+Clustering,figures/clustering_lifestyle_profile_heatmap.png,figure,True,False,Summarize standardized cluster profiles.,Cluster profile heatmap
+PCA Supplement,figures/pca_explained_variance.png,figure,True,False,Respond to PCA/feature extraction requirement; PCA is for visualization and auxiliary understanding only.,PCA cumulative explained variance
+Appendix,figures/regression_productivity_observed_vs_predicted.png,figure,False,True,Document weak productivity prediction as a negative result.,Observed vs predicted productivity score
+Appendix,figures/classification_permutation_importance.png,figure,False,True,Keep detailed model interpretation figure outside main text if space is limited.,Classification permutation importance
