@@ -12,6 +12,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 try:
     from .config import (
         CLASSIFICATION_TARGET,
+        CLUSTERING_INPUT_COLUMNS,
         HIGH_RISK_LEAKAGE_COLUMNS,
         ID_COLUMNS,
         OUTCOME_COLUMNS,
@@ -21,6 +22,7 @@ try:
 except ImportError:
     from config import (
         CLASSIFICATION_TARGET,
+        CLUSTERING_INPUT_COLUMNS,
         HIGH_RISK_LEAKAGE_COLUMNS,
         ID_COLUMNS,
         OUTCOME_COLUMNS,
@@ -82,6 +84,11 @@ def get_excluded_columns(task: str, target_column: Optional[str] = None) -> list
     return sorted(excluded)
 
 
+def get_clustering_feature_columns(df: pd.DataFrame) -> list[str]:
+    """Return the explicit behavior/lifestyle feature whitelist for clustering."""
+    return columns_present(df, CLUSTERING_INPUT_COLUMNS)
+
+
 def make_feature_target(
     df: pd.DataFrame,
     task: str,
@@ -101,8 +108,14 @@ def make_feature_target(
     else:
         raise ValueError(f"Unknown task: {task}")
 
-    excluded = columns_present(data, get_excluded_columns(task, target))
-    X = data.drop(columns=excluded)
+    if task == "clustering":
+        clustering_columns = get_clustering_feature_columns(data)
+        if not clustering_columns:
+            raise ValueError("No clustering input columns are present in the dataframe.")
+        X = data[clustering_columns].copy()
+    else:
+        excluded = columns_present(data, get_excluded_columns(task, target))
+        X = data.drop(columns=excluded)
     y = data[target].copy() if target is not None else None
     return X, y
 

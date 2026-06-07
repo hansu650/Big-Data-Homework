@@ -2,15 +2,24 @@
 
 \subsection{任务设定}
 
-聚类任务仅使用数字行为与生活习惯变量，不使用身心风险或效率结果变量。聚类完成后，再将 \texttt{high\_risk\_flag}、\texttt{productivity\_score} 等结果变量用于画像解释。
+聚类任务仅使用数字行为与生活习惯数值变量，不使用人口背景类别变量、设备类别变量、身心风险或效率结果变量。聚类完成后，再将 \texttt{daily\_role}、\texttt{device\_type}、\texttt{high\_risk\_flag}、\texttt{productivity\_score} 等变量用于画像解释。
 
 \subsection{模型与指标}
 
-使用 KMeans 对 $k=2$ 到 $k=6$ 进行比较，评价指标包括 Silhouette、Calinski-Harabasz、Davies-Bouldin 与 Inertia。
+使用 KMeans 对 $k=2$ 到 $k=8$ 进行肘部法则和轮廓系数分析，并补充 AgglomerativeClustering 与 GaussianMixture 的算法对比。评价指标包括 Silhouette、Calinski-Harabasz、Davies-Bouldin 与 KMeans Inertia。
 
-\placeholdertext{Table placeholder: results/clustering\_kmeans\_scores.csv and results/clustering\_lifestyle\_profiles.csv}
+\placeholdertext{Table placeholder: report/tables/clustering\_model\_comparison.tex}
+
+\placeholdertext{Table placeholder: report/tables/clustering\_lifestyle\_profiles\_compact.tex}
+
+\maybefigure{clustering_kmeans_elbow.png}{KMeans 肘部法则图}{fig:clustering-elbow}
+
+\maybefigure{clustering_silhouette_by_k.png}{不同聚类算法与簇数的轮廓系数}{fig:clustering-silhouette}
+
+\maybefigure{clustering_model_comparison.png}{聚类算法最佳轮廓系数对比}{fig:clustering-model-comparison}
 
 \maybefigure{clustering_kmeans_selection.png}{KMeans 聚类数量选择}{fig:clustering-selection}
 
 \maybefigure{clustering_lifestyle_pca.png}{生活方式聚类 PCA 投影}{fig:clustering-pca}
 
+\maybefigure{clustering_lifestyle_profile_heatmap.png}{聚类画像标准化均值热力图}{fig:clustering-profile-heatmap}

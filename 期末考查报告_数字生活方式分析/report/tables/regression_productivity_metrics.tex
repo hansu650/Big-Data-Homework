@@ -1,15 +1,14 @@
 \begin{table}
-\centering
-\caption{Regression metrics for productivity score prediction}
-\label{tab:regression-metrics}
-\begin{tabular}{lrrrrrrl}
+\caption{Productivity score regression metrics}
+\label{tab:regression-productivity-metrics}
+\begin{tabular}{lrrrrr}
 \toprule
-            model &    mae &   rmse &      r2 &  n\_train &  n\_test &  feature\_count &             target \\
+model & cv\_best\_r2 & mae & mse & rmse & r2 \\
 \midrule
-            ridge & 7.1994 & 9.2638 & -0.0113 &     2625 &     875 &             22 & productivity\_score \\
-linear\_regression & 7.2006 & 9.2645 & -0.0115 &     2625 &     875 &             22 & productivity\_score \\
-gradient\_boosting & 7.3244 & 9.3002 & -0.0193 &     2625 &     875 &             22 & productivity\_score \\
-    random\_forest & 7.3363 & 9.3770 & -0.0362 &     2625 &     875 &             22 & productivity\_score \\
+gradient\_boosting & 0.0119 & 7.1671 & 85.2031 & 9.2306 & -0.0041 \\
+random\_forest & 0.0072 & 7.2088 & 85.9208 & 9.2693 & -0.0125 \\
+ridge & 0.0043 & 7.1747 & 85.5884 & 9.2514 & -0.0086 \\
+linear\_regression & 0.0002 & 7.1999 & 85.8232 & 9.2641 & -0.0114 \\
 \bottomrule
 \end{tabular}
 \end{table}

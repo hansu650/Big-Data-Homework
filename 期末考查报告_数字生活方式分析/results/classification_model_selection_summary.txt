@@ -1,0 +1,10 @@
+分类模型选择与阈值调优摘要
+==============================
+
+候选模型: logistic_regression, random_forest, gradient_boosting
+调参方式: Logistic Regression 使用 GridSearchCV；Random Forest 和 Gradient Boosting 使用 RandomizedSearchCV；内部验证使用 StratifiedKFold(cv=5)。
+验证集按 PR-AUC 与 F1 选择的概率模型: gradient_boosting
+最终阈值策略: recall_at_least_60_best_precision, threshold=0.14
+测试集 Recall=0.6420, F1=0.5355, PR-AUC=0.5084, ROC-AUC=0.7531
+
+说明: high_risk_flag 是高风险筛查任务，不能只看 Accuracy。类别不均衡时，Accuracy 可能主要反映多数类识别，而高风险样本漏判会直接降低筛查价值，因此报告中应同时关注 Recall、F1、PR-AUC 和混淆矩阵。若某模型 ROC-AUC 较高但默认阈值下 Recall 较低，不能简单称为最优筛查模型，需要结合阈值调优后的表现解释。

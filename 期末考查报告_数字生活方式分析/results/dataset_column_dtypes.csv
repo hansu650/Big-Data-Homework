@@ -1,11 +1,11 @@
 column,dtype
 id,int64
 age,int64
-gender,object
-region,object
-income_level,object
-education_level,object
-daily_role,object
+gender,str
+region,str
+income_level,str
+education_level,str
+daily_role,str
 device_hours_per_day,float64
 phone_unlocks,int64
 notifications_per_day,int64
@@ -20,6 +20,6 @@ stress_level,float64
 happiness_score,float64
 focus_score,float64
 high_risk_flag,int64
-device_type,object
+device_type,str
 productivity_score,float64
 digital_dependence_score,float64

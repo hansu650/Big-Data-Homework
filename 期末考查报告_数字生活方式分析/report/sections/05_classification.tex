@@ -4,15 +4,22 @@
 
 分类目标为 \texttt{high\_risk\_flag}。模型输入排除全部指定泄漏列，并使用训练集/测试集划分评估模型泛化表现。
 
-\subsection{模型与指标}
+\subsection{模型、调参与指标}
 
-基线模型包括 Logistic Regression、Random Forest 和 Gradient Boosting。评价指标包括 Accuracy、Precision、Recall、F1 与 ROC-AUC。
+模型包括 Logistic Regression、Random Forest 和 Gradient Boosting。第二阶段补充 GridSearchCV/RandomizedSearchCV 调参，评价指标包括 Accuracy、Precision、Recall、F1、Balanced Accuracy、ROC-AUC 与 PR-AUC。
 
-\placeholdertext{Table placeholder: results/classification\_high\_risk\_metrics.csv}
+\placeholdertext{Table placeholder: report/tables/classification\_tuned\_metrics.tex}
 
-\maybefigure{classification_best_confusion_matrix.png}{最佳分类模型混淆矩阵}{fig:classification-confusion}
+\subsection{阈值调优}
 
-\maybefigure{classification_best_roc_curve.png}{最佳分类模型 ROC 曲线}{fig:classification-roc}
+\placeholdertext{Table placeholder: report/tables/classification\_threshold\_tuning.tex}
+
+\maybefigure{classification_tuned_metrics_comparison.png}{分类阈值策略指标对比}{fig:classification-threshold-metrics}
+
+\maybefigure{classification_final_confusion_matrix.png}{最终分类模型混淆矩阵}{fig:classification-confusion}
+
+\maybefigure{classification_roc_curve.png}{最终分类模型 ROC 曲线}{fig:classification-roc}
+
+\maybefigure{classification_precision_recall_curve.png}{最终分类模型 Precision-Recall 曲线}{fig:classification-pr}
 
 \maybefigure{classification_permutation_importance.png}{分类任务置换重要性}{fig:classification-importance}
-

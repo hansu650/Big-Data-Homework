@@ -1,0 +1,26 @@
+variable,category,count,risk_rate
+gender,Female,1835,0.21907356948228882
+gender,Male,1665,0.18198198198198198
+region,Africa,578,0.19377162629757785
+region,Asia,739,0.19350473612990526
+region,Europe,797,0.20075282308657466
+region,Middle East,339,0.22418879056047197
+region,North America,622,0.19614147909967847
+region,South America,425,0.2164705882352941
+income_level,High,475,0.22526315789473683
+income_level,Low,1139,0.19315188762071994
+income_level,Lower-Mid,1044,0.1867816091954023
+income_level,Upper-Mid,842,0.2173396674584323
+education_level,Bachelor,1573,0.20279720279720279
+education_level,High School,1103,0.20036264732547598
+education_level,Master,652,0.20552147239263804
+education_level,PhD,172,0.18023255813953487
+daily_role,Caregiver/Home,149,0.174496644295302
+daily_role,Full-time Employee,1429,0.1980405878236529
+daily_role,Part-time/Shift,659,0.2109256449165402
+daily_role,Student,905,0.19779005524861878
+daily_role,Unemployed_Looking,358,0.21787709497206703
+device_type,Android,903,0.20044296788482835
+device_type,Laptop,886,0.19413092550790068
+device_type,Tablet,888,0.21058558558558557
+device_type,iPhone,823,0.20048602673147023

@@ -67,3 +67,17 @@ focus_score, productivity_score, digital_dependence_score
 
 `report/` 目录只提供结构化 LaTeX 骨架、图表占位和方法说明。正式结论需要在真实模型结果跑完后再补写，避免提前编造实验结论。
 
+## Stage 2 Modeling Validation
+
+第二阶段已补充实验可信度修复：
+
+- 分类任务增加 GridSearchCV/RandomizedSearchCV 调参、PR-AUC、Balanced Accuracy 与阈值调优。
+- 回归任务同时评估 `productivity_score` 和 `digital_dependence_score`，并补齐 MAE、MSE、RMSE、R2。
+- 聚类任务改为只使用数字行为与生活习惯数值特征，并增加 KMeans、AgglomerativeClustering、GaussianMixture 对比。
+- EDA 增加按风险分组箱线图、类别风险率图和行为-结果关系图。
+
+第二阶段摘要见：
+
+```text
+results/stage2_experiment_design_fix_summary.md
+```

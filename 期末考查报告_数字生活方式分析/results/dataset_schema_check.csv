@@ -1,11 +1,11 @@
 column,present,dtype,missing_count
 id,True,int64,0
 age,True,int64,0
-gender,True,object,0
-region,True,object,0
-income_level,True,object,0
-education_level,True,object,0
-daily_role,True,object,0
+gender,True,str,0
+region,True,str,0
+income_level,True,str,0
+education_level,True,str,0
+daily_role,True,str,0
 device_hours_per_day,True,float64,0
 phone_unlocks,True,int64,0
 notifications_per_day,True,int64,0
@@ -20,6 +20,6 @@ stress_level,True,float64,0
 happiness_score,True,float64,0
 focus_score,True,float64,0
 high_risk_flag,True,int64,0
-device_type,True,object,0
+device_type,True,str,0
 productivity_score,True,float64,0
 digital_dependence_score,True,float64,0

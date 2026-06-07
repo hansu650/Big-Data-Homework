@@ -94,6 +94,33 @@ BEHAVIOR_LIFESTYLE_COLUMNS = [
     "device_type",
 ]
 
+CLUSTERING_INPUT_COLUMNS = [
+    "device_hours_per_day",
+    "phone_unlocks",
+    "notifications_per_day",
+    "social_media_mins",
+    "study_mins",
+    "physical_activity_days",
+    "sleep_hours",
+    "sleep_quality",
+    "social_media_hours",
+    "study_hours",
+    "notifications_per_device_hour",
+    "unlocks_per_device_hour",
+    "device_to_sleep_ratio",
+    "activity_sleep_interaction",
+    "social_to_study_ratio",
+]
+
+CLUSTER_PROFILE_CONTEXT_COLUMNS = [
+    "gender",
+    "region",
+    "income_level",
+    "education_level",
+    "daily_role",
+    "device_type",
+]
+
 MODEL_TEST_SIZE = 0.25
 CV_SPLITS = 5
 DEFAULT_FIGURE_DPI = 160
@@ -101,13 +128,21 @@ DEFAULT_FIGURE_DPI = 160
 CLASSIFICATION_METRICS_PATH = RESULTS_DIR / "classification_high_risk_metrics.csv"
 CLASSIFICATION_CONFUSION_PATH = RESULTS_DIR / "classification_best_confusion_matrix.csv"
 CLASSIFICATION_FEATURE_IMPORTANCE_PATH = RESULTS_DIR / "classification_permutation_importance.csv"
+CLASSIFICATION_CV_RESULTS_PATH = RESULTS_DIR / "classification_cv_results.csv"
+CLASSIFICATION_TUNED_METRICS_PATH = RESULTS_DIR / "classification_tuned_metrics.csv"
+CLASSIFICATION_THRESHOLD_TUNING_PATH = RESULTS_DIR / "classification_threshold_tuning.csv"
+CLASSIFICATION_FINAL_CONFUSION_PATH = RESULTS_DIR / "classification_final_confusion_matrix.csv"
+CLASSIFICATION_MODEL_SELECTION_SUMMARY_PATH = RESULTS_DIR / "classification_model_selection_summary.txt"
 
 REGRESSION_METRICS_PATH = RESULTS_DIR / "regression_productivity_metrics.csv"
 REGRESSION_PREDICTIONS_PATH = RESULTS_DIR / "regression_productivity_predictions.csv"
 REGRESSION_FEATURE_IMPORTANCE_PATH = RESULTS_DIR / "regression_productivity_permutation_importance.csv"
+REGRESSION_TARGET_COMPARISON_PATH = RESULTS_DIR / "regression_target_comparison.csv"
+REGRESSION_MODEL_SELECTION_SUMMARY_PATH = RESULTS_DIR / "regression_model_selection_summary.txt"
 
 CLUSTERING_SCORES_PATH = RESULTS_DIR / "clustering_kmeans_scores.csv"
 CLUSTERING_ASSIGNMENTS_PATH = RESULTS_DIR / "clustering_lifestyle_assignments.csv"
 CLUSTERING_PROFILE_PATH = RESULTS_DIR / "clustering_lifestyle_profiles.csv"
 CLUSTERING_PCA_PATH = RESULTS_DIR / "clustering_lifestyle_pca_coordinates.csv"
-
+CLUSTERING_MODEL_COMPARISON_PATH = RESULTS_DIR / "clustering_model_comparison.csv"
+CLUSTERING_PROFILE_INTERPRETATION_PATH = RESULTS_DIR / "clustering_profile_interpretation.txt"

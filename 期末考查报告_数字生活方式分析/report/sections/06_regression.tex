@@ -2,13 +2,15 @@
 
 \subsection{任务设定}
 
-回归目标为 \texttt{productivity\_score}。实验使用数字行为与生活习惯变量预测效率表现，并保存模型评价指标与预测结果。
+回归目标包括 \texttt{productivity\_score} 与 \texttt{digital\_dependence\_score}。实验使用人口背景、数字行为、生活习惯与工程特征进行预测，但排除 \texttt{high\_risk\_flag}、心理状态结果变量和另一个 outcome 目标变量。
 
 \subsection{模型与指标}
 
-基线模型包括 Linear Regression、Ridge Regression、Random Forest Regressor 和 Gradient Boosting Regressor。评价指标包括 MAE、RMSE 与 $R^2$。
+模型包括 Linear Regression、Ridge Regression、Random Forest Regressor 和 Gradient Boosting Regressor。第二阶段补充 5 折交叉验证调参，评价指标包括 MAE、MSE、RMSE 与 $R^2$。
 
-\placeholdertext{Table placeholder: results/regression\_productivity\_metrics.csv}
+\subsection{\texttt{productivity\_score} 预测}
+
+\placeholdertext{Table placeholder: report/tables/regression\_productivity\_metrics.tex}
 
 \maybefigure{regression_productivity_observed_vs_predicted.png}{效率分数真实值与预测值对比}{fig:regression-prediction}
 
@@ -16,3 +18,18 @@
 
 \maybefigure{regression_productivity_permutation_importance.png}{回归任务置换重要性}{fig:regression-importance}
 
+\subsection{\texttt{digital\_dependence\_score} 预测}
+
+\placeholdertext{Table placeholder: report/tables/regression\_digital\_dependence\_metrics.tex}
+
+\maybefigure{regression_digital_dependence_observed_vs_predicted.png}{数字依赖分数真实值与预测值对比}{fig:regression-dependence-prediction}
+
+\maybefigure{regression_digital_dependence_residuals.png}{数字依赖预测残差图}{fig:regression-dependence-residuals}
+
+\maybefigure{regression_digital_dependence_permutation_importance.png}{数字依赖回归任务置换重要性}{fig:regression-dependence-importance}
+
+\subsection{回归目标对比}
+
+\placeholdertext{Table placeholder: report/tables/regression\_target\_comparison.tex}
+
+\maybefigure{regression_target_comparison.png}{两个回归目标的最佳模型表现对比}{fig:regression-target-comparison}

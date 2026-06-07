@@ -1,0 +1,8 @@
+回归模型选择摘要
+================
+
+productivity_score 最佳模型: gradient_boosting, R2=-0.0041, MSE=85.2031, RMSE=9.2306, MAE=7.1671
+digital_dependence_score 最佳模型: gradient_boosting, R2=0.9839, MSE=3.1471, RMSE=1.7740, MAE=0.9982
+
+productivity_score 说明: 在当前可观测行为与生活习惯特征下，productivity_score 的可预测性较弱，不能据此得出强预测结论。
+digital_dependence_score 说明: 该目标相对更贴近设备使用、通知、解锁和社交媒体变量，若指标明显优于 productivity_score，正式报告可考虑将回归主线调整为数字依赖程度预测。

@@ -1,0 +1,10 @@
+聚类画像解释摘要
+================
+
+聚类输入特征数: 15
+聚类输入字段: device_hours_per_day, phone_unlocks, notifications_per_day, social_media_mins, study_mins, physical_activity_days, sleep_hours, sleep_quality, social_media_hours, study_hours, notifications_per_device_hour, unlocks_per_device_hour, device_to_sleep_ratio, activity_sleep_interaction, social_to_study_ratio
+未用于聚类训练的背景/结果字段包括 id、gender、region、income_level、education_level、daily_role、device_type 以及 anxiety_score、depression_score、stress_level、happiness_score、focus_score、high_risk_flag、productivity_score、digital_dependence_score。
+按 Silhouette 选择的探索性画像模型: kmeans, k=3, silhouette=0.1860
+Silhouette 较低，聚类结构较弱，因此聚类结果主要用于探索性画像，不作为严格人群边界。
+
+建议簇名称见 results/clustering_lifestyle_profiles_compact.csv。
