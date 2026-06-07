@@ -1,6 +1,6 @@
 # Big Data Analysis Final Report Project
 
-题目：数字生活方式对身心风险与效率表现的影响分析--基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究
+题目：《数字生活方式下的高风险识别、数字依赖预测与用户画像分析——基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究》
 
 本项目用于《大数据分析与应用》期末考查报告的实验代码、结果输出和 LaTeX 报告框架。项目坚持 CPU 运行、非深度学习方法、可复现实验设置，并统一使用 `random_state=42`。
 
@@ -61,7 +61,7 @@ anxiety_score, depression_score, stress_level, happiness_score,
 focus_score, productivity_score, digital_dependence_score
 ```
 
-聚类任务也仅基于数字行为与生活习惯变量建模，身心风险和效率变量只在聚类后用于画像解释。
+聚类任务也仅基于数字行为与生活习惯变量建模，高风险、数字依赖和效率变量只在聚类后用于画像解释。
 
 ## Current Report Status
 

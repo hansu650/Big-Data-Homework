@@ -1,16 +1,15 @@
 \section{研究背景与问题定义}
 
-数字设备使用、社交媒体暴露、睡眠与运动习惯可能共同影响个体的身心风险与效率表现。本研究基于 2025 Digital Lifestyle Benchmark Dataset，围绕数字生活方式变量开展分类、回归与聚类分析。
+数字设备使用、社交媒体暴露、睡眠与运动习惯可能共同关联个体的高风险状态、数字依赖程度与效率表现。本研究基于 2025 Digital Lifestyle Benchmark Dataset，围绕数字生活方式变量开展分类、回归与聚类分析。
 
 \subsection{研究目标}
 
 \begin{itemize}
   \item 分类任务：预测用户是否属于 \texttt{high\_risk\_flag} 高风险群体。
-  \item 回归任务：预测 \texttt{productivity\_score}，备选目标为 \texttt{digital\_dependence\_score}。
+  \item 回归任务：重点预测 \texttt{digital\_dependence\_score}，并保留 \texttt{productivity\_score} 作为弱预测/负结果分析。
   \item 聚类任务：基于数字行为和生活习惯进行用户画像分群。
 \end{itemize}
 
 \subsection{实验约束}
 
 实验使用 Python、pandas、numpy、scipy、scikit-learn 与 matplotlib，在 CPU 环境运行，不使用深度学习模型。所有随机过程统一设置 \texttt{random\_state=42}。
-
