@@ -1,0 +1,18 @@
+\section{分类实验：高风险用户预测}
+
+\subsection{任务设定}
+
+分类目标为 \texttt{high\_risk\_flag}。模型输入排除全部指定泄漏列，并使用训练集/测试集划分评估模型泛化表现。
+
+\subsection{模型与指标}
+
+基线模型包括 Logistic Regression、Random Forest 和 Gradient Boosting。评价指标包括 Accuracy、Precision、Recall、F1 与 ROC-AUC。
+
+\placeholdertext{Table placeholder: results/classification\_high\_risk\_metrics.csv}
+
+\maybefigure{classification_best_confusion_matrix.png}{最佳分类模型混淆矩阵}{fig:classification-confusion}
+
+\maybefigure{classification_best_roc_curve.png}{最佳分类模型 ROC 曲线}{fig:classification-roc}
+
+\maybefigure{classification_permutation_importance.png}{分类任务置换重要性}{fig:classification-importance}
+

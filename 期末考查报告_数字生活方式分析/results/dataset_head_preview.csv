@@ -1,0 +1,11 @@
+id,age,gender,region,income_level,education_level,daily_role,device_hours_per_day,phone_unlocks,notifications_per_day,social_media_mins,study_mins,physical_activity_days,sleep_hours,sleep_quality,anxiety_score,depression_score,stress_level,happiness_score,focus_score,high_risk_flag,device_type,productivity_score,digital_dependence_score
+1,40,Female,Asia,High,High School,Part-time/Shift,3.54,45,561,98,34,7.0,9.12379996856656,3.353627229065094,9.926651431001652,5.0,6.593288791385255,8.0,23.0,0,Android,70.0,25.7
+2,27,Male,Africa,Lower-Mid,Master,Full-time Employee,5.65,100,393,174,102,2.0,8.83751689466956,2.90814688427508,4.0,4.0,4.126925580981799,8.1,35.0,0,Laptop,64.0,30.1
+3,31,Male,North America,Lower-Mid,Bachelor,Full-time Employee,8.87,181,231,595,140,1.0,6.486743490405938,2.8892134520710853,4.0,8.0,1.4291394113837326,7.6,15.0,0,Android,65.29930112427833,40.6
+4,41,Female,Middle East,Low,Master,Caregiver/Home,4.05,94,268,18,121,4.0,7.600503916041014,3.097488132489784,7.093357303296108,9.0,4.995511514530647,7.8,28.0,1,Tablet,80.0,36.68415185296776
+5,26,Female,Europe,Lower-Mid,Bachelor,Full-time Employee,13.07,199,91,147,60,1.0,5.197962143808271,2.786098466055896,7.028125485306799,15.0,9.448757290004147,4.2,70.0,1,Android,65.29930112427833,48.4
+6,37,Female,Middle East,Upper-Mid,Bachelor,Caregiver/Home,4.59,73,198,9,85,0.0,10.945226162648847,2.797043847701924,7.954749715454075,4.0,1.3170610240985463,10.0,64.0,0,Android,63.0,21.2
+7,18,Female,Europe,Lower-Mid,High School,Unemployed_Looking,4.95,119,553,61,188,4.0,8.422325191079652,3.06511831938304,7.510411738119959,1.0,9.923969314465092,7.7,15.0,0,iPhone,81.0,32.8
+8,33,Female,Europe,Upper-Mid,Master,Full-time Employee,6.55,82,184,48,155,3.0,6.295213014211736,2.9523063893081094,4.64684906066567,8.0,1.0,8.6,70.0,0,Tablet,73.0,25.7
+9,43,Female,South America,Lower-Mid,PhD,Full-time Employee,8.05,155,309,16,116,4.0,9.698407146278884,3.065844303103937,7.6150050676287,18.0,2.8660012980489773,8.3,53.0,0,Android,60.0,39.9
+10,41,Female,Asia,Low,High School,Full-time Employee,2.33,38,110,249,155,5.0,9.72271969916111,3.187426003154164,5.586164212581286,0.0,1.976406835980132,9.2,73.0,0,iPhone,70.0,10.8

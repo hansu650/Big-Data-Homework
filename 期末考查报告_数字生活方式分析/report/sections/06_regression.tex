@@ -1,0 +1,18 @@
+\section{回归实验：效率表现预测}
+
+\subsection{任务设定}
+
+回归目标为 \texttt{productivity\_score}。实验使用数字行为与生活习惯变量预测效率表现，并保存模型评价指标与预测结果。
+
+\subsection{模型与指标}
+
+基线模型包括 Linear Regression、Ridge Regression、Random Forest Regressor 和 Gradient Boosting Regressor。评价指标包括 MAE、RMSE 与 $R^2$。
+
+\placeholdertext{Table placeholder: results/regression\_productivity\_metrics.csv}
+
+\maybefigure{regression_productivity_observed_vs_predicted.png}{效率分数真实值与预测值对比}{fig:regression-prediction}
+
+\maybefigure{regression_productivity_residuals.png}{效率预测残差图}{fig:regression-residuals}
+
+\maybefigure{regression_productivity_permutation_importance.png}{回归任务置换重要性}{fig:regression-importance}
+

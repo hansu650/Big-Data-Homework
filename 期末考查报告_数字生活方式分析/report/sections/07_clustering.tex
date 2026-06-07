@@ -1,0 +1,16 @@
+\section{聚类实验：数字生活方式用户画像}
+
+\subsection{任务设定}
+
+聚类任务仅使用数字行为与生活习惯变量，不使用身心风险或效率结果变量。聚类完成后，再将 \texttt{high\_risk\_flag}、\texttt{productivity\_score} 等结果变量用于画像解释。
+
+\subsection{模型与指标}
+
+使用 KMeans 对 $k=2$ 到 $k=6$ 进行比较，评价指标包括 Silhouette、Calinski-Harabasz、Davies-Bouldin 与 Inertia。
+
+\placeholdertext{Table placeholder: results/clustering\_kmeans\_scores.csv and results/clustering\_lifestyle\_profiles.csv}
+
+\maybefigure{clustering_kmeans_selection.png}{KMeans 聚类数量选择}{fig:clustering-selection}
+
+\maybefigure{clustering_lifestyle_pca.png}{生活方式聚类 PCA 投影}{fig:clustering-pca}
+

@@ -1,0 +1,10 @@
+excluded_column,reason
+anxiety_score,specified leakage/outcome column
+depression_score,specified leakage/outcome column
+digital_dependence_score,specified leakage/outcome column
+focus_score,specified leakage/outcome column
+happiness_score,specified leakage/outcome column
+high_risk_flag,classification target
+id,identifier
+productivity_score,specified leakage/outcome column
+stress_level,specified leakage/outcome column

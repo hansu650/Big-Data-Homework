@@ -1,0 +1,12 @@
+\section{数据预处理与特征工程}
+
+预处理步骤包括字段一致性检查、缺失值统计、数值特征标准化、类别特征独热编码，以及基于数字行为和生活习惯的派生特征构造。
+
+\subsection{派生特征}
+
+派生特征包括社交媒体小时数、学习小时数、单位设备使用时长通知数、单位设备使用时长解锁数、设备使用与睡眠时长比值、运动睡眠交互项等。分类任务中的派生特征仅来自非泄漏的数字行为与生活习惯变量。
+
+\subsection{目标泄漏控制}
+
+预测 \texttt{high\_risk\_flag} 时，主模型不使用 \texttt{anxiety\_score}、\texttt{depression\_score}、\texttt{stress\_level}、\texttt{happiness\_score}、\texttt{focus\_score}、\texttt{productivity\_score} 和 \texttt{digital\_dependence\_score}。
+

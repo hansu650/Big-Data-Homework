@@ -1,0 +1,60 @@
+\documentclass[UTF8,a4paper,12pt]{ctexart}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.6cm,bottom=2.6cm}
+\graphicspath{{../figures/}{figures/}}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+\newcommand{\placeholdertext}[1]{%
+  \begin{center}
+  \fbox{\parbox{0.88\linewidth}{\centering #1}}
+  \end{center}
+}
+
+\newcommand{\maybefigure}[3]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{../figures/#1}{\includegraphics[width=0.88\linewidth]{../figures/#1}}{\placeholdertext{Figure placeholder: #1}}
+    \caption{#2}
+    \label{#3}
+  \end{figure}
+}
+
+\title{数字生活方式对身心风险与效率表现的影响分析\\
+\large 基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究}
+\author{姓名：\underline{\hspace{4cm}} \quad 学号：\underline{\hspace{4cm}}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本文档目前为期末考查报告的 LaTeX 骨架。正式实验结论将在运行 notebooks 并得到真实 CSV 与图表结果后补充。
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\input{sections/01_introduction}
+\input{sections/02_dataset}
+\input{sections/03_preprocessing}
+\input{sections/04_eda}
+\input{sections/05_classification}
+\input{sections/06_regression}
+\input{sections/07_clustering}
+\input{sections/08_discussion}
+\input{sections/09_conclusion_reflection}
+\input{sections/appendix_code}
+
+\end{document}
+

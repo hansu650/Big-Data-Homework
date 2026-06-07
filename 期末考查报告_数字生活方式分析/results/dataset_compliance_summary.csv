@@ -1,0 +1,10 @@
+item,value
+dataset_name,2025 Digital Lifestyle Benchmark Dataset
+source_page,https://huggingface.co/datasets/tarekmasryo/digital-lifestyle-benchmark-dataset
+canonical_csv,https://huggingface.co/datasets/tarekmasryo/digital-lifestyle-benchmark-dataset/resolve/main/data/digital_lifestyle_benchmark_2025.csv
+license,"CC BY 4.0, according to the Hugging Face dataset card"
+row_count,3500
+column_count,24
+random_state,42
+cpu_only,True
+deep_learning,False
