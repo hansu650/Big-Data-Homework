@@ -1,0 +1,62 @@
+\chapter{方法设计与实验实现}
+
+\section{总体技术路线}
+
+本文技术路线遵循“数据合规性检查--预处理与特征工程--探索性分析--监督学习建模--无监督画像--结果归档”的顺序。图 \ref{fig:analysis-pipeline-diagram} 用流程图概括整体路径。
+
+\begin{figure}[H]
+\centering
+\fbox{
+\begin{minipage}{0.88\linewidth}
+\centering
+数据集选择与合规性检查
+$\rightarrow$ 数据质量检查
+$\rightarrow$ 特征工程与特征筛选
+$\rightarrow$ EDA 可视化
+$\rightarrow$ 分类/回归建模
+$\rightarrow$ 聚类与 PCA 画像
+$\rightarrow$ 图表、CSV 与 LaTeX 报告归档
+\end{minipage}
+}
+\caption{总体数据分析技术路线}
+\label{fig:analysis-pipeline-diagram}
+\end{figure}
+
+\section{工程结构与核心文件组织}
+
+项目采用 notebooks、src、scripts、results、figures 和 report/overleaf 包分离的方式组织，便于复现实验与撰写报告。图 \ref{fig:project-structure-diagram} 展示了核心目录职责。
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{p{0.28\linewidth}p{0.58\linewidth}}
+\toprule
+目录 & 作用 \\
+\midrule
+\texttt{data/} & 保存原始数据与处理后数据，不在 Stage 5 中修改。\\
+\texttt{notebooks/} & 记录数据选择、EDA、分类、回归、聚类和结果汇总过程。\\
+\texttt{src/} & 保存配置、数据工具、特征工程、可视化和模型评估函数。\\
+\texttt{scripts/} & 保存证据增强、检查和报告辅助脚本。\\
+\texttt{results/} & 保存所有 CSV、Markdown 和文本结果，是报告指标来源。\\
+\texttt{figures/} & 保存 EDA、模型评估、聚类和 PCA 图片。\\
+\texttt{overleaf\_final/} & 保存可上传 Overleaf 的自包含 LaTeX 编译包。\\
+\bottomrule
+\end{tabular}
+\caption{项目工程目录与核心文件组织}
+\label{fig:project-structure-diagram}
+\end{figure}
+
+\section{分类建模流程}
+
+分类任务以 \texttt{high\_risk\_flag} 为目标。建模时先完成目标泄漏字段排除，再将数据划分为训练集、验证集和测试集。模型包括 Logistic Regression、Random Forest 和 Gradient Boosting，并使用 StratifiedKFold 进行交叉验证和超参数搜索。阈值选择不直接使用测试集，而是在验证集上比较默认阈值、最大 F1 阈值和不同 Recall 约束下的策略，最终在测试集上报告一次结果。
+
+\section{回归建模流程}
+
+回归任务分为两个目标：\texttt{digital\_dependence\_score} 和 \texttt{productivity\_score}。两者使用相同的特征控制原则，即不使用 \texttt{high\_risk\_flag}、心理状态结果字段以及另一个 outcome 目标变量。模型包括 Linear Regression、Ridge、RandomForestRegressor 和 GradientBoostingRegressor。最终评价指标包括 $R^2$、MSE、RMSE 和 MAE。
+
+\section{聚类画像流程}
+
+聚类任务不使用监督标签训练，只使用数字行为与生活习惯数值特征，并在建模前进行 StandardScaler 标准化。KMeans 测试 $k=2$ 到 $k=8$，并与 AgglomerativeClustering、GaussianMixture 进行比较。聚类完成后，再用 \texttt{high\_risk\_flag}、\texttt{productivity\_score}、\texttt{digital\_dependence\_score} 和背景变量进行画像解释。
+
+\section{实验复现与结果文件组织}
+
+实验使用 CPU 环境，主要依赖 Python、pandas、numpy、scipy、matplotlib 和 scikit-learn。所有随机过程统一设置 \texttt{random\_state=42}。模型指标来自 \texttt{results/} 目录中的 CSV 或文本文件，图片来自 \texttt{figures/}。Stage 5 只重构 LaTeX 报告结构和 Overleaf 编译包，不新增实验、不重跑模型，也不修改任何核心 CSV 指标。

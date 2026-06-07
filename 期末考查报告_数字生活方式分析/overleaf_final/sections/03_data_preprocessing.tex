@@ -1,0 +1,48 @@
+\chapter{数据集与预处理}
+
+\section{数据集来源与合规性说明}
+
+本文使用 2025 Digital Lifestyle Benchmark Dataset。该数据集以 CSV 形式提供，包含 3500 条记录和 24 个字段，支持分类、回归和聚类等任务。表 \ref{tab:dataset-compliance} 给出数据集合规性摘要。数据集为合成数据，适合课程教学、benchmark 和 EDA 场景，但不适合直接外推到真实医学诊断或个体健康判定。
+
+\input{tables/dataset_compliance_summary}
+
+在数据集选择阶段，本文没有采用 \texttt{pfm\_train.csv}/\texttt{pfm\_test.csv}。原因是该员工离职类数据与前序实验主题相似度较高，且来源年份与课程要求中的 2024--2025 更新约束不如当前数据集清晰。Digital Lifestyle 数据集更贴合数字生活方式主题，并自然支持本报告设置的分类、回归与聚类任务。
+
+\section{字段含义与任务变量设计}
+
+原始字段覆盖人口背景、设备使用、生活习惯和结果变量四类信息。人口背景包括年龄、性别、地区、收入、教育、日常角色和设备类型；设备使用包括每日设备时长、手机解锁次数、通知数量、社交媒体使用时间等；生活习惯包括学习时间、身体活动天数、睡眠时长和睡眠质量；结果变量包括高风险标记、生产力得分、数字依赖得分以及若干心理状态相关字段。
+
+本文据此设计三类任务：分类任务预测 \texttt{high\_risk\_flag}；回归任务以 \texttt{digital\_dependence\_score} 为主线，同时检验 \texttt{productivity\_score} 的可预测性；聚类任务只基于数字行为与生活习惯数值特征形成用户画像。
+
+\section{数据质量检查}
+
+预处理质量检查结果见表 \ref{tab:preprocessing-quality}。原始数据共 3500 条记录、24 个字段，缺失值总数为 0，重复行数量为 0，重复 id 数量为 0。关键数值字段的范围检查均通过，包括年龄、设备时长、解锁次数、通知数、社交媒体时长、学习时长、身体活动天数、睡眠时长、睡眠质量、生产力得分和数字依赖得分。检查后未发现需要删除的记录。
+
+\input{tables/preprocessing_quality_check_compact}
+
+\section{特征工程与特征筛选}
+
+特征工程主要从行为变量中派生比例和交互特征，包括 \texttt{social\_media\_hours}、\texttt{study\_hours}、\texttt{notifications\_per\_device\_hour}、\texttt{unlocks\_per\_device\_hour}、\texttt{device\_to\_sleep\_ratio}、\texttt{activity\_sleep\_interaction} 和 \texttt{social\_to\_study\_ratio}。这些特征用于补充原始时长和计数字段，使模型能捕捉单位设备时长下的通知或解锁压力，以及设备使用与睡眠、活动之间的相对关系。
+
+为防止目标泄漏，分类任务排除所有身心结果变量、效率变量、数字依赖变量和 id；回归任务排除 \texttt{high\_risk\_flag}、心理状态结果字段和另一个 outcome 目标变量；聚类任务使用显式白名单，只包含数字行为与生活习惯数值特征。
+
+\begin{lstlisting}[language=Python,caption={任务级特征排除逻辑示意},label={lst:feature-selection}]
+CLASSIFICATION_LEAKAGE = [
+    "anxiety_score", "depression_score", "stress_level",
+    "happiness_score", "focus_score", "productivity_score",
+    "digital_dependence_score", "high_risk_flag", "id"
+]
+
+CLUSTERING_FEATURES = [
+    "device_hours_per_day", "phone_unlocks", "notifications_per_day",
+    "social_media_mins", "study_mins", "physical_activity_days",
+    "sleep_hours", "sleep_quality", "social_media_hours",
+    "study_hours", "notifications_per_device_hour",
+    "unlocks_per_device_hour", "device_to_sleep_ratio",
+    "activity_sleep_interaction", "social_to_study_ratio"
+]
+\end{lstlisting}
+
+\section{探索性统计与变量分布}
+
+探索性统计用于在建模前理解类别比例、数值变量分布和变量相关性。本文将主要 EDA 图放在第 5 章结果分析中集中解释，附录保留数值变量直方图和行为变量-结果变量关系图。这样的组织方式可以避免数据预处理章节过长，同时让读者在结果章节中同时看到可视化证据和模型指标。

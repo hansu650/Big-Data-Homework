@@ -1,14 +1,17 @@
 \begin{table}[H]
 \centering
-\caption{不同聚类算法的最佳结果对比}
+\caption{聚类算法与簇数对比摘要}
 \label{tab:clustering-model-comparison}
-\begin{tabular}{lrrrrr}
+\begin{tabular}{lrrrr}
 \toprule
-算法 & $k$ & Inertia & Silhouette & Calinski-Harabasz & Davies-Bouldin \\
+算法 & $k$ & Silhouette & Calinski-Harabasz & Davies-Bouldin \\
 \midrule
-agglomerative & 3 & -- & 0.1518 & 495.8938 & 1.8768 \\
-gaussian\_mixture & 2 & -- & 0.1478 & 650.8461 & 2.1599 \\
-kmeans & 3 & 38902.0591 & 0.1860 & 611.1770 & 1.7959 \\
+KMeans & 2 & 0.1808 & 752.8023 & 1.9065 \\
+KMeans & 3 & 0.1860 & 611.1770 & 1.7959 \\
+KMeans & 4 & 0.1406 & 546.4364 & 1.9615 \\
+Agglomerative & 3 & 0.1518 & 495.8938 & 1.8768 \\
+GaussianMixture & 2 & 0.1478 & 650.8461 & 2.1599 \\
+GaussianMixture & 4 & 0.1225 & 408.1725 & 2.2266 \\
 \bottomrule
 \end{tabular}
 \end{table}

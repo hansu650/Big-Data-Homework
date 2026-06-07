@@ -1,21 +1,21 @@
 \begin{table}[H]
 \centering
-\caption{预处理质量检查精简汇总}
-\label{tab:preprocessing-quality-check}
-\begin{tabular}{ll}
+\caption{预处理质量检查摘要}
+\label{tab:preprocessing-quality}
+\begin{tabular}{p{0.36\linewidth}p{0.20\linewidth}p{0.32\linewidth}}
 \toprule
-检查项 & 结果 \\
+检查项 & 检查结果 & 处理策略 \\
 \midrule
-原始样本量 & 3500 \\
-原始字段数 & 24 \\
-缺失值总数 & 0 \\
-重复行数量 & 0 \\
-重复 \texttt{id} 数量 & 0 \\
-关键数值字段范围检查 & 未发现需删除记录 \\
-工程特征生成 & 7 个派生特征均成功生成 \\
-分类特征控制 & 排除目标列、心理状态、效率和数字依赖字段 \\
-回归特征控制 & 排除 \texttt{high\_risk\_flag} 与其他 outcome 字段 \\
-聚类特征控制 & 仅使用数字行为与生活习惯数值特征 \\
+原始样本量 & 3500 & 未删除记录 \\
+原始字段数 & 24 & 未删除字段 \\
+缺失值总数 & 0 & 无需删除，建模管道保留缺失处理能力 \\
+重复行数量 & 0 & 无需删除 \\
+重复 id 数量 & 0 & 无需删除 \\
+关键数值字段合理范围 & 全部通过 & 检查后未发现需删除记录 \\
+工程特征生成 & 7 个特征全部生成 & 用于补充行为比例和交互信息 \\
+分类泄漏字段排除 & 通过 & 排除 outcome 字段与 id \\
+回归 outcome 控制 & 通过 & 排除 \texttt{high\_risk\_flag} 和其他结果变量 \\
+聚类输入控制 & 通过 & 仅使用行为与生活习惯数值特征 \\
 \bottomrule
 \end{tabular}
 \end{table}

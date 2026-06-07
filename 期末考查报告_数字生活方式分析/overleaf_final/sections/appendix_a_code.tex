@@ -1,0 +1,38 @@
+\chapter{核心代码}
+
+本附录说明报告涉及的核心代码结构。完整代码位于项目根目录的 \texttt{notebooks/}、\texttt{src/} 和 \texttt{scripts/}，正文只保留少量关键片段，避免用大段代码替代方法解释。
+
+\section{核心源文件功能}
+
+\begin{itemize}
+  \item \texttt{src/config.py}：配置路径、随机种子、目标变量、泄漏字段、聚类输入白名单和输出目录。
+  \item \texttt{src/data\_utils.py}：负责数据下载、读取、合规性检查和数据摘要输出。
+  \item \texttt{src/feature\_engineering.py}：负责工程特征生成、任务级特征筛选和预处理管道构造。
+  \item \texttt{src/model\_utils.py}：封装分类、回归、聚类评估指标和结果保存函数。
+  \item \texttt{src/visualization.py}：绘制 EDA 图、模型评估图、聚类画像图和 PCA 图。
+  \item \texttt{scripts/stage2\_5\_evidence\_enhancement.py}：生成预处理质量检查、PCA 解释方差和报告图表筛选清单。
+\end{itemize}
+
+\section{核心流程片段}
+
+\begin{lstlisting}[language=Python,caption={实验随机性与 CPU 传统机器学习约束示意},label={lst:random-state}]
+RANDOM_STATE = 42
+
+models = {
+    "logistic_regression": LogisticRegression(max_iter=2000),
+    "random_forest": RandomForestClassifier(random_state=RANDOM_STATE),
+    "gradient_boosting": GradientBoostingClassifier(random_state=RANDOM_STATE),
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={阈值选择流程示意},label={lst:threshold-selection}]
+threshold_candidates = [
+    ("default_0_50", 0.50),
+    ("max_f1", best_f1_threshold),
+    ("recall_at_least_60_best_precision", recall60_threshold),
+    ("recall_at_least_70_best_precision", recall70_threshold),
+]
+
+# Thresholds are selected on validation data.
+# The test set is evaluated once after the threshold is fixed.
+\end{lstlisting}

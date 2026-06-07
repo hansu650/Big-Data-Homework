@@ -2,13 +2,13 @@
 \centering
 \caption{两个回归目标的最佳模型对比}
 \label{tab:regression-target-comparison}
-\resizebox{\textwidth}{!}{
+\resizebox{\linewidth}{!}{
 \begin{tabular}{llrrrrr}
 \toprule
 目标变量 & 最佳模型 & MAE & MSE & RMSE & $R^2$ & CV 最优 $R^2$ \\
 \midrule
-productivity\_score & gradient\_boosting & 7.1671 & 85.2031 & 9.2306 & -0.0041 & 0.0119 \\
-digital\_dependence\_score & gradient\_boosting & 0.9982 & 3.1471 & 1.7740 & 0.9839 & 0.9804 \\
+\texttt{productivity\_score} & Gradient Boosting & 7.1671 & 85.2031 & 9.2306 & -0.0041 & 0.0119 \\
+\texttt{digital\_dependence\_score} & Gradient Boosting & 0.9982 & 3.1471 & 1.7740 & 0.9839 & 0.9804 \\
 \bottomrule
 \end{tabular}
 }

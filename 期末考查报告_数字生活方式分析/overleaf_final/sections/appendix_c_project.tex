@@ -1,0 +1,41 @@
+\chapter{项目链接与运行说明}
+
+\section{GitHub 仓库地址}
+
+项目代码与报告文件保存在 GitHub 仓库：
+\url{https://github.com/hansu650/Big-Data-Homework}
+
+本报告对应项目目录为：
+\texttt{期末考查报告\_数字生活方式分析/}。
+
+\section{环境安装}
+
+建议使用课程环境或本地 Python 环境安装依赖：
+
+\begin{lstlisting}[language=bash,caption={环境安装命令示意},label={lst:install}]
+pip install -r requirements.txt
+\end{lstlisting}
+
+若使用本机已有 conda 环境，可先进入项目目录后运行 notebook 或脚本。所有实验使用 CPU，不依赖 GPU。
+
+\section{Notebook 执行顺序}
+
+\begin{enumerate}
+  \item \texttt{notebooks/00\_dataset\_selection\_and\_compliance.ipynb}
+  \item \texttt{notebooks/01\_data\_preprocessing\_and\_eda.ipynb}
+  \item \texttt{notebooks/02\_classification\_high\_risk.ipynb}
+  \item \texttt{notebooks/03\_regression\_productivity.ipynb}
+  \item \texttt{notebooks/04\_clustering\_lifestyle\_profiles.ipynb}
+  \item \texttt{notebooks/05\_result\_summary\_for\_report.ipynb}
+\end{enumerate}
+
+\section{关键脚本与 Overleaf 包}
+
+证据增强脚本可重新生成预处理质量检查、PCA 解释方差和报告图表筛选清单：
+
+\begin{lstlisting}[language=bash,caption={Stage 2.5 证据增强脚本},label={lst:stage25}]
+python scripts/stage2_5_evidence_enhancement.py
+\end{lstlisting}
+
+最终 Overleaf 编译包位于：
+\texttt{期末考查报告\_数字生活方式分析/overleaf\_final/}。上传该目录到 Overleaf 后，选择 XeLaTeX 编译即可。最终提交时建议同时提交 \texttt{main.pdf} 与完整项目代码目录或仓库链接，以满足完整代码附录要求。

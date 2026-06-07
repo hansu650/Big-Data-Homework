@@ -1,4 +1,4 @@
-\documentclass[UTF8,a4paper,12pt]{ctexart}
+\documentclass[UTF8,a4paper,12pt,openany]{ctexrep}
 
 \usepackage{geometry}
 \usepackage{graphicx}
@@ -11,10 +11,35 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 \geometry{left=2.5cm,right=2.5cm,top=2.6cm,bottom=2.6cm}
 \graphicspath{{figures/}}
-\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue, hypertexnames=false}
+
+\ctexset{
+  chapter = {
+    name = {},
+    number = \arabic{chapter},
+    aftername = \quad,
+    format = \centering\zihao{3}\bfseries,
+    beforeskip = 12pt,
+    afterskip = 18pt
+  },
+  section = {
+    format = \zihao{4}\bfseries
+  },
+  subsection = {
+    format = \zihao{-4}\bfseries
+  }
+}
+
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+\renewcommand{\thetable}{\thechapter-\arabic{table}}
+\renewcommand{\theequation}{\thechapter-\arabic{equation}}
+\captionsetup{font=small,labelsep=quad}
+
 \lstset{
   basicstyle=\ttfamily\footnotesize,
   breaklines=true,
@@ -25,6 +50,10 @@
   keepspaces=true,
   showstringspaces=false
 }
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.2em}
+\linespread{1.25}
 \setlength{\emergencystretch}{3em}
 \sloppy
 
@@ -37,39 +66,45 @@
 \newcommand{\maybefigure}[3]{%
   \begin{figure}[H]
     \centering
-    \IfFileExists{figures/#1}{\includegraphics[width=0.88\linewidth]{figures/#1}}{\missingartifacttext{Figure file unavailable: #1}}
+    \IfFileExists{figures/#1}{\includegraphics[width=0.88\linewidth]{figures/#1}}{\missingartifacttext{图像文件占位：#1}}
     \caption{#2}
     \label{#3}
   \end{figure}
 }
 
-\title{数字生活方式下的高风险识别、数字依赖预测与用户画像分析\\
-\large ——基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究}
-\author{姓名：\underline{\hspace{4cm}} \quad 学号：\underline{\hspace{4cm}}}
-\date{\today}
-
 \begin{document}
 \input{sections/00_cover}
 
-\begin{abstract}
-本文基于 2025 Digital Lifestyle Benchmark Dataset，分析数字设备使用、社交媒体、通知、睡眠与活动习惯的建模价值。数据集包含 3500 条记录和 24 个字段，为合成基准数据，本文结论仅用于课程建模和行为分析，不用于医学诊断。研究设置三类任务：分类任务预测 \texttt{high\_risk\_flag} 以进行高风险筛查；回归任务以 \texttt{digital\_dependence\_score} 为主线，并保留 \texttt{productivity\_score} 作为弱预测/负结果；聚类任务基于数字行为与生活习惯形成探索性画像。结果显示，分类最终采用 Gradient Boosting，threshold=0.14 时测试集 Recall=0.6420、F1=0.5355、PR-AUC=0.5084；数字依赖预测 $R^2=0.9839$、MSE=3.1471、MAE=0.9982；生产力得分预测 $R^2=-0.0041$；KMeans $k=3$ 的 Silhouette=0.1860，聚类仅作探索性画像。
-\end{abstract}
+\pagenumbering{Roman}
+\chapter*{摘 要}
+\addcontentsline{toc}{chapter}{摘 要}
+本文基于 2025 Digital Lifestyle Benchmark Dataset，围绕数字设备使用、社交媒体、通知暴露、睡眠、学习与身体活动等变量，开展数字生活方式下的高风险识别、数字依赖预测与用户画像分析。数据集包含 3500 条记录和 24 个字段，为合成教学与基准数据，本文所有结论仅用于《大数据分析与应用》课程建模训练和行为数据分析，不用于医学诊断或自动化干预。
 
-\noindent\textbf{关键词：}数字生活方式；高风险识别；数字依赖预测；机器学习；聚类画像；大数据分析
+研究设置三类任务：第一，分类任务以 \texttt{high\_risk\_flag} 为目标，在严格排除心理状态、效率得分和数字依赖得分等潜在泄漏字段后进行高风险数字生活方式筛查；第二，回归任务以 \texttt{digital\_dependence\_score} 为主线，同时保留 \texttt{productivity\_score} 作为弱预测与负结果对照；第三，聚类任务只使用数字行为与生活习惯数值特征，构建探索性用户画像。实验均使用 CPU 环境下的 Python、pandas、numpy、scipy、matplotlib 与 scikit-learn 实现，随机过程统一设置 \texttt{random\_state=42}。
 
-\newpage
+已有实验结果显示，分类任务最终采用 Gradient Boosting 并选择 threshold=0.14 的偏召回筛查策略，测试集 Recall=0.6420、F1=0.5355、PR-AUC=0.5084；数字依赖回归的最佳模型为 Gradient Boosting，测试集 $R^2=0.9839$、MSE=3.1471、MAE=0.9982；生产力得分预测 $R^2=-0.0041$，说明在当前可观测特征下不宜得出强预测结论；KMeans 在 $k=3$ 时 Silhouette=0.1860，聚类结果仅用于探索性画像，不代表天然清晰人群边界。
+
+\noindent\textbf{关键词：} 数字生活方式；高风险识别；数字依赖预测；机器学习；聚类画像；大数据分析
+
+\clearpage
 \tableofcontents
-\newpage
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \input{sections/01_introduction}
-\input{sections/02_dataset}
-\input{sections/03_preprocessing}
-\input{sections/04_eda}
-\input{sections/05_classification}
-\input{sections/06_regression}
-\input{sections/07_clustering}
-\input{sections/08_discussion}
-\input{sections/09_conclusion_reflection}
-\input{sections/appendix_code}
+\input{sections/02_theory}
+\input{sections/03_data_preprocessing}
+\input{sections/04_method_design}
+\input{sections/05_results_analysis}
+\input{sections/06_conclusion_outlook}
+\input{sections/references}
+
+\appendix
+\input{sections/appendix_a_code}
+\input{sections/appendix_b_independence}
+\input{sections/appendix_c_project}
+\input{sections/appendix_d_supplement}
 
 \end{document}
