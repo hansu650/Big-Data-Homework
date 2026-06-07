@@ -1,25 +1,39 @@
-\section{分类实验：高风险用户预测}
+\section{分类实验：高风险数字生活方式筛查}
 
-\subsection{任务设定}
+本章的目的在于回答 Q1：在排除明显泄漏字段后，模型能否对 \texttt{high\_risk\_flag} 进行有参考价值的筛查。由于该任务涉及“高风险”标签，本文不将模型表述为诊断工具，而将其定位为课程实验中的风险筛查模型。
 
-分类目标为 \texttt{high\_risk\_flag}。模型输入排除全部指定泄漏列，并使用训练集/测试集划分评估模型泛化表现。
+\subsection{任务设定与模型}
 
-\subsection{模型、调参与指标}
+分类目标为 \texttt{high\_risk\_flag}。输入特征排除了 \texttt{id}、目标列以及 \texttt{anxiety\_score}、\texttt{depression\_score}、\texttt{stress\_level}、\texttt{happiness\_score}、\texttt{focus\_score}、\texttt{productivity\_score}、\texttt{digital\_dependence\_score} 等字段。这样做的原因是这些变量与风险标签或结果状态高度接近，若直接作为输入，会使模型在测试集中表现得过于乐观。
 
-模型包括 Logistic Regression、Random Forest 和 Gradient Boosting。第二阶段补充 GridSearchCV/RandomizedSearchCV 调参，评价指标包括 Accuracy、Precision、Recall、F1、Balanced Accuracy、ROC-AUC 与 PR-AUC。
+候选模型包括 Logistic Regression、Random Forest 和 Gradient Boosting。调参使用 5 折交叉验证，其中分类交叉验证采用 StratifiedKFold，以保持每折中高风险样本比例相对稳定。评价指标包括 Accuracy、Precision、Recall、F1、ROC-AUC、PR-AUC、Balanced Accuracy 和混淆矩阵。
 
-\placeholdertext{Table placeholder: report/tables/classification\_tuned\_metrics.tex}
+\subsection{调参与阈值选择}
 
-\subsection{阈值调优}
+表 \ref{tab:classification-threshold-tuning} 展示验证集上的阈值调优结果。默认阈值 0.50 的 Precision 较高，但 Recall 较低；当阈值降低时，模型会识别出更多高风险样本，但误报数量也会上升。本文最终采用验证集中 “Recall 至少达到 0.60 且 Precision 相对较优” 的策略，对应 Gradient Boosting 和 threshold=0.14。选择该策略的原因是高风险筛查不能只追求总体准确率，需要在漏判和误报之间做明确权衡。
 
-\placeholdertext{Table placeholder: report/tables/classification\_threshold\_tuning.tex}
+\input{tables/classification_threshold_tuning}
+
+\subsection{测试集表现}
+
+表 \ref{tab:classification-tuned-metrics} 给出 Gradient Boosting 在测试集不同阈值策略下的表现。最终策略 threshold=0.14 时，测试集 Precision=0.4593、Recall=0.6420、F1=0.5355、PR-AUC=0.5084、ROC-AUC=0.7531、Balanced Accuracy=0.7259。与默认阈值相比，该策略牺牲了一部分 Precision，但显著提高了高风险样本召回率，更符合筛查任务的解释口径。
+
+\input{tables/classification_tuned_metrics}
+
+图 \ref{fig:classification-threshold-metrics} 直观比较了不同阈值策略下的指标变化。该图说明分类模型本身输出的是概率，最终业务策略并不必然固定在 0.50 阈值。阈值越低，模型越倾向于把样本判为高风险，因此 Recall 可能提高，但 Precision 会下降。
 
 \maybefigure{classification_tuned_metrics_comparison.png}{分类阈值策略指标对比}{fig:classification-threshold-metrics}
 
+图 \ref{fig:classification-confusion} 为最终阈值下的混淆矩阵。测试集中实际非高风险样本中有 566 个被正确识别，133 个被误判为高风险；实际高风险样本中有 113 个被识别，63 个被漏判。这个结果说明模型具有一定筛查能力，但仍存在误报和漏判，因此不能替代人工复核或专业判断。
+
 \maybefigure{classification_final_confusion_matrix.png}{最终分类模型混淆矩阵}{fig:classification-confusion}
 
-\maybefigure{classification_roc_curve.png}{最终分类模型 ROC 曲线}{fig:classification-roc}
+图 \ref{fig:classification-pr} 和图 \ref{fig:classification-roc} 分别展示 Precision-Recall 曲线和 ROC 曲线。由于高风险样本比例约为 20.14\%，PR-AUC 对少数类识别更敏感；ROC-AUC 则从整体排序能力角度评价概率输出。本文同时报告两类曲线，是为了避免只用单一指标评价筛查模型。
 
 \maybefigure{classification_precision_recall_curve.png}{最终分类模型 Precision-Recall 曲线}{fig:classification-pr}
 
-\maybefigure{classification_permutation_importance.png}{分类任务置换重要性}{fig:classification-importance}
+\maybefigure{classification_roc_curve.png}{最终分类模型 ROC 曲线}{fig:classification-roc}
+
+\subsection{分类结果解释}
+
+综合来看，Gradient Boosting 在调参后被选为最终概率模型，threshold=0.14 的策略使 Recall 达到 0.6420，说明模型能识别出约六成以上的测试集高风险样本。但 Precision=0.4593 也说明被判为高风险的样本中存在较多误报。因此，本报告将其解释为“可辅助筛查”的模型，而不是“可独立判定风险状态”的模型。

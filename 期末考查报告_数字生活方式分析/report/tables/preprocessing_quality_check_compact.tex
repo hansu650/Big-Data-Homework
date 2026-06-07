@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering
+\caption{预处理质量检查精简汇总}
+\label{tab:preprocessing-quality-check}
+\begin{tabular}{ll}
+\toprule
+检查项 & 结果 \\
+\midrule
+原始样本量 & 3500 \\
+原始字段数 & 24 \\
+缺失值总数 & 0 \\
+重复行数量 & 0 \\
+重复 \texttt{id} 数量 & 0 \\
+关键数值字段范围检查 & 未发现需删除记录 \\
+工程特征生成 & 7 个派生特征均成功生成 \\
+分类特征控制 & 排除目标列、心理状态、效率和数字依赖字段 \\
+回归特征控制 & 排除 \texttt{high\_risk\_flag} 与其他 outcome 字段 \\
+聚类特征控制 & 仅使用数字行为与生活习惯数值特征 \\
+\bottomrule
+\end{tabular}
+\end{table}

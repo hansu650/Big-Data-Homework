@@ -1,9 +1,10 @@
-\begin{table}
-\caption{Productivity score regression metrics}
+\begin{table}[H]
+\centering
+\caption{\texttt{productivity\_score} 回归模型测试集指标}
 \label{tab:regression-productivity-metrics}
 \begin{tabular}{lrrrrr}
 \toprule
-model & cv\_best\_r2 & mae & mse & rmse & r2 \\
+模型 & CV 最优 $R^2$ & MAE & MSE & RMSE & $R^2$ \\
 \midrule
 gradient\_boosting & 0.0119 & 7.1671 & 85.2031 & 9.2306 & -0.0041 \\
 random\_forest & 0.0072 & 7.2088 & 85.9208 & 9.2693 & -0.0125 \\

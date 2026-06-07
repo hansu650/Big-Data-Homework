@@ -10,12 +10,21 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{array}
 
 \geometry{left=2.5cm,right=2.5cm,top=2.6cm,bottom=2.6cm}
 \graphicspath{{../figures/}{figures/}}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false
+}
 
-\newcommand{\placeholdertext}[1]{%
+\newcommand{\missingartifacttext}[1]{%
   \begin{center}
   \fbox{\parbox{0.88\linewidth}{\centering #1}}
   \end{center}
@@ -24,7 +33,7 @@
 \newcommand{\maybefigure}[3]{%
   \begin{figure}[H]
     \centering
-    \IfFileExists{../figures/#1}{\includegraphics[width=0.88\linewidth]{../figures/#1}}{\placeholdertext{Figure placeholder: #1}}
+    \IfFileExists{../figures/#1}{\includegraphics[width=0.88\linewidth]{../figures/#1}}{\missingartifacttext{Missing figure: #1}}
     \caption{#2}
     \label{#3}
   \end{figure}
@@ -36,11 +45,13 @@
 \date{\today}
 
 \begin{document}
-\maketitle
+\input{sections/00_cover}
 
 \begin{abstract}
-本文档目前为期末考查报告的 LaTeX 骨架。正式实验结论将在运行 notebooks 并得到真实 CSV 与图表结果后补充。
+本文基于 2025 Digital Lifestyle Benchmark Dataset，分析数字设备使用、社交媒体、通知、睡眠与活动习惯的建模价值。数据集包含 3500 条记录和 24 个字段，为合成基准数据，本文结论仅用于课程建模和行为分析，不用于医学诊断。研究设置三类任务：分类任务预测 \texttt{high\_risk\_flag} 以进行高风险筛查；回归任务以 \texttt{digital\_dependence\_score} 为主线，并保留 \texttt{productivity\_score} 作为弱预测/负结果；聚类任务基于数字行为与生活习惯形成探索性画像。结果显示，分类最终采用 Gradient Boosting，threshold=0.14 时测试集 Recall=0.6420、F1=0.5355、PR-AUC=0.5084；数字依赖预测 $R^2=0.9839$、MSE=3.1471、MAE=0.9982；生产力得分预测 $R^2=-0.0041$；KMeans $k=3$ 的 Silhouette=0.1860，聚类仅作探索性画像。
 \end{abstract}
+
+\noindent\textbf{关键词：}数字生活方式；高风险识别；数字依赖预测；机器学习；聚类画像；大数据分析
 
 \tableofcontents
 \newpage

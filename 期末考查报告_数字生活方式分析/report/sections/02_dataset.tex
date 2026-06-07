@@ -1,17 +1,21 @@
-\section{数据集说明}
+\section{数据集选择与合规性说明}
 
-本研究优先使用 2025 Digital Lifestyle Benchmark Dataset。数据集下载、许可与字段合规检查由 \texttt{notebooks/00\_dataset\_selection\_and\_compliance.ipynb} 完成，并将检查结果保存到 \texttt{results/} 目录。
+本章的目的在于说明数据集来源、规模、字段结构和使用限制。课程要求数据集来自公开数据平台、具备足够样本量和字段数，并能自然支持至少两类机器学习任务。本文最终采用 2025 Digital Lifestyle Benchmark Dataset，原因是该数据集直接围绕数字生活方式主题构建，字段覆盖设备使用、睡眠活动、心理状态、高风险标签、生产力得分和数字依赖得分，能够支持分类、回归与聚类三类任务。
 
-\subsection{数据来源}
+\subsection{数据来源与基本信息}
 
-\begin{itemize}
-  \item 数据集页面：\url{https://huggingface.co/datasets/tarekmasryo/digital-lifestyle-benchmark-dataset}
-  \item 原始 CSV：\texttt{data/digital\_lifestyle\_benchmark\_2025.csv}
-  \item 本地路径：\texttt{data/raw/digital\_lifestyle\_benchmark\_2025.csv}
-\end{itemize}
+本文数据来源于 Hugging Face 数据集页面，数据格式为 CSV。表 \ref{tab:dataset-compliance-summary} 汇总了数据集的合规性信息。根据 \texttt{results/dataset\_compliance\_summary.csv}，该数据集共有 3500 条记录、24 个字段，许可证记录为 CC BY 4.0，实验设置为 CPU only 且不使用深度学习。
 
-数据集为合成教学/基准数据。正式报告中应明确说明：本文结论仅用于数字生活方式行为分析和机器学习建模练习，不用于医学诊断或个体健康决策。
+\input{tables/dataset_compliance_summary}
 
-\subsection{字段概览}
+该数据集为合成数据，适合用于 benchmark、课程实验、EDA 和机器学习流程训练。由于数据不是来自真实医疗或临床追踪场景，本文只讨论数字生活方式变量与建模目标之间的统计关系和预测表现，不将其解释为真实世界中的医学诊断证据。
 
-\placeholdertext{Table placeholder: dataset schema and missing-value summary from results/dataset_schema_check.csv and results/missing_value_summary.csv}
+\subsection{字段与任务适配性}
+
+数据字段包括人口背景变量、数字行为变量、生活习惯变量和结果变量。例如，数字行为字段包含 \texttt{device\_hours\_per\_day}、\texttt{phone\_unlocks}、\texttt{notifications\_per\_day}、\texttt{social\_media\_mins}；生活习惯字段包含 \texttt{study\_mins}、\texttt{physical\_activity\_days}、\texttt{sleep\_hours}、\texttt{sleep\_quality}。结果变量包括 \texttt{high\_risk\_flag}、\texttt{productivity\_score} 和 \texttt{digital\_dependence\_score}。
+
+这些字段使数据集能够自然对应本文三类任务：\texttt{high\_risk\_flag} 可作为二分类目标，\texttt{digital\_dependence\_score} 和 \texttt{productivity\_score} 可作为回归目标，数字行为和生活习惯字段可作为聚类输入。这样的任务结构比单一监督学习数据集更适合期末综合报告。
+
+\subsection{备选数据集未采用原因}
+
+前期曾考虑使用 \texttt{pfm\_train.csv} 和 \texttt{pfm\_test.csv}。但该数据集来源和发布时间不如本项目最终采用的数据集稳定，且任务形式与实验三中的员工离职预测较为相似，难以体现本次课程报告的独立主题和综合建模设计。相比之下，2025 Digital Lifestyle Benchmark Dataset 与“数字生活方式”主题更贴合，也更容易在同一数据框架下组织分类、回归和聚类实验。

@@ -1,12 +1,13 @@
-\begin{table}
-\caption{Best clustering result by algorithm}
+\begin{table}[H]
+\centering
+\caption{不同聚类算法的最佳结果对比}
 \label{tab:clustering-model-comparison}
 \begin{tabular}{lrrrrr}
 \toprule
-algorithm & k & inertia & silhouette & calinski\_harabasz & davies\_bouldin \\
+算法 & $k$ & Inertia & Silhouette & Calinski-Harabasz & Davies-Bouldin \\
 \midrule
-agglomerative & 3 & NaN & 0.1518 & 495.8938 & 1.8768 \\
-gaussian\_mixture & 2 & NaN & 0.1478 & 650.8461 & 2.1599 \\
+agglomerative & 3 & -- & 0.1518 & 495.8938 & 1.8768 \\
+gaussian\_mixture & 2 & -- & 0.1478 & 650.8461 & 2.1599 \\
 kmeans & 3 & 38902.0591 & 0.1860 & 611.1770 & 1.7959 \\
 \bottomrule
 \end{tabular}
