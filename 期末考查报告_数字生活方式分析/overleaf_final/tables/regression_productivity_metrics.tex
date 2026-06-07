@@ -1,0 +1,15 @@
+\begin{table}[H]
+\centering
+\caption{\texttt{productivity\_score} 回归模型测试集指标}
+\label{tab:regression-productivity-metrics}
+\begin{tabular}{lrrrrr}
+\toprule
+模型 & CV 最优 $R^2$ & MAE & MSE & RMSE & $R^2$ \\
+\midrule
+gradient\_boosting & 0.0119 & 7.1671 & 85.2031 & 9.2306 & -0.0041 \\
+random\_forest & 0.0072 & 7.2088 & 85.9208 & 9.2693 & -0.0125 \\
+ridge & 0.0043 & 7.1747 & 85.5884 & 9.2514 & -0.0086 \\
+linear\_regression & 0.0002 & 7.1999 & 85.8232 & 9.2641 & -0.0114 \\
+\bottomrule
+\end{tabular}
+\end{table}

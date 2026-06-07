@@ -1,0 +1,43 @@
+\section{聚类实验：数字生活方式用户画像分析}
+
+本章的目的在于回答 Q4：在不使用结果变量参与训练的情况下，能否仅根据数字行为与生活习惯形成具有解释价值的用户画像。聚类结果不代表人群天然存在严格边界，而是对生活方式模式进行探索性总结。
+
+\subsection{聚类输入与标准化}
+
+聚类输入只包含 15 个数字行为与生活习惯数值特征：\texttt{device\_hours\_per\_day}、\texttt{phone\_unlocks}、\texttt{notifications\_per\_day}、\texttt{social\_media\_mins}、\texttt{study\_mins}、\texttt{physical\_activity\_days}、\texttt{sleep\_hours}、\texttt{sleep\_quality} 及相关工程特征。训练阶段不使用 \texttt{id}、人口背景类别变量、设备类别变量、\texttt{high\_risk\_flag}、\texttt{digital\_dependence\_score}、\texttt{productivity\_score} 或心理状态字段。
+
+不同输入特征量纲差异较大，例如通知数、分钟数和睡眠质量的尺度不同，因此聚类前使用 StandardScaler 标准化。这样做可以避免某些数值范围较大的变量在距离计算中占据不合理优势。
+
+\subsection{算法对比与簇数选择}
+
+本文比较了 KMeans、AgglomerativeClustering 和 GaussianMixture。表 \ref{tab:clustering-model-comparison} 显示，KMeans 在 $k=3$ 时取得最高 Silhouette=0.1860，Calinski-Harabasz=611.1770，Davies-Bouldin=1.7959。虽然该结果是三类算法中相对最优，但 Silhouette 低于 0.20，说明聚类结构并不强，不能解释为自然清晰分群。
+
+\input{tables/clustering_model_comparison}
+
+图 \ref{fig:clustering-elbow} 展示 KMeans 肘部法则。随着 $k$ 增加，Inertia 持续下降，这是 KMeans 的常见现象；因此不能只依赖 Inertia 选择簇数，还需要结合 Silhouette 和画像可解释性。
+
+\maybefigure{clustering_kmeans_elbow.png}{KMeans 肘部法则图}{fig:clustering-elbow}
+
+图 \ref{fig:clustering-silhouette} 展示不同算法和簇数下的轮廓系数。KMeans 的 $k=3$ 在本实验中最高，但数值只有 0.1860，进一步说明聚类边界偏弱。本报告后续仅将其作为探索性画像，而不把簇解释为严格、稳定的人群分类。
+
+\maybefigure{clustering_silhouette_by_k.png}{不同聚类算法与簇数的轮廓系数}{fig:clustering-silhouette}
+
+\subsection{PCA 可视化与解释方差}
+
+图 \ref{fig:pca-explained-variance} 展示了基于聚类同一组标准化特征的 PCA 累计解释方差。根据 \texttt{results/pca\_explained\_variance.csv}，前 2 个主成分累计解释方差约为 0.4241，前 5 个主成分约为 0.7895，前 8 个主成分约为 0.9509。PCA 在本文中主要用于降维可视化和辅助理解，不作为分类或回归模型输入，也不用于因果解释。
+
+\maybefigure{pca_explained_variance.png}{PCA 累计解释方差曲线}{fig:pca-explained-variance}
+
+图 \ref{fig:clustering-pca} 将 KMeans 聚类结果投影到 PCA 二维空间。由于前两个主成分并不能解释全部信息，二维图只能帮助观察簇的大致相对位置，不能作为判断聚类边界清晰的唯一依据。
+
+\maybefigure{clustering_lifestyle_pca.png}{生活方式聚类 PCA 投影}{fig:clustering-pca}
+
+\subsection{用户画像解释}
+
+表 \ref{tab:clustering-profiles-compact} 给出三类聚类画像的精简结果。Cluster 0 的社交媒体使用时长均值最高，约为 430.21 分钟/天，可命名为“高社交媒体使用型”；Cluster 1 的设备使用时长最高，约为 11.05 小时/天，数字依赖得分均值为 51.24，高风险比例为 0.3725，可命名为“高设备依赖型”；Cluster 2 的设备使用时长较低、睡眠时长和睡眠质量较高，高风险比例为 0.1142，可命名为“低负荷均衡型”。
+
+\input{tables/clustering_lifestyle_profiles_compact}
+
+图 \ref{fig:clustering-profile-heatmap} 用标准化均值热力图展示各簇的行为特征差异。该图的作用是帮助读者快速比较不同画像在设备使用、社交媒体、睡眠和活动变量上的相对强弱。由于 Silhouette=0.1860，画像名称应被理解为便于讨论的解释标签，而不是严格人群边界。
+
+\maybefigure{clustering_lifestyle_profile_heatmap.png}{聚类画像标准化均值热力图}{fig:clustering-profile-heatmap}

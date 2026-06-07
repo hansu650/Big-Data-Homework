@@ -1,0 +1,15 @@
+\begin{table}[H]
+\centering
+\caption{\texttt{digital\_dependence\_score} 回归模型测试集指标}
+\label{tab:regression-digital-dependence-metrics}
+\begin{tabular}{lrrrrr}
+\toprule
+模型 & CV 最优 $R^2$ & MAE & MSE & RMSE & $R^2$ \\
+\midrule
+gradient\_boosting & 0.9804 & 0.9982 & 3.1471 & 1.7740 & 0.9839 \\
+ridge & 0.9692 & 0.7652 & 3.6541 & 1.9116 & 0.9813 \\
+linear\_regression & 0.9692 & 0.7651 & 3.6538 & 1.9115 & 0.9813 \\
+random\_forest & 0.9680 & 1.2680 & 4.3875 & 2.0946 & 0.9776 \\
+\bottomrule
+\end{tabular}
+\end{table}

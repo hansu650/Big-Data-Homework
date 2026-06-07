@@ -1,0 +1,37 @@
+\section{回归实验：数字依赖预测与生产力弱预测检验}
+
+本章的目的在于回答 Q2 和 Q3：当前特征能否稳定预测数字依赖程度，以及同样的特征是否也能稳定预测生产力得分。为了避免事后只呈现效果好的结果，本文同时保留两个回归目标，并明确将 \texttt{digital\_dependence\_score} 作为主线，将 \texttt{productivity\_score} 作为弱预测/负结果分析。
+
+\subsection{任务设定与模型}
+
+回归输入包括人口背景、数字行为、生活习惯和工程特征，但不使用 \texttt{high\_risk\_flag}、心理状态结果变量以及另一个 outcome 目标变量。模型包括 Linear Regression、Ridge Regression、Random Forest Regressor 和 Gradient Boosting Regressor。调参采用 5 折交叉验证，评价指标包括 $R^2$、MSE、RMSE 和 MAE。
+
+\subsection{\texttt{digital\_dependence\_score} 预测}
+
+表 \ref{tab:regression-digital-dependence-metrics} 展示数字依赖得分回归结果。最佳模型为 Gradient Boosting，测试集 $R^2=0.9839$、MSE=3.1471、RMSE=1.7740、MAE=0.9982。该结果说明，在当前合成数据设定下，数字依赖得分与设备使用时长、通知数量、手机解锁等变量之间存在很强的可预测关系。
+
+\input{tables/regression_digital_dependence_metrics}
+
+图 \ref{fig:regression-dependence-prediction} 展示真实值与预测值的关系。点云靠近对角线，说明模型预测值与真实数字依赖得分具有较高一致性。该图支持将 \texttt{digital\_dependence\_score} 作为回归主线，但仍不能被解释为数字行为对依赖程度的因果证明。
+
+\maybefigure{regression_digital_dependence_observed_vs_predicted.png}{数字依赖分数真实值与预测值对比}{fig:regression-dependence-prediction}
+
+图 \ref{fig:regression-dependence-importance} 给出置换重要性结果。根据数字依赖置换重要性 CSV，\texttt{device\_hours\_per\_day}、\texttt{notifications\_per\_day} 和 \texttt{phone\_unlocks} 排在前列。这与数字依赖得分的业务含义一致：设备使用、通知暴露和解锁频率更直接地反映数字设备依赖程度。
+
+\maybefigure{regression_digital_dependence_permutation_importance.png}{数字依赖回归任务置换重要性}{fig:regression-dependence-importance}
+
+\subsection{\texttt{productivity\_score} 弱预测结果}
+
+表 \ref{tab:regression-productivity-metrics} 展示生产力得分回归结果。最佳模型同样为 Gradient Boosting，但测试集 $R^2=-0.0041$、MSE=85.2031、RMSE=9.2306、MAE=7.1671。负的 $R^2$ 表示模型在测试集上的解释能力弱于简单预测均值，因此不能写成“数字生活方式可以有效预测生产力得分”。
+
+\input{tables/regression_productivity_metrics}
+
+该负结果具有报告价值。它说明同一组数字行为与生活习惯特征并不一定适合预测所有目标变量。生产力得分可能受未观测因素影响，也可能在该合成数据生成机制中与行为变量关系较弱。因此，本文将 \texttt{productivity\_score} 作为模型局限和目标可预测性差异的证据，而不是回避该结果。
+
+\subsection{回归目标对比}
+
+表 \ref{tab:regression-target-comparison} 和图 \ref{fig:regression-target-comparison} 汇总两个回归目标的最佳模型表现。对比结果非常清楚：\texttt{digital\_dependence\_score} 的 $R^2=0.9839$，而 \texttt{productivity\_score} 的 $R^2=-0.0041$。因此，正式报告正文以数字依赖预测为主线，生产力得分只作为辅助负结果分析。
+
+\input{tables/regression_target_comparison}
+
+\maybefigure{regression_target_comparison.png}{两个回归目标的最佳模型表现对比}{fig:regression-target-comparison}

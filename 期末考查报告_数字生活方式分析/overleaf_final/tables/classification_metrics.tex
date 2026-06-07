@@ -1,0 +1,15 @@
+\begin{table}
+\centering
+\caption{Current tuned classification test metrics}
+\label{tab:classification-metrics}
+\begin{tabular}{llrrrrrrr}
+\toprule
+            model &                  threshold\_policy &  threshold &  precision &  recall &     f1 &  roc\_auc &  pr\_auc &  balanced\_accuracy \\
+\midrule
+gradient\_boosting &                      default\_0\_50 &     0.5000 &     0.6812 &  0.2670 & 0.3837 &   0.7531 &  0.5084 &             0.6178 \\
+gradient\_boosting &                            max\_f1 &     0.3500 &     0.5957 &  0.4773 & 0.5300 &   0.7531 &  0.5084 &             0.6979 \\
+gradient\_boosting & recall\_at\_least\_60\_best\_precision &     0.1400 &     0.4593 &  0.6420 & 0.5355 &   0.7531 &  0.5084 &             0.7259 \\
+gradient\_boosting & recall\_at\_least\_70\_best\_precision &     0.1200 &     0.2536 &  0.7955 & 0.3846 &   0.7531 &  0.5084 &             0.6030 \\
+\bottomrule
+\end{tabular}
+\end{table}
