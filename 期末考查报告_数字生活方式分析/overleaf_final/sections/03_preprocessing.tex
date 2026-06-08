@@ -1,0 +1,78 @@
+\chapter{数据预处理}
+
+\section{原始数据读取与字段检查}
+
+本章对应课程评分标准中的“数据预处理”。原始数据以 CSV 文件形式读取，共 3500 行、24 个字段。读取后首先检查字段名称、字段类型、样本量和目标变量是否存在，确认分类目标 \texttt{high\_risk\_flag}、回归目标 \texttt{digital\_dependence\_score} 和 \texttt{productivity\_score} 均可用于后续建模。
+
+字段检查的目的，是保证后续模型输入、目标变量和报告指标具有一致的数据来源。本文没有在 Stage 6 中重新运行 notebook，也没有修改任何结果 CSV。
+
+\section{缺失值、重复值与异常值检查}
+
+预处理质量检查见表 \ref{tab:preprocessing-quality}。原始数据缺失值总数为 0，重复行数量为 0，重复 id 数量为 0。因此，本文不进行缺失行删除或重复行删除。模型管道仍保留必要的预处理能力，以保证复现实验时在数据变动情况下也能稳定运行。
+
+\input{tables/preprocessing_quality_check_compact}
+
+\section{数据合理性校验}
+
+本文对关键数值字段进行合理范围检查，包括 \texttt{age}、\texttt{device\_hours\_per\_day}、\texttt{phone\_unlocks}、\texttt{notifications\_per\_day}、\texttt{social\_media\_mins}、\texttt{study\_mins}、\texttt{physical\_activity\_days}、\texttt{sleep\_hours}、\texttt{sleep\_quality}、\texttt{productivity\_score} 和 \texttt{digital\_dependence\_score}。检查结果未发现需删除的严重异常记录，因此不进行样本删除。
+
+这一步的意义在于区分“极端值”和“明显不合理值”。例如设备时长、通知数量和社交媒体时长可能天然存在较大差异，但只要仍在合理范围内，就不应为了让数据更整齐而随意删除。
+
+\section{特征工程与特征提取}
+
+在原始行为变量基础上，本文生成以下工程特征：\texttt{social\_media\_hours}、\texttt{study\_hours}、\texttt{notifications\_per\_device\_hour}、\texttt{unlocks\_per\_device\_hour}、\texttt{device\_to\_sleep\_ratio}、\texttt{activity\_sleep\_interaction} 和 \texttt{social\_to\_study\_ratio}。这些特征用于补充“单位设备时长下的通知压力”“设备使用与睡眠的相对关系”“活动与睡眠交互”等信息。
+
+\begin{lstlisting}[language=Python,caption={特征工程函数片段},label={lst:feature-engineering}]
+df["social_media_hours"] = df["social_media_mins"] / 60.0
+df["study_hours"] = df["study_mins"] / 60.0
+df["notifications_per_device_hour"] = (
+    df["notifications_per_day"] / df["device_hours_per_day"].clip(lower=0.1)
+)
+df["unlocks_per_device_hour"] = (
+    df["phone_unlocks"] / df["device_hours_per_day"].clip(lower=0.1)
+)
+df["device_to_sleep_ratio"] = (
+    df["device_hours_per_day"] / df["sleep_hours"].clip(lower=0.1)
+)
+df["activity_sleep_interaction"] = (
+    df["physical_activity_days"] * df["sleep_hours"]
+)
+df["social_to_study_ratio"] = (
+    df["social_media_mins"] / df["study_mins"].clip(lower=1.0)
+)
+\end{lstlisting}
+
+\section{PCA 降维扩展与 LCA/GMM 说明}
+
+PCA 分析基于聚类使用的标准化数字行为与生活习惯数值特征。结果显示，前两个主成分累计解释约 42.41\% 方差，前五个主成分累计解释约 78.95\% 方差。本文将 PCA 用于聚类结果的降维可视化和辅助理解，不作为分类或回归模型输入，也不将 PCA 主成分解释为因果因素。
+
+本文未单独引入 LCA。原因是本报告聚类输入以连续型数字行为和生活习惯变量为主，而 LCA 更常用于类别型潜在类别分析。作为补充，本文采用 GaussianMixture 作为概率式聚类方法，用于近似刻画潜在群体结构，并与 KMeans 和层次聚类形成对比。
+
+\section{特征筛选与目标泄漏控制}
+
+目标泄漏控制是本文预处理阶段的重要步骤。分类任务预测 \texttt{high\_risk\_flag} 时，不使用 \texttt{anxiety\_score}、\texttt{depression\_score}、\texttt{stress\_level}、\texttt{happiness\_score}、\texttt{focus\_score}、\texttt{productivity\_score}、\texttt{digital\_dependence\_score}、\texttt{id} 和 \texttt{high\_risk\_flag} 作为输入特征。回归任务不使用 \texttt{high\_risk\_flag} 和其他 outcome 字段。聚类任务只使用数字行为与生活习惯数值特征，背景变量和结果变量仅用于聚类后的画像解释。
+
+\begin{lstlisting}[language=Python,caption={目标泄漏字段排除逻辑片段},label={lst:leakage-control}]
+HIGH_RISK_LEAKAGE_COLUMNS = [
+    "anxiety_score", "depression_score", "stress_level",
+    "happiness_score", "focus_score", "productivity_score",
+    "digital_dependence_score"
+]
+
+classification_drop = [
+    "id", "high_risk_flag", *HIGH_RISK_LEAKAGE_COLUMNS
+]
+
+clustering_features = [
+    "device_hours_per_day", "phone_unlocks", "notifications_per_day",
+    "social_media_mins", "study_mins", "physical_activity_days",
+    "sleep_hours", "sleep_quality", "social_media_hours",
+    "study_hours", "notifications_per_device_hour",
+    "unlocks_per_device_hour", "device_to_sleep_ratio",
+    "activity_sleep_interaction", "social_to_study_ratio"
+]
+\end{lstlisting}
+
+\section{预处理结果小结}
+
+预处理结果表明，原始数据质量较完整，缺失值、重复行和重复 id 均为 0，关键字段合理范围检查通过，工程特征全部生成。分类、回归和聚类任务分别完成了输入特征边界控制，为后续 EDA 和机器学习建模提供了可复现的数据基础。

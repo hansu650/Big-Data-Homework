@@ -1,0 +1,48 @@
+\chapter{自主选题与分析视角}
+
+\section{业务背景与问题来源}
+
+移动设备、社交媒体平台、在线学习工具和即时通知已经成为日常生活的重要组成部分。设备使用时长、通知数量、手机解锁次数、社交媒体使用时间、睡眠质量和身体活动频率等变量，可以从不同角度描述用户的数字生活方式。对这些变量进行系统分析，有助于理解数字行为数据如何支持风险筛查、数字依赖评估和生活方式管理。
+
+本文的分析目标不是证明数字行为对身心状态存在因果影响，而是在课程数据分析框架下，利用结构化表格数据完成数据预处理、探索性可视化、机器学习建模、模型评估和结果解释。报告中的“高风险”仅对应数据集中的 \texttt{high\_risk\_flag} 标签，不代表医学诊断。
+
+\section{报告题目与研究目标}
+
+本文题目为：《数字生活方式下的高风险识别、数字依赖预测与用户画像分析——基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究》。
+
+围绕该题目，本文设置四个研究目标：识别高风险数字生活方式；预测数字依赖程度；检验生产力得分是否能由当前可观测特征稳定预测；构建数字生活方式用户画像。四个目标分别对应分类、回归、负结果检验和聚类画像，能够覆盖课程要求中的多类机器学习任务。
+
+\section{分析视角与研究问题}
+
+本文从四个层面组织分析。行为层关注 \texttt{device\_hours\_per\_day}、\texttt{notifications\_per\_day}、\texttt{phone\_unlocks}、\texttt{social\_media\_mins} 和 \texttt{study\_mins}；生活层关注 \texttt{sleep\_hours}、\texttt{sleep\_quality} 和 \texttt{physical\_activity\_days}；结果层关注 \texttt{high\_risk\_flag}、\texttt{digital\_dependence\_score} 和 \texttt{productivity\_score}；方法层对应分类、回归和聚类。
+
+据此形成以下研究问题：能否在控制目标泄漏后筛查高风险数字生活方式；能否稳定预测数字依赖程度；生产力得分是否能被当前特征有效预测；数字行为和生活习惯能否形成可解释的用户画像。
+
+\section{本文主要工作与技术路线}
+
+本文主要工作包括：
+
+\begin{enumerate}
+  \item 完成合规公开数据集筛选，并说明弃用 \texttt{pfm\_train.csv}/\texttt{pfm\_test.csv} 的原因。
+  \item 完成缺失值、重复值、合理范围、工程特征和目标泄漏控制等数据预处理工作。
+  \item 完成目标变量分布、数值变量相关性、风险组差异、类别风险率和行为变量关系等 EDA 与可视化分析。
+  \item 构建分类、回归、聚类三类机器学习实验，完成调参、阈值选择和模型评估。
+  \item 形成高风险筛查、数字依赖预测和数字生活方式画像结论，并说明结果边界和合成数据限制。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\fbox{
+\begin{minipage}{0.88\linewidth}
+\centering
+数据集筛选
+$\rightarrow$ 数据预处理
+$\rightarrow$ EDA 可视化
+$\rightarrow$ 分类、回归、聚类建模
+$\rightarrow$ 指标评估与结果解释
+$\rightarrow$ 报告与代码归档
+\end{minipage}
+}
+\caption{本文技术路线}
+\label{fig:theme-pipeline}
+\end{figure}

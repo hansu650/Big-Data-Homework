@@ -1,0 +1,37 @@
+\chapter{结果文件与图表清单}
+
+\section{结果文件说明}
+
+项目的核心结果保存在 \texttt{results/} 目录中。正文只引用精简表，完整 CSV 作为电子附录保留。
+
+\begin{itemize}
+  \item \texttt{dataset\_compliance\_summary.csv}：数据集合规性摘要。
+  \item \texttt{preprocessing\_quality\_check.csv}：预处理质量检查。
+  \item \texttt{classification\_cv\_results.csv}：分类调参完整结果。
+  \item \texttt{classification\_tuned\_metrics.csv}：分类测试集阈值策略指标。
+  \item \texttt{classification\_threshold\_tuning.csv}：验证集阈值选择结果。
+  \item \texttt{regression\_target\_comparison.csv}：两个回归目标对比。
+  \item \texttt{regression\_digital\_dependence\_metrics.csv}：数字依赖回归指标。
+  \item \texttt{regression\_productivity\_metrics.csv}：生产力弱预测指标。
+  \item \texttt{clustering\_model\_comparison.csv}：聚类算法和簇数对比。
+  \item \texttt{clustering\_lifestyle\_profiles.csv}：完整聚类画像表。
+  \item \texttt{pca\_explained\_variance.csv}：PCA 解释方差表。
+\end{itemize}
+
+\section{图表文件说明}
+
+主要图表保存在 \texttt{figures/} 目录中，包括 EDA 图、分类评估图、回归评估图、聚类图和 PCA 图。最终报告引用的图片已复制到 \texttt{overleaf\_final/figures/}，用于 Overleaf 自包含编译。
+
+\section{补充图表}
+
+图 \ref{fig:appendix-productivity-prediction} 展示生产力得分真实值与预测值对比，作为弱预测结果的补充证据。图 \ref{fig:appendix-classification-importance} 展示分类任务置换重要性，用于辅助理解分类模型主要依赖的输入变量。
+
+\maybefigure{regression_productivity_observed_vs_predicted.png}{生产力得分真实值与预测值对比}{fig:appendix-productivity-prediction}
+
+\maybefigure{classification_permutation_importance.png}{分类任务置换重要性}{fig:appendix-classification-importance}
+
+\section{PCA 解释方差表}
+
+表 \ref{tab:pca-explained-variance} 列出前 10 个主成分的解释方差比例。PCA 仅用于聚类可视化和辅助理解，不作为分类或回归模型输入。
+
+\input{tables/pca_explained_variance_compact}

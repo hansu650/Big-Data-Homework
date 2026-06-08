@@ -78,11 +78,11 @@
 \pagenumbering{Roman}
 \chapter*{摘 要}
 \addcontentsline{toc}{chapter}{摘 要}
-本文基于 2025 Digital Lifestyle Benchmark Dataset，围绕数字设备使用、社交媒体、通知暴露、睡眠、学习与身体活动等变量，开展数字生活方式下的高风险识别、数字依赖预测与用户画像分析。数据集包含 3500 条记录和 24 个字段，为合成教学与基准数据，本文所有结论仅用于《大数据分析与应用》课程建模训练和行为数据分析，不用于医学诊断或自动化干预。
+本文按照《大数据分析与应用》课程考查报告评分标准，围绕数据集自主选取、自主选题、数据预处理、探索性分析、机器学习建模、报告代码组织和结论反思七个方面展开。研究基于 2025 Digital Lifestyle Benchmark Dataset，数据集包含 3500 条记录和 24 个字段，为 CSV 结构化表格数据，来源于 Hugging Face，能够支持分类、回归和聚类任务。该数据为合成教学与 benchmark 数据，本文所有结论仅用于课程建模训练和数字生活方式行为分析，不用于医学诊断、个体健康判断或自动化干预。
 
-研究设置三类任务：第一，分类任务以 \texttt{high\_risk\_flag} 为目标，在严格排除心理状态、效率得分和数字依赖得分等潜在泄漏字段后进行高风险数字生活方式筛查；第二，回归任务以 \texttt{digital\_dependence\_score} 为主线，同时保留 \texttt{productivity\_score} 作为弱预测与负结果对照；第三，聚类任务只使用数字行为与生活习惯数值特征，构建探索性用户画像。实验均使用 CPU 环境下的 Python、pandas、numpy、scipy、matplotlib 与 scikit-learn 实现，随机过程统一设置 \texttt{random\_state=42}。
+本文的主题为“数字生活方式下的高风险识别、数字依赖预测与用户画像分析”。在数据预处理阶段，完成缺失值、重复值、id 重复、关键数值字段合理范围和工程特征生成检查；在特征筛选阶段，分类任务严格排除 \texttt{anxiety\_score}、\texttt{depression\_score}、\texttt{stress\_level}、\texttt{happiness\_score}、\texttt{focus\_score}、\texttt{productivity\_score} 和 \texttt{digital\_dependence\_score} 等 outcome 字段，回归和聚类任务也分别控制目标泄漏和输入范围。探索性分析从目标变量分布、数值变量相关性、风险组差异、类别变量风险率和行为变量关系等角度展开。
 
-已有实验结果显示，分类任务最终采用 Gradient Boosting 并选择 threshold=0.14 的偏召回筛查策略，测试集 Recall=0.6420、F1=0.5355、PR-AUC=0.5084；数字依赖回归的最佳模型为 Gradient Boosting，测试集 $R^2=0.9839$、MSE=3.1471、MAE=0.9982；生产力得分预测 $R^2=-0.0041$，说明在当前可观测特征下不宜得出强预测结论；KMeans 在 $k=3$ 时 Silhouette=0.1860，聚类结果仅用于探索性画像，不代表天然清晰人群边界。
+已有实验结果显示，分类任务最终采用 Gradient Boosting，并选择 threshold=0.14 的偏召回筛查策略，测试集 Recall=0.6420、F1=0.5355、PR-AUC=0.5084；回归任务以 \texttt{digital\_dependence\_score} 为主线，最佳模型测试集 $R^2=0.9839$、MSE=3.1471、MAE=0.9982，而 \texttt{productivity\_score} 的 $R^2=-0.0041$，作为弱预测/负结果分析；聚类任务在数字行为与生活习惯数值特征上比较 KMeans、层次聚类和 GaussianMixture，最终采用 KMeans $k=3$，Silhouette=0.1860，仅作为探索性用户画像。
 
 \noindent\textbf{关键词：} 数字生活方式；高风险识别；数字依赖预测；机器学习；聚类画像；大数据分析
 
@@ -93,18 +93,19 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
-\input{sections/01_introduction}
-\input{sections/02_theory}
-\input{sections/03_data_preprocessing}
-\input{sections/04_method_design}
-\input{sections/05_results_analysis}
-\input{sections/06_conclusion_outlook}
+\input{sections/01_dataset_selection}
+\input{sections/02_research_theme}
+\input{sections/03_preprocessing}
+\input{sections/04_eda_visualization}
+\input{sections/05_modeling_evaluation}
+\input{sections/06_report_code_structure}
+\input{sections/07_conclusion_reflection}
 \input{sections/references}
 
 \appendix
 \input{sections/appendix_a_code}
-\input{sections/appendix_b_independence}
-\input{sections/appendix_c_project}
-\input{sections/appendix_d_supplement}
+\input{sections/appendix_b_reproducibility}
+\input{sections/appendix_c_artifacts}
+\input{sections/appendix_d_independence}
 
 \end{document}

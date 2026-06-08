@@ -1,20 +1,20 @@
 \begin{table}[H]
 \centering
-\caption{数据集合规性摘要}
+\caption{最终数据集与课程要求逐项对照}
 \label{tab:dataset-compliance}
-\begin{tabular}{p{0.32\linewidth}p{0.55\linewidth}}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{p{0.25\linewidth}p{0.44\linewidth}p{0.16\linewidth}}
 \toprule
-检查项 & 结果 \\
+课程要求 & Digital Lifestyle Benchmark Dataset (2025) 情况 & 是否满足 \\
 \midrule
-数据集名称 & 2025 Digital Lifestyle Benchmark Dataset \\
-来源页面 & \url{https://huggingface.co/datasets/tarekmasryo/digital-lifestyle-benchmark-dataset} \\
-文件格式 & CSV \\
-样本量 & 3500 \\
-字段数 & 24 \\
-许可说明 & CC BY 4.0（依据数据集页面说明） \\
-随机种子 & 42 \\
-计算环境 & CPU only \\
-深度学习 & False \\
+来源平台 & Hugging Face 公开数据集页面 & 满足 \\
+发布时间/更新年份 & 2025 年数据集 & 满足 \\
+文件格式 & CSV 结构化表格数据 & 满足 \\
+样本量 & 3500 行，满足不少于 1000 行要求 & 满足 \\
+有效特征数 & 24 个字段，满足不少于 8 个有效特征要求 & 满足 \\
+任务支持 & 支持 \texttt{high\_risk\_flag} 分类、\texttt{digital\_dependence\_score} 回归和生活方式聚类 & 满足 \\
+数据性质 & 合成教学/benchmark 数据，结论需谨慎解释，不用于医学诊断 & 满足课程建模用途 \\
 \bottomrule
 \end{tabular}
+}
 \end{table}

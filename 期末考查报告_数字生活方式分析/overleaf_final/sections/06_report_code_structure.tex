@@ -1,0 +1,54 @@
+\chapter{报告架构与代码规范呈现}
+
+\section{项目目录与工程结构}
+
+本章对应课程评分标准中的“报告架构与代码规范呈现”。本文按标准数据分析流程组织项目：明确分析目标，介绍数据集，完成数据预处理，进行统计分析与可视化，开展机器学习建模调参与评估，解释结果，最后完成总结反思和复现归档。
+
+\begin{figure}[H]
+\centering
+\begin{tabular}{p{0.28\linewidth}p{0.58\linewidth}}
+\toprule
+目录 & 作用 \\
+\midrule
+\texttt{data/} & 保存原始数据与处理后数据。\\
+\texttt{notebooks/} & 保存数据选择、预处理、EDA、分类、回归、聚类和结果汇总 notebook。\\
+\texttt{src/} & 保存配置、数据工具、特征工程、模型评估和可视化函数。\\
+\texttt{scripts/} & 保存证据增强和报告辅助脚本。\\
+\texttt{figures/} & 保存 EDA、模型评估、聚类和 PCA 图片。\\
+\texttt{results/} & 保存分类、回归、聚类、EDA、PCA 和预处理检查结果。\\
+\texttt{overleaf\_final/} & 保存最终 LaTeX 源码、表格、图片和 PDF。\\
+\bottomrule
+\end{tabular}
+\caption{项目目录结构与文件职责}
+\label{fig:project-structure-rubric}
+\end{figure}
+
+\section{Notebook 与 Python 源码组织}
+
+Notebook 执行顺序如下：\texttt{00\_dataset\_selection\_and\_compliance.ipynb}、\texttt{01\_data\_preprocessing\_and\_eda.ipynb}、\texttt{02\_classification\_high\_risk.ipynb}、\texttt{03\_regression\_productivity.ipynb}、\texttt{04\_clustering\_lifestyle\_profiles.ipynb}、\texttt{05\_result\_summary\_for\_report.ipynb}。这样的顺序保证数据合规性、预处理、可视化、模型训练和结果汇总之间具有清晰依赖关系。
+
+Python 源码组织包括：\texttt{src/config.py} 用于配置随机种子、路径和目标变量；\texttt{src/data\_utils.py} 用于数据读取和合规性检查；\texttt{src/feature\_engineering.py} 用于工程特征和特征筛选；\texttt{src/model\_utils.py} 用于模型评估；\texttt{src/visualization.py} 用于图表绘制。
+
+\section{核心代码片段与说明}
+
+正文只展示关键代码片段，完整代码保存在项目目录。下面的片段展示了模型训练中统一随机种子和传统机器学习模型的组织方式。
+
+\begin{lstlisting}[language=Python,caption={模型配置与随机种子片段},label={lst:model-config}]
+RANDOM_STATE = 42
+
+classifiers = {
+    "logistic_regression": LogisticRegression(max_iter=2000),
+    "random_forest": RandomForestClassifier(random_state=RANDOM_STATE),
+    "gradient_boosting": GradientBoostingClassifier(random_state=RANDOM_STATE),
+}
+\end{lstlisting}
+
+\section{图表、结果文件与复现说明}
+
+所有结果文件均保存在 \texttt{results/} 中，包括分类调参结果、阈值选择结果、回归指标、聚类比较、PCA 解释方差和预处理质量检查。所有图表保存在 \texttt{figures/} 中，最终报告引用的图片已复制到 \texttt{overleaf\_final/figures/}。
+
+复现方式为：先运行 \texttt{pip install -r requirements.txt} 安装依赖，再按 notebook 顺序执行；若只需重新生成 Stage 2.5 证据增强结果，可运行 \texttt{python scripts/stage2\_5\_evidence\_enhancement.py}；最终报告在 Overleaf 中选择 XeLaTeX 编译 \texttt{main.tex}。
+
+\section{完整代码附录说明}
+
+完整 notebook、Python 源码、脚本和结果 CSV 不全部贴入正文，以避免报告正文被代码淹没。正文只保留与方法理解直接相关的片段，完整代码路径和运行说明见附录 A 与附录 B。

@@ -1,38 +1,37 @@
 \chapter{核心代码}
 
-本附录说明报告涉及的核心代码结构。完整代码位于项目根目录的 \texttt{notebooks/}、\texttt{src/} 和 \texttt{scripts/}，正文只保留少量关键片段，避免用大段代码替代方法解释。
+本附录对应正文第 6 章的代码规范说明。完整代码位于项目目录中的 \texttt{notebooks/}、\texttt{src/} 和 \texttt{scripts/}，此处只列出核心结构和关键片段。
 
-\section{核心源文件功能}
+\section{核心源码文件}
 
 \begin{itemize}
-  \item \texttt{src/config.py}：配置路径、随机种子、目标变量、泄漏字段、聚类输入白名单和输出目录。
-  \item \texttt{src/data\_utils.py}：负责数据下载、读取、合规性检查和数据摘要输出。
-  \item \texttt{src/feature\_engineering.py}：负责工程特征生成、任务级特征筛选和预处理管道构造。
-  \item \texttt{src/model\_utils.py}：封装分类、回归、聚类评估指标和结果保存函数。
-  \item \texttt{src/visualization.py}：绘制 EDA 图、模型评估图、聚类画像图和 PCA 图。
-  \item \texttt{scripts/stage2\_5\_evidence\_enhancement.py}：生成预处理质量检查、PCA 解释方差和报告图表筛选清单。
+  \item \texttt{src/config.py}：路径、随机种子、目标变量、泄漏字段和聚类输入白名单。
+  \item \texttt{src/data\_utils.py}：数据下载、读取、合规性检查和摘要输出。
+  \item \texttt{src/feature\_engineering.py}：工程特征生成、任务级特征筛选和预处理管道。
+  \item \texttt{src/model\_utils.py}：分类、回归、聚类评估指标与结果保存。
+  \item \texttt{src/visualization.py}：EDA、模型评估、聚类画像和 PCA 图绘制。
 \end{itemize}
 
-\section{核心流程片段}
+\section{核心代码片段}
 
-\begin{lstlisting}[language=Python,caption={实验随机性与 CPU 传统机器学习约束示意},label={lst:random-state}]
+\begin{lstlisting}[language=Python,caption={统一随机种子与模型配置},label={lst:appendix-random-state}]
 RANDOM_STATE = 42
 
-models = {
-    "logistic_regression": LogisticRegression(max_iter=2000),
-    "random_forest": RandomForestClassifier(random_state=RANDOM_STATE),
-    "gradient_boosting": GradientBoostingClassifier(random_state=RANDOM_STATE),
+regressors = {
+    "linear_regression": LinearRegression(),
+    "ridge": Ridge(),
+    "random_forest": RandomForestRegressor(random_state=RANDOM_STATE),
+    "gradient_boosting": GradientBoostingRegressor(random_state=RANDOM_STATE),
 }
 \end{lstlisting}
 
-\begin{lstlisting}[language=Python,caption={阈值选择流程示意},label={lst:threshold-selection}]
-threshold_candidates = [
-    ("default_0_50", 0.50),
-    ("max_f1", best_f1_threshold),
-    ("recall_at_least_60_best_precision", recall60_threshold),
-    ("recall_at_least_70_best_precision", recall70_threshold),
+\begin{lstlisting}[language=Python,caption={聚类输入白名单示意},label={lst:appendix-clustering-whitelist}]
+CLUSTERING_FEATURES = [
+    "device_hours_per_day", "phone_unlocks", "notifications_per_day",
+    "social_media_mins", "study_mins", "physical_activity_days",
+    "sleep_hours", "sleep_quality", "social_media_hours",
+    "study_hours", "notifications_per_device_hour",
+    "unlocks_per_device_hour", "device_to_sleep_ratio",
+    "activity_sleep_interaction", "social_to_study_ratio",
 ]
-
-# Thresholds are selected on validation data.
-# The test set is evaluated once after the threshold is fixed.
 \end{lstlisting}

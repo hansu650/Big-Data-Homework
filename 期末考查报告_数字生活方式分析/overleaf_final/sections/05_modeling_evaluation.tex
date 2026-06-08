@@ -1,0 +1,85 @@
+\chapter{机器学习建模、调参与模型评估}
+
+\section{实验设置与评价指标}
+
+本章对应课程评分标准中的“机器学习建模、调参与模型评估”。全部实验使用 Python、pandas、numpy、scipy、matplotlib 和 scikit-learn，在 CPU 环境下完成，不使用深度学习。随机过程统一设置 \texttt{random\_state=42}。监督学习任务使用训练/测试划分，训练阶段进行交叉验证和参数搜索，测试集只用于最终评估。
+
+分类任务评价指标包括 Accuracy、Precision、Recall、F1、混淆矩阵，并补充 ROC-AUC、PR-AUC 和 Balanced Accuracy。高风险筛查场景中，Recall 和 F1 比单纯 Accuracy 更重要。回归任务评价指标包括 $R^2$、MSE、MAE，并补充 RMSE。聚类任务使用肘部法则和 Silhouette，并补充 Calinski-Harabasz 和 Davies-Bouldin。
+
+\section{分类任务：高风险数字生活方式筛查}
+
+分类目标变量为 \texttt{high\_risk\_flag}。模型包括 Logistic Regression、Random Forest 和 Gradient Boosting。训练阶段使用 StratifiedKFold 交叉验证进行调参，随后在验证集上进行阈值选择。由于高风险筛查不能只追求 Accuracy，本文重点比较默认阈值、最大 F1 阈值、Recall 至少 0.60 和 Recall 至少 0.70 的策略。
+
+表 \ref{tab:classification-threshold-tuning} 给出验证集阈值调优结果，表 \ref{tab:classification-tuned-metrics} 给出测试集指标。最终采用 Gradient Boosting + threshold=0.14，在测试集上 Recall=0.6420、F1=0.5355、PR-AUC=0.5084。该策略属于偏召回的筛查策略，不能解释为医学诊断工具。
+
+\input{tables/classification_threshold_tuning}
+
+\input{tables/classification_tuned_metrics}
+
+图 \ref{fig:classification-metrics} 比较不同阈值策略的分类指标。默认阈值 0.50 的 Precision 较高但 Recall 较低；threshold=0.14 能识别更多高风险样本，但误报也会增加，这符合筛查模型在召回和精确率之间的权衡。
+
+\maybefigure{classification_tuned_metrics_comparison.png}{分类阈值策略指标对比}{fig:classification-metrics}
+
+图 \ref{fig:classification-confusion} 为最终阈值下的混淆矩阵。测试集中 $TN=566$、$FP=133$、$FN=63$、$TP=113$，说明模型能够召回一部分高风险样本，但仍然需要人工复核和谨慎解释。
+
+\maybefigure{classification_final_confusion_matrix.png}{最终分类混淆矩阵}{fig:classification-confusion}
+
+图 \ref{fig:classification-pr} 和图 \ref{fig:classification-roc} 分别展示 PR 曲线和 ROC 曲线。在高风险正类较少的情况下，PR-AUC 对正类识别能力更敏感；ROC-AUC 则用于补充观察整体排序能力。
+
+\maybefigure{classification_precision_recall_curve.png}{分类 Precision-Recall 曲线}{fig:classification-pr}
+
+\maybefigure{classification_roc_curve.png}{分类 ROC 曲线}{fig:classification-roc}
+
+\section{回归任务：数字依赖预测与生产力弱预测}
+
+回归任务以 \texttt{digital\_dependence\_score} 为主线，同时保留 \texttt{productivity\_score} 作为对照。表 \ref{tab:regression-target-comparison} 显示，数字依赖预测效果明显强于生产力预测。Gradient Boosting 在数字依赖目标上的测试集 $R^2=0.9839$、MSE=3.1471、MAE=0.9982；而生产力得分预测 $R^2=-0.0041$，说明当前特征对该目标解释能力弱。
+
+\input{tables/regression_target_comparison}
+
+\input{tables/regression_digital_dependence_metrics}
+
+图 \ref{fig:regression-target-comparison} 展示两个回归目标的指标差异，图 \ref{fig:regression-dd-observed} 展示数字依赖真实值与预测值对比。数字依赖预测中真实值与预测值接近对角线，说明数字行为变量对数字依赖分数具有较强表征能力。
+
+\maybefigure{regression_target_comparison.png}{两个回归目标预测效果对比}{fig:regression-target-comparison}
+
+\maybefigure{regression_digital_dependence_observed_vs_predicted.png}{数字依赖得分真实值与预测值对比}{fig:regression-dd-observed}
+
+图 \ref{fig:regression-dd-importance} 展示数字依赖预测的置换重要性。重要变量主要包括 \texttt{device\_hours\_per\_day}、\texttt{notifications\_per\_day} 和 \texttt{phone\_unlocks}，与数字依赖指标的含义一致。但强预测关系不等于因果关系，合成数据结果也不能直接外推到现实场景。
+
+\maybefigure{regression_digital_dependence_permutation_importance.png}{数字依赖预测置换重要性}{fig:regression-dd-importance}
+
+生产力弱预测结果见表 \ref{tab:regression-productivity}。负结果说明，同一套数字行为和生活习惯特征并不能稳定解释所有 outcome，报告中不能写成“数字生活方式可以有效预测生产力”。
+
+\input{tables/regression_productivity_metrics}
+
+\section{聚类任务：数字生活方式用户画像}
+
+聚类任务只使用数字行为与生活习惯数值特征，不使用人口背景类别和 outcome 字段训练。模型比较包括 KMeans、AgglomerativeClustering 和 GaussianMixture。表 \ref{tab:clustering-model-comparison} 显示，KMeans 在 $k=3$ 时 Silhouette=0.1860，结合可解释性作为最终画像方案。
+
+\input{tables/clustering_model_comparison}
+
+图 \ref{fig:clustering-elbow} 和图 \ref{fig:clustering-silhouette} 分别展示 KMeans 肘部曲线和不同算法/簇数的 Silhouette 对比。Silhouette 整体较低，说明分群边界偏弱，因此聚类仅用于探索性画像，不代表天然清晰人群边界。
+
+\maybefigure{clustering_kmeans_elbow.png}{KMeans 肘部曲线}{fig:clustering-elbow}
+
+\maybefigure{clustering_silhouette_by_k.png}{不同聚类算法与簇数的 Silhouette 对比}{fig:clustering-silhouette}
+
+图 \ref{fig:pca-explained-variance} 展示 PCA 累计解释方差，图 \ref{fig:clustering-pca} 展示聚类结果在前两个 PCA 维度上的投影。前两个主成分累计解释约 42.41\% 方差，PCA 仅用于可视化和辅助理解。
+
+\maybefigure{pca_explained_variance.png}{PCA 累计解释方差曲线}{fig:pca-explained-variance}
+
+\maybefigure{clustering_lifestyle_pca.png}{数字生活方式聚类的 PCA 可视化}{fig:clustering-pca}
+
+表 \ref{tab:clustering-profiles-compact} 和图 \ref{fig:clustering-heatmap} 总结三类画像：高社交媒体使用型、高设备依赖型和低负荷均衡型。这些名称只用于描述簇均值特征，不是固定人群标签。
+
+\input{tables/clustering_lifestyle_profiles_compact}
+
+\maybefigure{clustering_lifestyle_profile_heatmap.png}{聚类画像标准化特征热力图}{fig:clustering-heatmap}
+
+\section{模型结果综合分析}
+
+综合三类任务，分类模型可作为高风险初筛，但需要人工复核；数字依赖回归效果较好，是本文回归主线；生产力预测为弱预测/负结果，说明当前特征不足以稳定解释该目标；聚类画像具有解释价值，但 Silhouette 较低，边界不强。
+
+\section{业务场景解释与结果边界}
+
+本文结果可用于数字生活方式管理参考，例如关注设备使用时长、通知干扰、社交媒体使用、睡眠和身体活动平衡。分类结果只适合初筛，不应用于医学诊断、自动化惩罚或强制干预。由于数据为合成数据，所有结论都应作为课程建模和行为分析结果谨慎解释。

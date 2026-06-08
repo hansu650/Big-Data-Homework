@@ -1,0 +1,43 @@
+\chapter{探索性分析与数据可视化}
+
+\section{描述性统计分析}
+
+本章对应课程评分标准中的“探索性分析与数据可视化”。EDA 的目的，是在建模前理解变量分布、类别比例、变量相关性和风险组差异。数据中年龄范围为 13--50，设备使用时长范围约为 0.28--17.16 小时，睡眠时长范围约为 3.00--11.00 小时，\texttt{digital\_dependence\_score} 范围为 5.6--89.2，\texttt{productivity\_score} 范围为 33--95。这些变量范围与预处理质量检查结果一致。
+
+\section{目标变量分布分析}
+
+图 \ref{fig:eda-risk-distribution} 展示 \texttt{high\_risk\_flag} 的分布。高风险样本不是多数类，因此后续分类模型不能只依赖 Accuracy 评价。如果模型倾向预测低风险，可能得到较高准确率但漏掉大量真实高风险样本。
+
+\maybefigure{eda_high_risk_flag_distribution.png}{\texttt{high\_risk\_flag} 类别分布}{fig:eda-risk-distribution}
+
+\section{数值变量分布与相关性分析}
+
+图 \ref{fig:eda-numeric-histograms} 展示主要数值变量的分布。设备时长、通知数量、解锁次数和社交媒体使用时间反映数字行为差异；睡眠时长、睡眠质量和身体活动天数反映生活习惯差异；数字依赖和生产力得分则作为后续回归分析目标。
+
+\maybefigure{eda_numeric_histograms.png}{主要数值变量分布直方图}{fig:eda-numeric-histograms}
+
+图 \ref{fig:eda-correlation} 展示数值变量相关性。相关性热力图用于观察变量之间的线性关联和潜在冗余，例如部分数字行为变量与数字依赖得分之间存在较明显相关关系。需要强调，相关性不等于因果关系，图中的关系只能作为后续建模和解释的描述性证据。
+
+\maybefigure{eda_numeric_correlation_heatmap.png}{数值变量相关性热力图}{fig:eda-correlation}
+
+\section{高风险组与非高风险组差异分析}
+
+图 \ref{fig:eda-boxplots-risk} 按 \texttt{high\_risk\_flag} 分组比较设备时长、通知数、社交媒体使用、睡眠、活动和数字依赖等变量。该图帮助观察高风险组与非高风险组在行为变量上的分布差异，为后续分类模型提供直观解释基础。
+
+\maybefigure{eda_boxplots_by_risk.png}{按高风险标记分组的行为变量箱线图}{fig:eda-boxplots-risk}
+
+\section{类别变量风险率分析}
+
+图 \ref{fig:eda-category-risk} 展示性别、地区、收入水平、教育水平、日常角色和设备类型等类别变量下的高风险比例。该图用于描述不同类别下风险比例的差异，但不说明类别变量本身导致风险变化。
+
+\maybefigure{eda_category_risk_rate.png}{类别变量下的高风险比例}{fig:eda-category-risk}
+
+\section{行为变量与结果变量关系分析}
+
+图 \ref{fig:eda-behavior-scatter} 展示行为变量与结果变量之间的关系，例如设备时长与数字依赖、睡眠时长与生产力、社交媒体时长与数字依赖等。这类图能够帮助观察变量关系形态，也为回归目标可预测性差异提供补充证据。
+
+\maybefigure{eda_behavior_outcome_scatter.png}{行为变量与结果变量关系图}{fig:eda-behavior-scatter}
+
+\section{EDA 结论小结}
+
+EDA 结果显示，数字行为变量和生活习惯变量具有较明显的分布差异；高风险组与非高风险组在部分行为变量上存在描述性差别；数字依赖得分与设备使用、通知和解锁等变量关系较紧密；生产力得分与当前行为变量之间的关系更弱。这些观察支持后续将数字依赖作为回归主线，并将生产力得分作为弱预测/负结果分析。

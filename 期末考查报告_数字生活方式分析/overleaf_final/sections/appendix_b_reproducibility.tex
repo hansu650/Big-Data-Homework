@@ -1,0 +1,34 @@
+\chapter{完整实验运行说明}
+
+\section{环境安装}
+
+本项目使用 Python、pandas、numpy、scipy、matplotlib 和 scikit-learn，所有实验均在 CPU 环境下运行。复现时可在项目根目录执行：
+
+\begin{lstlisting}[language=bash,caption={依赖安装命令},label={lst:appendix-install}]
+pip install -r requirements.txt
+\end{lstlisting}
+
+\section{Notebook 执行顺序}
+
+建议按以下顺序执行 notebook：
+
+\begin{enumerate}
+  \item \texttt{notebooks/00\_dataset\_selection\_and\_compliance.ipynb}
+  \item \texttt{notebooks/01\_data\_preprocessing\_and\_eda.ipynb}
+  \item \texttt{notebooks/02\_classification\_high\_risk.ipynb}
+  \item \texttt{notebooks/03\_regression\_productivity.ipynb}
+  \item \texttt{notebooks/04\_clustering\_lifestyle\_profiles.ipynb}
+  \item \texttt{notebooks/05\_result\_summary\_for\_report.ipynb}
+\end{enumerate}
+
+\section{关键脚本运行}
+
+Stage 2.5 中用于补充预处理质量检查、PCA 解释方差和最终报告图表筛选清单的脚本为：
+
+\begin{lstlisting}[language=bash,caption={证据增强脚本},label={lst:appendix-stage25}]
+python scripts/stage2_5_evidence_enhancement.py
+\end{lstlisting}
+
+\section{Overleaf 编译方式}
+
+最终 LaTeX 编译包位于 \texttt{期末考查报告\_数字生活方式分析/overleaf\_final/}。上传该目录到 Overleaf 后，Compiler 选择 XeLaTeX，主文档选择 \texttt{main.tex}。最终提交前，填写封面中的学号、姓名、学院、专业年级、Institution 和 Grade and major 后，再编译一次即可。
