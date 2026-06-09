@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Lifestyle Analysis Dashboard</title>
+  <style>
+    :root {
+      --ink: #17212f;
+      --muted: #5c6675;
+      --line: #d9e0ea;
+      --panel: #ffffff;
+      --wash: #f6f8fb;
+      --blue: #1f6fba;
+      --green: #197b66;
+      --amber: #b56916;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--wash);
+      line-height: 1.55;
+    }
+    header {
+      background: linear-gradient(110deg, #0f344f 0%, #1f6fba 58%, #2d8b78 100%);
+      color: white;
+      padding: 48px 56px 36px;
+    }
+    header h1 { margin: 0 0 10px; font-size: 42px; letter-spacing: 0; }
+    header p { margin: 0; font-size: 18px; max-width: 900px; opacity: .95; }
+    nav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 14px 56px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a { color: var(--blue); font-weight: 650; text-decoration: none; }
+    main { padding: 32px 56px 54px; }
+    section { max-width: 1180px; margin: 0 auto 34px; }
+    h2 { margin: 0 0 16px; font-size: 25px; }
+    .cards, .results { display: grid; gap: 16px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card, .result, .workflow span, .figure-card, .structure, .note {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 22px rgba(20, 33, 48, .06);
+    }
+    .card, .result { padding: 18px; }
+    .eyebrow { color: var(--muted); text-transform: uppercase; font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+    .value { font-size: 28px; font-weight: 800; margin: 5px 0; }
+    .workflow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .workflow span { padding: 10px 13px; font-weight: 700; }
+    .workflow i { color: var(--muted); font-style: normal; }
+    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .figure-card { overflow: hidden; }
+    .figure-card img { width: 100%; height: 330px; object-fit: contain; background: #f9fbfd; border-bottom: 1px solid var(--line); }
+    .figure-card div { padding: 14px 16px 16px; }
+    .figure-card h3 { margin: 0 0 6px; font-size: 17px; }
+    .figure-card p, .card p, .result p, .note p { margin: 0; color: var(--muted); }
+    .structure { padding: 20px; overflow-x: auto; }
+    pre { margin: 0; font-family: Consolas, "Courier New", monospace; font-size: 15px; }
+    .note { padding: 18px; }
+    .links a { color: var(--blue); overflow-wrap: anywhere; }
+    footer { padding: 24px 56px; color: var(--muted); background: #fff; border-top: 1px solid var(--line); }
+    @media (max-width: 900px) {
+      header, nav, main, footer { padding-left: 24px; padding-right: 24px; }
+      .cards, .results, .gallery { grid-template-columns: 1fr; }
+      header h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <header id="top">
+    <h1>Digital Lifestyle Analysis Dashboard</h1>
+    <p>High-risk screening, digital dependence prediction, and lifestyle profiling with reproducible big-data analysis artifacts.</p>
+  </header>
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#results">Key Results</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#structure">Structure</a>
+    <a href="#reproducibility">Reproducibility</a>
+  </nav>
+  <main>
+    <section id="overview">
+      <h2>Project Overview</h2>
+      <div class="cards">
+        <article class="card"><div class="eyebrow">Dataset</div><div class="value">2025</div><p>Digital Lifestyle Benchmark Dataset</p></article>
+        <article class="card"><div class="eyebrow">Records</div><div class="value">3,500</div><p>Samples for course-level modeling and visualization</p></article>
+        <article class="card"><div class="eyebrow">Fields</div><div class="value">24</div><p>Behavioral, lifestyle, mental-health, and outcome variables</p></article>
+        <article class="card"><div class="eyebrow">Tasks</div><div class="value">3</div><p>Classification, regression, and clustering</p></article>
+      </div>
+    </section>
+    <section id="workflow">
+      <h2>Analysis Workflow</h2>
+      <div class="workflow">
+        <span>Dataset Compliance</span><i>to</i><span>Preprocessing</span><i>to</i><span>EDA</span><i>to</i><span>Classification</span><i>to</i><span>Regression</span><i>to</i><span>Clustering</span><i>to</i><span>Report</span>
+      </div>
+    </section>
+    <section id="results">
+      <h2>Key Results</h2>
+      <div class="results">
+        <article class="result"><div class="eyebrow">Classification</div><div class="value">F1 0.5355</div><p>Gradient Boosting, threshold=0.14, Recall=0.6420, PR-AUC=0.5084.</p></article>
+        <article class="result"><div class="eyebrow">Digital Dependence</div><div class="value">R2 0.9839</div><p>MSE=3.1471 and MAE=0.9982 for digital_dependence_score prediction.</p></article>
+        <article class="result"><div class="eyebrow">Productivity</div><div class="value">R2 -0.0041</div><p>A weak-prediction result retained as a negative modeling finding.</p></article>
+        <article class="result"><div class="eyebrow">Clustering</div><div class="value">k=3</div><p>KMeans profile analysis with Silhouette=0.1860, interpreted exploratorily.</p></article>
+      </div>
+    </section>
+    <section id="gallery">
+      <h2>Visualization Gallery</h2>
+      <div class="gallery">
+        <article class="figure-card">
+          <img src="assets/figures/eda_high_risk_flag_distribution.png" alt="eda high risk flag distribution">
+          <div>
+            <h3>Eda High Risk Flag Distribution</h3>
+            <p>Class balance and screening-target distribution.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/eda_numeric_correlation_heatmap.png" alt="eda numeric correlation heatmap">
+          <div>
+            <h3>Eda Numeric Correlation Heatmap</h3>
+            <p>Correlation patterns among numeric behavior and outcome variables.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/eda_boxplots_by_risk.png" alt="eda boxplots by risk">
+          <div>
+            <h3>Eda Boxplots By Risk</h3>
+            <p>Group-level differences between high-risk and non-high-risk samples.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/eda_category_risk_rate.png" alt="eda category risk rate">
+          <div>
+            <h3>Eda Category Risk Rate</h3>
+            <p>Risk-rate comparison across categorical groups.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/classification_final_confusion_matrix.png" alt="classification final confusion matrix">
+          <div>
+            <h3>Classification Final Confusion Matrix</h3>
+            <p>Final classification errors and correct predictions.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/classification_precision_recall_curve.png" alt="classification precision recall curve">
+          <div>
+            <h3>Classification Precision Recall Curve</h3>
+            <p>Precision-recall behavior for the screening model.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/classification_roc_curve.png" alt="classification roc curve">
+          <div>
+            <h3>Classification Roc Curve</h3>
+            <p>ROC behavior for the final classifier.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/regression_target_comparison.png" alt="regression target comparison">
+          <div>
+            <h3>Regression Target Comparison</h3>
+            <p>Comparison of regression targets and modeling difficulty.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/regression_digital_dependence_observed_vs_predicted.png" alt="regression digital dependence observed vs predicted">
+          <div>
+            <h3>Regression Digital Dependence Observed Vs Predicted</h3>
+            <p>Observed versus predicted digital dependence scores.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/clustering_kmeans_elbow.png" alt="clustering kmeans elbow">
+          <div>
+            <h3>Clustering Kmeans Elbow</h3>
+            <p>K selection evidence for KMeans clustering.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/clustering_silhouette_by_k.png" alt="clustering silhouette by k">
+          <div>
+            <h3>Clustering Silhouette By K</h3>
+            <p>Silhouette score comparison across candidate cluster counts.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/clustering_lifestyle_pca.png" alt="clustering lifestyle pca">
+          <div>
+            <h3>Clustering Lifestyle Pca</h3>
+            <p>PCA projection of lifestyle clusters.</p>
+          </div>
+        </article>
+<article class="figure-card">
+          <img src="assets/figures/clustering_lifestyle_profile_heatmap.png" alt="clustering lifestyle profile heatmap">
+          <div>
+            <h3>Clustering Lifestyle Profile Heatmap</h3>
+            <p>Cluster-level profile interpretation across selected features.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+    <section id="structure">
+      <h2>Project Structure</h2>
+      <div class="structure"><pre>Big-Data-Homework/
+  final project directory/
+    data/
+    notebooks/
+    src/
+    scripts/
+    figures/
+    results/
+    final_submit/
+    overleaf_final/
+    web_demo/
+    requirements.txt</pre></div>
+    </section>
+    <section id="reproducibility">
+      <h2>Reproducibility</h2>
+      <div class="note">
+        <p><strong>Run locally:</strong> install dependencies with <code>pip install -r requirements.txt</code>, run notebooks 00 to 05 in order, open the final DOCX, and open <code>web_demo/index.html</code> directly in a browser.</p>
+        <p><strong>Boundaries:</strong> the dataset is synthetic benchmark data; the high-risk model is a screening tool, not a diagnosis tool; the regression result does not imply causality; clustering is exploratory; no online inference is provided.</p>
+        <p class="links"><strong>GitHub:</strong> <a href="https://github.com/hansu650/Big-Data-Homework">https://github.com/hansu650/Big-Data-Homework</a></p>
+      </div>
+    </section>
+  </main>
+  <footer>Static showcase page for a course report. No server, checkpoint, GPU, or online inference is required.</footer>
+  <script>
+    if (location.hash) {
+      setTimeout(() => {
+        const target = document.querySelector(location.hash);
+        if (target) target.scrollIntoView();
+      }, 250);
+    }
+  </script>
+</body>
+</html>
