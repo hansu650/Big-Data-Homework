@@ -67,7 +67,14 @@ placeholder:
 
 ## 4. Appendix A
 
-In Appendix A, replace:
+Appendix A now has two parts:
+
+- A.1 Environment and Dependencies explains the CPU-based Python environment
+  and the command `pip install -r requirements.txt`.
+- A.2 Complete Runnable Code is the only place where the full code should be
+  pasted.
+
+In A.2, replace:
 
 `[PASTE COMPLETE RUNNABLE CODE HERE]`
 
@@ -82,6 +89,6 @@ Before submitting:
 1. Fill only your personal blank fields on the cover.
 2. Insert the required Excel screenshots.
 3. Paste Code1-Code7 in the main text.
-4. Paste the full `appendix_A_complete_code.py` into Appendix A.
+4. Paste the full `appendix_A_complete_code.py` into Appendix A A.2.
 5. Open the final DOCX once in Word/WPS to check page layout.
 6. Export to PDF if the teacher asks for PDF submission.

@@ -4,6 +4,17 @@ This pass keeps the workflow-style report and does not redesign the experiments.
 It focuses on code formatting, first-appearance table order, stronger model
 selection explanation, and clearer final logic.
 
+## Final Pre-Submission Polish
+
+- Added a clean `requirements.txt` for the final runnable report materials.
+- Added `A.1 Environment and Dependencies` before the complete-code paste
+  position in Appendix A.
+- Kept Appendix A as the only appendix and kept only the complete runnable code
+  placeholder in A.2.
+- Added short workflow-connection sentences in preprocessing, EDA, modeling, and
+  conclusion without changing the report structure or model results.
+- Kept Fig1-Fig12 only; no extra figure was added in this pass.
+
 ## Code and Reproducibility
 
 - Rechecked the key code files so they remain normal multi-line files:

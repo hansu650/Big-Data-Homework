@@ -320,7 +320,10 @@ def add_preprocessing(doc: Document) -> None:
         "This section turns the raw CSV file into a reliable modeling table. The main purpose is to check data quality, construct useful behavior features, and control target leakage before modeling.",
     )
     add_heading(doc, "3.1 Data Loading", 2)
-    add_para(doc, "This step reads the original CSV and confirms the basic shape of the dataset. The output is 3500 rows and 24 fields.")
+    add_para(
+        doc,
+        "This step reads the original CSV and confirms the basic shape of the dataset. The output is 3500 rows and 24 fields. The raw preview prepared in Table1 is the input evidence for this loading step.",
+    )
     add_code_placeholder(doc, 1, "Data Loading and Basic Inspection")
     add_code_explanation(
         doc,
@@ -429,6 +432,10 @@ def add_preprocessing(doc: Document) -> None:
         "PC1 and PC2 explain about 42.41% of the total variance, so a two-dimensional PCA view only captures part of the high-dimensional behavior structure.",
         "The PCA evidence supports dimensionality-reduction discussion, but PCA is used only for auxiliary understanding rather than replacing the original modeling features.",
     )
+    add_para(
+        doc,
+        "After preprocessing, the dataset keeps all 3500 records, adds behavior-intensity features, and separates task-specific feature sets. Therefore, the later models are built on a clean and leakage-controlled table.",
+    )
 
 
 def add_eda(doc: Document) -> None:
@@ -491,6 +498,10 @@ def add_eda(doc: Document) -> None:
         doc,
         "The EDA results are not decoration. They explain why classification should use Recall and F1, why digital_dependence_score is more predictable than productivity_score, and why clustering needs scaling and cautious interpretation.",
     )
+    add_para(
+        doc,
+        "The statistical summary and visualizations show three useful signals: class imbalance for classification, stronger behavior dependence for digital_dependence_score, and weaker visible patterns for productivity_score.",
+    )
 
 
 def add_modeling(doc: Document) -> None:
@@ -498,11 +509,11 @@ def add_modeling(doc: Document) -> None:
     add_heading(doc, "5.1 Experimental Setup", 2)
     add_para(
         doc,
-        "The supervised tasks use train/test split, random_state=42, cross-validation, and GridSearchCV-style hyperparameter tuning. Different tasks use different evaluation metrics. Classification uses Precision, Recall, F1, PR-AUC, ROC-AUC, Balanced Accuracy, and confusion matrix. Regression uses R², MSE, RMSE, and MAE. Clustering uses elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin.",
+        "The supervised tasks use train/test split, random_state=42, cross-validation, and GridSearchCV-style hyperparameter tuning. Different tasks use different evaluation metrics. Classification uses Precision, Recall, F1, PR-AUC, ROC-AUC, Balanced Accuracy, and confusion matrix. Regression uses R2, MSE, RMSE, and MAE. Clustering uses elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin.",
     )
     add_para(
         doc,
-        "The model selection logic is different for each task. Classification focuses on recall-oriented screening and PR-AUC; regression focuses on R², MSE, and MAE; clustering focuses on silhouette, elbow trend, and profile interpretability.",
+        "The model selection logic is different for each task. Classification focuses on recall-oriented screening and PR-AUC; regression focuses on R2, MSE, and MAE; clustering focuses on silhouette, elbow trend, and profile interpretability.",
     )
     add_heading(doc, "5.2 High Risk Classification", 2)
     add_para(
@@ -511,7 +522,7 @@ def add_modeling(doc: Document) -> None:
     )
     add_para(
         doc,
-        "Gradient Boosting is selected because it gives the most suitable overall screening performance under the selected evaluation logic, especially PR-AUC and the final threshold-based Recall/F1 trade-off. Accuracy alone is not enough because the High Risk group is smaller and missed High Risk samples matter more in a screening task.",
+        "Gradient Boosting is selected because it provides the most suitable screening trade-off after model comparison and threshold tuning, not because it is perfect on every metric. Accuracy alone is not enough because the High Risk group is smaller and missed High Risk samples matter more in a screening task.",
     )
     add_table_placeholder(
         doc,
@@ -564,18 +575,18 @@ def add_modeling(doc: Document) -> None:
     add_heading(doc, "5.3 Digital Dependence and Productivity Regression", 2)
     add_para(
         doc,
-        "The main regression target is digital_dependence_score. Gradient Boosting reaches R²=0.9839, MSE=3.1471, and MAE=0.9982. It is selected because it gives the strongest overall performance under the report's main criterion, especially R² and MSE.",
+        "The main regression target is digital_dependence_score. Gradient Boosting reaches R2=0.9839, MSE=3.1471, and MAE=0.9982. It is selected because it gives the strongest overall performance under the report's main criterion, especially R2 and MSE.",
     )
     add_para(
         doc,
-        "Although linear models may have a slightly lower MAE in some results, Gradient Boosting is kept as the final comparison model because it achieves the strongest overall R²/MSE performance and remains consistent with the non-linear behavior-feature setting. The auxiliary productivity_score task has R²=-0.0041, so it is kept as a weak-prediction result.",
+        "Although some linear models may have a slightly lower MAE in digital dependence prediction, Gradient Boosting is kept as the final model because its overall R2 and MSE performance is stronger and it matches the non-linear feature setting. The auxiliary productivity_score task has R2=-0.0041, so it is kept as a weak-prediction result.",
     )
     add_table_placeholder(
         doc,
         11,
         "Regression Model Comparison",
         "screenshot_tables/table11_regression_model_comparison.xlsx",
-        "This screenshot compares models for digital_dependence_score and productivity_score using R², MSE, RMSE, MAE, and cross-validation scores.",
+        "This screenshot compares models for digital_dependence_score and productivity_score using R2, MSE, RMSE, MAE, and cross-validation scores.",
         "digital_dependence_score is strongly predicted, but productivity_score is not explained well by the current features.",
         "The contrast is important because it shows that the same feature set can strongly represent digital dependence but cannot explain productivity well.",
     )
@@ -585,7 +596,7 @@ def add_modeling(doc: Document) -> None:
         "Digital Dependence: Observed vs Predicted Scores",
         "fig8_digital_dependence_observed_predicted.png",
         "This figure checks whether predicted digital_dependence_score values are close to observed values.",
-        "Most points are close to the diagonal line, which is consistent with the high R²=0.9839.",
+        "Most points are close to the diagonal line, which is consistent with the high R2=0.9839.",
         "The regression result supports using digital behavior features to predict digital dependence, but it should not be written as a causal conclusion.",
     )
     add_figure_block(
@@ -594,13 +605,13 @@ def add_modeling(doc: Document) -> None:
         "Productivity Weak Prediction: Observed vs Predicted Scores",
         "fig9_productivity_observed_predicted.png",
         "This figure checks whether the current feature set can predict productivity_score as well as digital_dependence_score.",
-        "The points are widely scattered instead of staying close to the diagonal reference line. The nearly horizontal prediction pattern suggests that the model tends to predict values near the average productivity level instead of capturing individual productivity differences. This pattern is consistent with the weak R²=-0.0041 result.",
+        "The points are widely scattered instead of staying close to the diagonal reference line. The nearly horizontal prediction pattern suggests that the model tends to predict values near the average productivity level instead of capturing individual productivity differences. This pattern is consistent with the weak R2=-0.0041 result.",
         "The weak prediction is still meaningful because productivity may depend on motivation, task difficulty, learning environment, self-control, and work context, which are not fully captured by the current digital behavior features.",
     )
     add_code_placeholder(doc, 6, "Regression Model Evaluation")
     add_code_explanation(
         doc,
-        "calculate R², MSE, RMSE, and MAE for regression predictions",
+        "calculate R2, MSE, RMSE, and MAE for regression predictions",
         "regression quality cannot be judged by classification metrics",
         "a metrics table for each regression target",
         "the comparison between strong digital dependence prediction and weak productivity prediction",
@@ -616,7 +627,7 @@ def add_modeling(doc: Document) -> None:
     )
     add_para(
         doc,
-        "KMeans, AgglomerativeClustering, and GaussianMixture are compared. Candidate k values are evaluated with the elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin. KMeans k=3 is selected because it gives the most suitable silhouette among the tested KMeans settings and produces three readable lifestyle profiles.",
+        "KMeans, AgglomerativeClustering, and GaussianMixture are compared. Candidate k values are evaluated with the elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin. KMeans k=3 is selected because it gives the best tested silhouette result and produces readable profiles, but the low silhouette value means the profiles should be treated as exploratory summaries.",
     )
     add_table_placeholder(
         doc,
@@ -678,13 +689,13 @@ def add_conclusion(doc: Document) -> None:
     add_heading(doc, "6.1 Main Findings", 2)
     for item in [
         "High Risk can be screened from behavior and lifestyle features, but the model is a reference rather than a final individual-level conclusion.",
-        "digital_dependence_score can be predicted well by the current features, with R²=0.9839, MSE=3.1471, and MAE=0.9982.",
+        "digital_dependence_score can be predicted well by the current features, with R2=0.9839, MSE=3.1471, and MAE=0.9982.",
         "Clustering forms three readable lifestyle profiles, but Silhouette=0.1860 shows that the boundaries are weak.",
     ]:
         add_bullet(doc, item)
     add_para(
         doc,
-        "The whole workflow leads to a consistent conclusion. The data-quality checks show that the dataset can be used without deleting records. Feature engineering transforms raw counts and minutes into behavior-intensity variables. EDA then shows class imbalance, group overlap, and different correlation strengths among target variables. Based on these findings, the classification model is designed as a recall-oriented High Risk screening reference, the regression model successfully represents digital dependence but not productivity, and clustering provides readable but weakly separated lifestyle profiles. Therefore, the final value of the report is not perfect prediction, but a complete and explainable data analysis workflow.",
+        "The workflow is consistent from beginning to end. Data checks confirm that the original table is usable. Feature engineering turns raw behavior records into behavior-intensity variables. EDA explains why recall, PR-AUC, regression metrics, and clustering metrics are needed. The final models then show that High Risk can be screened as a reference, digital dependence can be strongly predicted, productivity is weakly explained, and lifestyle profiles are readable but not sharply separated.",
     )
     add_heading(doc, "6.2 Practical Value", 2)
     add_para(
@@ -717,6 +728,17 @@ def add_conclusion(doc: Document) -> None:
 
 def add_appendix(doc: Document) -> None:
     add_heading(doc, "Appendix A Complete Runnable Code", 1, page_break=True)
+    add_heading(doc, "A.1 Environment and Dependencies", 2)
+    add_para(
+        doc,
+        "The experiment was completed with a CPU-based Python environment. The main dependencies are pandas, NumPy, scikit-learn, Matplotlib, openpyxl, python-docx, and joblib. The environment can be installed with:",
+    )
+    add_para(doc, "pip install -r requirements.txt")
+    add_para(
+        doc,
+        "The complete runnable code below can regenerate preprocessing checks, screenshot Excel tables, figures, model metrics, and final result files.",
+    )
+    add_heading(doc, "A.2 Complete Runnable Code", 2)
     add_para(
         doc,
         "The complete runnable code should be pasted here before final submission. The code should be copied from:",

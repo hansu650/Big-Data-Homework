@@ -28,19 +28,33 @@ evidence files.
 | 21 | export_screenshot_tables.py passes py_compile. | PASS |
 | 22 | generate_final_report_figures.py passes py_compile. | PASS |
 | 23 | Core classification metrics unchanged: Recall=0.6420, F1=0.5355, PR-AUC=0.5084. | PASS |
-| 24 | Core regression metrics unchanged: R²=0.9839, MSE=3.1471, MAE=0.9982. | PASS |
-| 25 | productivity_score R²=-0.0041 is kept and explained as weak prediction. | PASS |
+| 24 | Core regression metrics unchanged: R2=0.9839, MSE=3.1471, MAE=0.9982. | PASS |
+| 25 | productivity_score R2=-0.0041 is kept and explained as weak prediction. | PASS |
 | 26 | KMeans k=3 and Silhouette=0.1860 are unchanged. | PASS |
 | 27 | PCA first two components explain about 42.41% variance. | PASS |
 | 28 | The conclusion forms a clear workflow loop from preprocessing to EDA to modeling to reflection. | PASS |
 | 29 | screenshot_todo.md tells the student exactly which Excel/table/code to insert. | PASS |
 | 30 | Final Word report opens normally by python-docx structural inspection. | PASS |
+| 31 | requirements.txt exists. | PASS |
+| 32 | Appendix A contains A.1 Environment and Dependencies. | PASS |
+| 33 | Appendix A contains A.2 Complete Runnable Code. | PASS |
+| 34 | Appendix A has no Code8 placeholder. | PASS |
+| 35 | report_code_snippets.md has Code1-Code7 only. | PASS |
+| 36 | All code files have real line breaks. | PASS |
+| 37 | appendix_A_complete_code.py passes py_compile. | PASS |
+| 38 | requirements.txt only contains actually used runtime packages. | PASS |
+| 39 | Table1-Table12 appear in first-appearance order. | PASS |
+| 40 | Fig1-Fig12 appear in order. | PASS |
+| 41 | No unnecessary figure is added. | PASS |
+| 42 | The conclusion has a clear workflow loop. | PASS |
 
 ## Structural QA Notes
 
 - The DOCX contains 12 inserted figures.
 - The DOCX contains 12 screenshot-table placeholders.
 - The DOCX contains 7 main-text code placeholders and one Appendix A complete-code placeholder.
+- Appendix A now contains a short environment/dependency note and the command
+  `pip install -r requirements.txt`.
 - `appendix_A_complete_code.py` ran successfully from the repository root in the
   `qintian-DL` conda environment.
 - The local environment still has no LibreOffice / converter executable, so
