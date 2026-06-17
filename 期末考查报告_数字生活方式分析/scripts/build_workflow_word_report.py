@@ -246,7 +246,7 @@ def add_report_workflow(doc: Document) -> None:
 
 
 def add_objective(doc: Document) -> None:
-    add_heading(doc, "1. Objective", 1)
+    add_heading(doc, "1. Research Objective and Task Design", 1)
     add_heading(doc, "1.1 Background", 2)
     add_para(
         doc,
@@ -256,7 +256,7 @@ def add_objective(doc: Document) -> None:
         doc,
         "The purpose of this report is to build a complete course-level workflow. The report does not only compare model scores. It starts from dataset selection and data checking, then moves to visualization, modeling, result explanation, and reflection.",
     )
-    add_heading(doc, "1.2 Questions", 2)
+    add_heading(doc, "1.2 Research Questions", 2)
     for item in [
         "Can high_risk_flag be screened from non-leakage behavioral and lifestyle features?",
         "Can digital_dependence_score be predicted from digital behavior and lifestyle variables?",
@@ -264,7 +264,7 @@ def add_objective(doc: Document) -> None:
         "Can clustering summarize users into readable digital lifestyle profiles?",
     ]:
         add_bullet(doc, item)
-    add_heading(doc, "1.3 Tasks", 2)
+    add_heading(doc, "1.3 Modeling Tasks", 2)
     add_para(
         doc,
         "The report implements classification, regression, and clustering. Classification is used for High Risk screening. Regression is used for digital dependence prediction and productivity weak-prediction checking. Clustering is used for exploratory user profiling. These three tasks are connected by the same preprocessing and feature-selection logic.",
@@ -272,17 +272,17 @@ def add_objective(doc: Document) -> None:
 
 
 def add_dataset(doc: Document) -> None:
-    add_heading(doc, "2. Dataset", 1, page_break=True)
-    add_heading(doc, "2.1 Source", 2)
+    add_heading(doc, "2. Dataset Description and Task Feasibility", 1, page_break=True)
+    add_heading(doc, "2.1 Dataset Source", 2)
     add_para(
         doc,
-        "The dataset is the 2025 Digital Lifestyle Benchmark Dataset. It is a CSV structured dataset with 3500 rows and 24 fields. It was selected because it naturally supports classification, regression, and clustering in one coherent digital lifestyle scenario.",
+        "The dataset is the 2025 Digital Lifestyle Benchmark Dataset. It is a CSV structured dataset with 3500 rows and 24 fields. It was selected because it naturally supports classification, regression, clustering, preprocessing evidence, and visualization in one coherent digital lifestyle scenario.",
     )
     add_para(
         doc,
-        "The earlier pfm_train and pfm_test files were not selected as the final dataset because their topic was closer to previous employee-attrition work and did not support the regression and clustering parts as naturally as this dataset.",
+        "Other candidate materials were reviewed, but the final dataset was selected because it better supports the complete workflow of classification, regression, clustering, preprocessing, and visualization.",
     )
-    add_heading(doc, "2.2 Fields", 2)
+    add_heading(doc, "2.2 Field Structure", 2)
     add_table_placeholder(
         doc,
         2,
@@ -292,7 +292,7 @@ def add_dataset(doc: Document) -> None:
         "The dataset includes behavior variables, lifestyle variables, background variables, and target variables such as high_risk_flag, digital_dependence_score, and productivity_score.",
         "The field design is suitable for a full workflow because it provides both input features and several possible target variables.",
     )
-    add_heading(doc, "2.3 Task Support", 2)
+    add_heading(doc, "2.3 Task Feasibility", 2)
     add_para(
         doc,
         "The dataset supports high_risk_flag classification, digital_dependence_score regression, productivity_score weak-prediction checking, and clustering based on behavior and lifestyle features. This is why it fits the final report better than a dataset that only supports one classification task.",
@@ -305,7 +305,11 @@ def add_dataset(doc: Document) -> None:
 
 
 def add_preprocessing(doc: Document) -> None:
-    add_heading(doc, "3. Preprocessing", 1, page_break=True)
+    add_heading(doc, "3. Data Preprocessing and Feature Construction", 1, page_break=True)
+    add_para(
+        doc,
+        "This section turns the raw CSV file into a reliable modeling table. The main purpose is to check data quality, construct useful behavior features, and control target leakage before modeling.",
+    )
     add_heading(doc, "3.1 Data Loading", 2)
     add_para(doc, "This step reads the original CSV and confirms the basic shape of the dataset. The output is 3500 rows and 24 fields.")
     add_table_placeholder(
@@ -325,7 +329,7 @@ def add_preprocessing(doc: Document) -> None:
         "the dataset shape, column list, data types, and preview rows",
         "the dataset introduction and later preprocessing steps",
     )
-    add_heading(doc, "3.2 Quality Check", 2)
+    add_heading(doc, "3.2 Missing and Duplicate Check", 2)
     add_para(doc, "This step checks missing values and duplicate records. The current result is missing values = 0, duplicate rows = 0, and duplicate id = 0.")
     add_table_placeholder(
         doc,
@@ -353,7 +357,7 @@ def add_preprocessing(doc: Document) -> None:
         "a missing-value table, duplicate counts, and numeric min/max summaries",
         "the decision to keep all records and continue to feature engineering",
     )
-    add_heading(doc, "3.3 Range Check", 2)
+    add_heading(doc, "3.3 Range and Rationality Check", 2)
     add_para(
         doc,
         "The range check covers age, device_hours_per_day, phone_unlocks, notifications_per_day, social_media_mins, study_mins, sleep_hours, sleep_quality, productivity_score, and digital_dependence_score. The goal is not to make the data look perfect. The goal is to check whether the numbers are reasonable for this benchmark dataset.",
@@ -389,7 +393,7 @@ def add_preprocessing(doc: Document) -> None:
         "seven engineered features added to the processed dataset",
         "later modeling and clustering by adding behavior-density information",
     )
-    add_heading(doc, "3.5 Feature Selection", 2)
+    add_heading(doc, "3.5 Feature Selection and Leakage Control", 2)
     add_para(
         doc,
         "Feature selection is also leakage control. For high_risk_flag classification, the input cannot use digital_dependence_score, productivity_score, anxiety_score, depression_score, stress_level, happiness_score, focus_score, id, or high_risk_flag itself. Otherwise the model would learn from outcome information rather than behavior evidence.",
@@ -411,50 +415,63 @@ def add_preprocessing(doc: Document) -> None:
         "separate feature sets for classification, regression, and clustering",
         "fairer model evaluation and more meaningful user-profile interpretation",
     )
-    add_heading(doc, "3.6 PCA and GMM", 2)
+    add_heading(doc, "3.6 PCA and Probabilistic Clustering Extension", 2)
     add_para(
         doc,
         "PCA is used only for dimensionality reduction visualization and structure understanding. The first two principal components explain about 42.41% variance. PCA is not used as input for classification or regression. Because the clustering inputs are mainly continuous numerical variables, a separate LCA model is not used. GaussianMixture is used as a probabilistic clustering extension to respond to the latent-group idea.",
     )
+    add_table_placeholder(
+        doc,
+        11,
+        "PCA Explained Variance",
+        "screenshot_tables/table11_pca_explained_variance.xlsx",
+        "This screenshot records the explained variance ratio and cumulative explained variance of PCA components.",
+        "PC1 and PC2 explain about 42.41% of the total variance, so a two-dimensional PCA view only captures part of the high-dimensional behavior structure.",
+        "The PCA evidence supports dimensionality-reduction discussion, but PCA is used only for auxiliary understanding rather than replacing the original modeling features.",
+    )
 
 
 def add_eda(doc: Document) -> None:
-    add_heading(doc, "4. EDA", 1, page_break=True)
+    add_heading(doc, "4. Statistical Exploration and Visualization", 1, page_break=True)
+    add_para(
+        doc,
+        "This section uses statistical summaries and visualizations to understand the mathematical structure of the dataset before modeling. The goal is to connect raw variables with later modeling choices instead of using figures as decoration.",
+    )
     add_heading(doc, "4.1 Target Distribution", 2)
     add_figure_block(
         doc,
         1,
-        "High Risk and No Risk Distribution",
+        "High Risk vs No Risk Sample Structure",
         "fig1_high_risk_no_risk_distribution.png",
         "This figure checks whether the classification target is balanced before model training.",
         "The No Risk group is larger than the High Risk group. A model may get acceptable Accuracy even when it misses many High Risk samples.",
         "The classification task should focus on Recall, F1, PR-AUC, and the confusion matrix instead of relying only on Accuracy.",
     )
-    add_heading(doc, "4.2 Feature Distribution", 2)
+    add_heading(doc, "4.2 Numeric Feature Distributions", 2)
     add_figure_block(
         doc,
         2,
-        "Core Numeric Feature Distributions",
+        "Core Digital Lifestyle Feature Distributions",
         "fig2_core_numeric_distributions.png",
         "This figure checks the distributions of the main numerical behavior and outcome variables.",
         "Device use, notifications, social media time, sleep, and digital dependence have different ranges and shapes.",
         "The distribution differences explain why scaling is needed before PCA and clustering, and why raw counts should be interpreted carefully.",
     )
-    add_heading(doc, "4.3 Correlation", 2)
+    add_heading(doc, "4.3 Correlation Structure", 2)
     add_figure_block(
         doc,
         3,
-        "Correlation Heatmap",
+        "Correlation Structure of Digital Lifestyle Variables",
         "fig3_correlation_heatmap.png",
         "This heatmap explores the mathematical relationships between numerical variables before modeling.",
         "Some digital behavior variables are related to digital_dependence_score and high_risk_flag, while productivity_score shows weaker relationships.",
         "The correlation pattern supports using behavior variables for digital dependence prediction but also warns that correlation is not causation.",
     )
-    add_heading(doc, "4.4 Group Difference", 2)
+    add_heading(doc, "4.4 High Risk and No Risk Group Difference", 2)
     add_figure_block(
         doc,
         4,
-        "High Risk vs No Risk Behavioral Differences",
+        "Behavioral Difference Between High Risk and No Risk Groups",
         "fig4_high_vs_no_risk_boxplots.png",
         "This figure compares behavior and lifestyle variables between High Risk and No Risk samples.",
         "The High Risk group tends to differ in device behavior and digital dependence, while some variables overlap between groups.",
@@ -468,13 +485,13 @@ def add_eda(doc: Document) -> None:
 
 
 def add_modeling(doc: Document) -> None:
-    add_heading(doc, "5. Modeling", 1, page_break=True)
-    add_heading(doc, "5.1 Setup", 2)
+    add_heading(doc, "5. Modeling, Tuning, and Evaluation", 1, page_break=True)
+    add_heading(doc, "5.1 Experimental Setup", 2)
     add_para(
         doc,
         "The supervised tasks use train/test split, random_state=42, cross-validation, and GridSearchCV-style hyperparameter tuning. Different tasks use different evaluation metrics. Classification uses Precision, Recall, F1, PR-AUC, ROC-AUC, Balanced Accuracy, and confusion matrix. Regression uses R², MSE, RMSE, and MAE. Clustering uses elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin.",
     )
-    add_heading(doc, "5.2 Classification", 2)
+    add_heading(doc, "5.2 High Risk Classification", 2)
     add_para(
         doc,
         "The classification target is high_risk_flag. Logistic Regression, Random Forest, and Gradient Boosting are compared. The final model is Gradient Boosting with threshold=0.14. Accuracy alone is not enough because the High Risk group is smaller and missed High Risk samples matter more in a screening task.",
@@ -491,7 +508,7 @@ def add_modeling(doc: Document) -> None:
     add_figure_block(
         doc,
         5,
-        "Classification Threshold Tuning",
+        "Threshold Tuning for Recall-Oriented Screening",
         "fig5_threshold_tuning.png",
         "This figure explains why the final classifier does not use the default threshold of 0.50.",
         "When the threshold decreases, Recall increases because more samples are predicted as High Risk. Precision may decrease because more No Risk samples are also marked as High Risk.",
@@ -500,7 +517,7 @@ def add_modeling(doc: Document) -> None:
     add_figure_block(
         doc,
         6,
-        "Confusion Matrix",
+        "Confusion Matrix of the Final High Risk Classifier",
         "fig6_confusion_matrix.png",
         "This figure shows the final No Risk / High Risk prediction results.",
         "The matrix separates true No Risk, false High Risk, missed High Risk, and true High Risk cases. Recall=0.6420 means about 64.20% of true High Risk samples are identified.",
@@ -509,7 +526,7 @@ def add_modeling(doc: Document) -> None:
     add_figure_block(
         doc,
         7,
-        "Precision-Recall Curve",
+        "Precision-Recall Curve under Class Imbalance",
         "fig7_precision_recall_curve.png",
         "This figure evaluates High Risk ranking ability under different thresholds.",
         "The selected threshold lies on the curve as a recall-oriented point. PR-AUC=0.5084 means the model has some ability to rank High Risk samples above No Risk samples.",
@@ -527,7 +544,7 @@ def add_modeling(doc: Document) -> None:
         doc,
         "The classification result is not perfect, but it makes sense for a screening task. Lowering the threshold from 0.50 to 0.14 increases the chance of finding true High Risk samples. The cost is that more No Risk samples may be predicted as High Risk. Therefore, this model is more suitable as a screening reference rather than a final individual-level conclusion.",
     )
-    add_heading(doc, "5.3 Regression", 2)
+    add_heading(doc, "5.3 Digital Dependence and Productivity Regression", 2)
     add_para(
         doc,
         "The main regression target is digital_dependence_score. The best model reaches R²=0.9839, MSE=3.1471, and MAE=0.9982. This means the current behavior and lifestyle features strongly represent digital dependence in this benchmark dataset. The auxiliary productivity_score task has R²=-0.0041, so it is kept as a weak-prediction result.",
@@ -544,11 +561,20 @@ def add_modeling(doc: Document) -> None:
     add_figure_block(
         doc,
         8,
-        "Digital Dependence Observed vs Predicted",
+        "Digital Dependence: Observed vs Predicted Scores",
         "fig8_digital_dependence_observed_predicted.png",
         "This figure checks whether predicted digital_dependence_score values are close to observed values.",
         "Most points are close to the diagonal line, which is consistent with the high R²=0.9839.",
         "The regression result supports using digital behavior features to predict digital dependence, but it should not be written as a causal conclusion.",
+    )
+    add_figure_block(
+        doc,
+        9,
+        "Productivity Weak Prediction: Observed vs Predicted Scores",
+        "fig9_productivity_observed_predicted.png",
+        "This figure checks whether the current feature set can predict productivity_score as well as digital_dependence_score.",
+        "The points are widely scattered instead of staying close to the diagonal reference line. This pattern is consistent with the weak R²=-0.0041 result.",
+        "The weak prediction is still meaningful because productivity may depend on motivation, task difficulty, learning environment, self-control, and work context, which are not fully captured by the current digital behavior features.",
     )
     add_code_placeholder(doc, 6, "Regression Evaluation")
     add_code_explanation(
@@ -562,7 +588,7 @@ def add_modeling(doc: Document) -> None:
         doc,
         "The regression results show two different outcomes. Digital dependence can be strongly represented by the current behavioral features, but productivity cannot. This contrast is important because model performance depends on whether the selected features contain enough information for the target variable.",
     )
-    add_heading(doc, "5.4 Clustering", 2)
+    add_heading(doc, "5.4 Digital Lifestyle Clustering", 2)
     add_para(
         doc,
         "Clustering is used to build exploratory digital lifestyle profiles. The input uses only digital behavior and lifestyle numerical features. It does not use high_risk_flag, digital_dependence_score, or productivity_score as clustering input because those variables are outcomes for interpretation, not grouping features.",
@@ -578,21 +604,30 @@ def add_modeling(doc: Document) -> None:
     )
     add_figure_block(
         doc,
-        9,
-        "K Selection for KMeans",
-        "fig9_kmeans_k_selection.png",
+        10,
+        "KMeans k Selection by Elbow and Silhouette",
+        "fig10_kmeans_k_selection.png",
         "This figure combines elbow information and silhouette score to choose k.",
         "The inertia curve decreases as k increases, while the silhouette curve is highest around k=3 among the tested values.",
         "k=3 is selected because it gives a readable profile structure and the best silhouette result, but Silhouette=0.1860 still requires cautious interpretation.",
     )
     add_figure_block(
         doc,
-        10,
-        "Cluster Profile Heatmap",
-        "fig10_cluster_profile_heatmap.png",
+        11,
+        "Three Digital Lifestyle Cluster Profiles",
+        "fig11_cluster_profile_heatmap.png",
         "This figure summarizes the average behavior patterns of the three clusters.",
         "Cluster 0 has high social media minutes. Cluster 1 has higher device hours, lower sleep quality, higher High Risk ratio, and higher digital dependence. Cluster 2 has lower device/social-media load and better sleep-related values.",
         "The heatmap makes the cluster names understandable even though the cluster boundaries are not strong.",
+    )
+    add_figure_block(
+        doc,
+        12,
+        "PCA Variance and Two-Dimensional Structure",
+        "fig12_pca_explained_variance.png",
+        "This figure provides dimensionality-reduction evidence for the PCA extension used in preprocessing and clustering interpretation.",
+        "The first two principal components explain about 42.41% of the total variance. Therefore, a two-dimensional view captures part of the structure but not the whole high-dimensional dataset.",
+        "PCA is useful for auxiliary structure understanding, but it should not replace the original feature space for classification, regression, or final clustering evaluation.",
     )
     add_code_placeholder(doc, 7, "Clustering and K Selection")
     add_code_explanation(
@@ -606,7 +641,7 @@ def add_modeling(doc: Document) -> None:
         doc,
         "The clustering result is useful not because the silhouette score is high, but because it provides a readable summary of lifestyle patterns. The weak silhouette score reminds us that behavioral data may form gradual transitions rather than clear-cut groups.",
     )
-    add_heading(doc, "5.5 Result Analysis", 2)
+    add_heading(doc, "5.5 Integrated Result Analysis", 2)
     add_para(
         doc,
         "The three modeling tasks tell a consistent story. Classification can provide a High Risk screening reference, but more false positives appear when recall is improved. Regression shows that digital dependence is much easier to explain than productivity. Clustering provides readable profiles, but the profile boundaries are weak. The results are not all perfect, but they make sense when connected back to the data and features.",
@@ -614,7 +649,7 @@ def add_modeling(doc: Document) -> None:
 
 
 def add_conclusion(doc: Document) -> None:
-    add_heading(doc, "6. Conclusion", 1, page_break=True)
+    add_heading(doc, "6. Findings, Limitations, and Reflection", 1, page_break=True)
     add_heading(doc, "6.1 Main Findings", 2)
     for item in [
         "High Risk can be screened from behavior and lifestyle features, but the model is a reference rather than a final individual-level conclusion.",
@@ -622,7 +657,7 @@ def add_conclusion(doc: Document) -> None:
         "Clustering forms three readable lifestyle profiles, but Silhouette=0.1860 shows that the boundaries are weak.",
     ]:
         add_bullet(doc, item)
-    add_heading(doc, "6.2 Value", 2)
+    add_heading(doc, "6.2 Practical Value", 2)
     add_para(
         doc,
         "The value of this project is not that every model result is perfect. Its value is that it shows a complete data-analysis process: choosing a dataset, checking data quality, extracting features, visualizing patterns, modeling with suitable metrics, explaining results, and keeping the work reproducible.",
@@ -636,7 +671,7 @@ def add_conclusion(doc: Document) -> None:
         "No external dataset is used for validation.",
     ]:
         add_bullet(doc, item)
-    add_heading(doc, "6.4 Reflection", 2)
+    add_heading(doc, "6.4 Personal Reflection", 2)
     add_para(
         doc,
         "Before this report, I tended to think that data analysis mainly meant running models and comparing scores. After completing this project, I realized that a complete big data analysis report should start much earlier: dataset selection, data cleaning, feature extraction, statistical analysis, visualization, model evaluation, and result interpretation are all necessary.",

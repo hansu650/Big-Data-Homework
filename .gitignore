@@ -1,5 +1,7 @@
 # Office temporary files
 ~$*
+~$*.xlsx
+~$*.docx
 *.tmp
 
 # Python cache files

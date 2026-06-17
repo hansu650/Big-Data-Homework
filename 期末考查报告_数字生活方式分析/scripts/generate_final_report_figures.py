@@ -1,4 +1,4 @@
-"""Generate the final 10 report figures for the workflow-style Word report.
+"""Generate final report figures for the workflow-style Word report.
 
 The script regenerates presentation figures from the validated data/results.
 It does not modify experiment CSV metrics or change the reported model scores.
@@ -50,6 +50,8 @@ plt.rcParams.update(
 
 def ensure_output_dir() -> None:
     FIGURE_DIR.mkdir(parents=True, exist_ok=True)
+    for old_figure in FIGURE_DIR.glob("fig*.png"):
+        old_figure.unlink()
 
 
 def save(fig: plt.Figure, filename: str) -> None:
@@ -172,7 +174,7 @@ def fig4_risk_boxplots(df: pd.DataFrame) -> None:
     for ax, col, title in zip(axes, columns, titles):
         box = ax.boxplot(
             [groups[0][col], groups[1][col]],
-            labels=["No Risk", "High Risk"],
+            tick_labels=["No Risk", "High Risk"],
             patch_artist=True,
             medianprops={"color": "#1F2937", "linewidth": 1.3},
         )
@@ -289,6 +291,35 @@ def fig8_observed_predicted() -> None:
     save(fig, "fig8_digital_dependence_observed_predicted.png")
 
 
+def fig11_productivity_observed_predicted() -> None:
+    pred = pd.read_csv(RESULTS_DIR / "regression_productivity_predictions.csv")
+    fig, ax = plt.subplots(figsize=(5.8, 4.6))
+    ax.scatter(
+        pred["actual"],
+        pred["predicted"],
+        s=18,
+        alpha=0.55,
+        color="#7A5195",
+        edgecolors="none",
+    )
+    low = min(pred["actual"].min(), pred["predicted"].min())
+    high = max(pred["actual"].max(), pred["predicted"].max())
+    ax.plot(
+        [low, high],
+        [low, high],
+        color="#D1495B",
+        linestyle="--",
+        linewidth=1.6,
+        label="Perfect prediction",
+    )
+    ax.set_title("Productivity: Observed vs Predicted")
+    ax.set_xlabel("Observed productivity_score")
+    ax.set_ylabel("Predicted productivity_score")
+    ax.legend(frameon=False)
+    ax.grid(alpha=0.2)
+    save(fig, "fig9_productivity_observed_predicted.png")
+
+
 def fig9_kmeans_k_selection() -> None:
     scores = pd.read_csv(RESULTS_DIR / "clustering_kmeans_scores.csv")
     fig, ax1 = plt.subplots(figsize=(6.8, 4.2))
@@ -315,13 +346,13 @@ def fig9_kmeans_k_selection() -> None:
     )
     ax2.set_ylabel("Silhouette", color="#D1495B")
     ax2.tick_params(axis="y", labelcolor="#D1495B")
-    ax1.axvline(3, color="#444444", linestyle="--", linewidth=1.1)
+    ax1.axvline(3, color="#444444", linestyle="--", linewidth=1.1, label="Selected k = 3")
     ax1.set_title("K Selection for KMeans")
-    lines = ax1.get_lines() + ax2.get_lines()
+    lines = [line for line in ax1.get_lines() + ax2.get_lines() if not line.get_label().startswith("_")]
     labels = [line.get_label() for line in lines]
     ax1.legend(lines, labels, frameon=False, loc="best")
     ax1.grid(axis="x", alpha=0.2)
-    save(fig, "fig9_kmeans_k_selection.png")
+    save(fig, "fig10_kmeans_k_selection.png")
 
 
 def fig10_cluster_profile_heatmap() -> None:
@@ -366,7 +397,44 @@ def fig10_cluster_profile_heatmap() -> None:
     ax.set_title("Cluster Profile Heatmap")
     cbar = fig.colorbar(image, ax=ax, fraction=0.03, pad=0.03)
     cbar.set_label("Normalized profile level")
-    save(fig, "fig10_cluster_profile_heatmap.png")
+    save(fig, "fig11_cluster_profile_heatmap.png")
+
+
+def fig12_pca_explained_variance() -> None:
+    pca = pd.read_csv(RESULTS_DIR / "pca_explained_variance.csv")
+    pca = pca.sort_values("component_index")
+    fig, ax = plt.subplots(figsize=(6.8, 4.2))
+    ax.plot(
+        pca["component_index"],
+        pca["cumulative_explained_variance"],
+        marker="D",
+        color="#4C78A8",
+        linewidth=1.9,
+        label="Cumulative explained variance",
+    )
+    ax.bar(
+        pca["component_index"],
+        pca["explained_variance_ratio"],
+        color="#A6CEE3",
+        alpha=0.55,
+        label="Single-component ratio",
+    )
+    pc2 = pca.loc[pca["component_index"].eq(2)].iloc[0]
+    ax.axhline(
+        pc2["cumulative_explained_variance"],
+        color="#D1495B",
+        linestyle="--",
+        linewidth=1.2,
+        label="PC1 + PC2 = 42.41%",
+    )
+    ax.set_title("PCA Explained Variance")
+    ax.set_xlabel("Principal component")
+    ax.set_ylabel("Explained variance ratio")
+    ax.set_xticks(pca["component_index"])
+    ax.set_ylim(0, 1.05)
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend(frameon=False, loc="lower right")
+    save(fig, "fig12_pca_explained_variance.png")
 
 
 def main() -> None:
@@ -380,9 +448,11 @@ def main() -> None:
     fig6_confusion_matrix()
     fig7_precision_recall_curve(raw)
     fig8_observed_predicted()
+    fig11_productivity_observed_predicted()
     fig9_kmeans_k_selection()
     fig10_cluster_profile_heatmap()
-    print(f"Generated 10 final report figures in {FIGURE_DIR}")
+    fig12_pca_explained_variance()
+    print(f"Generated 12 final report figures in {FIGURE_DIR}")
 
 
 if __name__ == "__main__":

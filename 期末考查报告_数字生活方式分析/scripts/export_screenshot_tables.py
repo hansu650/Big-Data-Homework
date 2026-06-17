@@ -333,6 +333,29 @@ def table10_clustering_profiles() -> None:
     save_workbook(OUTPUT_DIR / "table10_clustering_profiles.xlsx", sheets)
 
 
+def table11_pca_explained_variance() -> None:
+    pca = pd.read_csv(RESULTS_DIR / "pca_explained_variance.csv")
+    pca = pca[
+        [
+            "component",
+            "component_index",
+            "explained_variance_ratio",
+            "cumulative_explained_variance",
+            "input_feature_count",
+        ]
+    ].copy()
+    pca["explained_variance_percent"] = pca["explained_variance_ratio"] * 100
+    pca["cumulative_explained_variance_percent"] = (
+        pca["cumulative_explained_variance"] * 100
+    )
+    pca["interpretation_note"] = np.where(
+        pca["component_index"].eq(2),
+        "PC1 + PC2 explain about 42.41%; useful for visualization only.",
+        "",
+    )
+    save_workbook(OUTPUT_DIR / "table11_pca_explained_variance.xlsx", {"pca_variance": pca})
+
+
 def main() -> None:
     ensure_dir()
     raw = pd.read_csv(RAW_DATA_PATH)
@@ -346,6 +369,7 @@ def main() -> None:
     table8_classification_metrics()
     table9_regression_metrics()
     table10_clustering_profiles()
+    table11_pca_explained_variance()
     print(f"Generated screenshot Excel tables in {OUTPUT_DIR}")
 
 

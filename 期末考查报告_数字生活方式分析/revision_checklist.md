@@ -1,42 +1,49 @@
 # Revision Checklist
 
-1. PASS - Abstract removed.
-2. PASS - Keywords removed.
-3. PASS - References removed.
-4. PASS - Only Appendix A remains.
-5. PASS - Appendix B/C/D removed.
-6. PASS - All "Chapter" words removed.
-7. PASS - Figure numbers changed to Fig1-Fig10.
-8. PASS - Table numbers changed to Table1-Table10.
-9. PASS - Old Figure 3-1 / Figure 4-1 / Figure 5-10 style removed.
-10. PASS - Old Table 3-1 / Table 5-7 / Table C-1 style removed.
-11. PASS - High risk labels changed to High Risk / No Risk.
-12. PASS - ID distribution plot removed.
-13. PASS - Static showcase content removed.
-14. PASS - web_demo and HTML preview removed from report body.
-15. PASS - Final figures generated in figures/final_report/.
-16. PASS - Excel screenshot tables generated in screenshot_tables/.
-17. PASS - report_code_snippets.md generated.
-18. PASS - appendix_A_complete_code.py generated.
-19. PASS - screenshot_todo.md generated.
-20. PASS - Core classification metrics unchanged: Recall=0.6420, F1=0.5355, PR-AUC=0.5084.
-21. PASS - Core regression metrics unchanged: R²=0.9839, MSE=3.1471, MAE=0.9982.
-22. PASS - productivity_score R²=-0.0041 kept as weak result.
-23. PASS - KMeans k=3 and Silhouette=0.1860 unchanged.
-24. PASS - No AI-course residue words remain: CampusDepthSegLite, RGB-D, NYUDepthV2, PyTorch, 王雷春, 人工智能技术与应用.
-25. PASS - No LaTeX residue remains: \chapter, \section, \texttt, \maybefigure.
-26. PASS - No fixed footer "第1 页 共4页".
-27. PASS - Each figure has Purpose / Interpretation / Conclusion.
-28. PASS - Each table screenshot placeholder has explanation.
-29. PASS - The report follows the workflow: Objective -> Dataset -> Preprocessing -> EDA -> Modeling -> Result Analysis -> Conclusion.
-30. PASS - The final Word report can be opened normally by python-docx structural check.
+All checks below refer to the current workflow-style Word report and supporting
+files generated after the small fix pass.
 
-## Structural Check Summary
+| # | Check item | Result |
+|---|---|---|
+| 1 | DOCX has no Abstract. | PASS |
+| 2 | DOCX has no Keywords. | PASS |
+| 3 | DOCX has no References. | PASS |
+| 4 | DOCX has only Appendix A. | PASS |
+| 5 | DOCX has no Appendix B/C/D. | PASS |
+| 6 | DOCX has no Chapter word. | PASS |
+| 7 | DOCX has no static showcase / web_demo / HTML preview. | PASS |
+| 8 | DOCX has no project-structure screenshot placeholder. | PASS |
+| 9 | DOCX has no notebook screenshot placeholder. | PASS |
+| 10 | Figure numbering is Fig1, Fig2, Fig3... | PASS |
+| 11 | Table numbering is Table1, Table2, Table3... | PASS |
+| 12 | No Figure 4-1 / Figure 5-10 / Table C-1 remains. | PASS |
+| 13 | High Risk and No Risk labels are used instead of 0/1 wherever appropriate. | PASS |
+| 14 | ID distribution plot is not used. | PASS |
+| 15 | Every figure has Purpose / Interpretation / Conclusion. | PASS |
+| 16 | Every screenshot table has Purpose / Interpretation / Conclusion. | PASS |
+| 17 | report_code_snippets.md has real Markdown line breaks and code fences. | PASS |
+| 18 | appendix_A_complete_code.py has real Python line breaks and passes py_compile. | PASS |
+| 19 | generate_final_report_figures.py passes py_compile. | PASS |
+| 20 | export_screenshot_tables.py passes py_compile. | PASS |
+| 21 | appendix_A_complete_code.py can run from the repository root. | PASS |
+| 22 | Excel screenshot tables are generated successfully. | PASS |
+| 23 | Final figures are generated successfully. | PASS |
+| 24 | No ~$*.xlsx or ~$*.docx temporary files remain. | PASS |
+| 25 | Core classification metrics unchanged: Recall=0.6420, F1=0.5355, PR-AUC=0.5084. | PASS |
+| 26 | Core regression metrics unchanged: R²=0.9839, MSE=3.1471, MAE=0.9982. | PASS |
+| 27 | productivity_score R²=-0.0041 is kept and explained as weak prediction. | PASS |
+| 28 | KMeans k=3 and Silhouette=0.1860 are unchanged. | PASS |
+| 29 | PCA first two components explain about 42.41% variance. | PASS |
+| 30 | The final Word report can be opened by python-docx structural inspection. | PASS |
+| 31 | DOCX contains 12 inserted figures and 11 screenshot-table placeholders. | PASS |
+| 32 | Visual DOCX rendering was attempted. | PASS WITH NOTE: local converter / LibreOffice is unavailable in this environment. |
 
-- Final DOCX: final_submit/大数据分析与应用期末考查报告.docx
-- Embedded final figures: 10
-- Excel screenshot placeholders: 10
-- Core code placeholders: 8
-- Word tables retained: 3 cover/grading tables only
-- Large result tables are not manually written in Word; they are provided as screenshot-ready Excel files.
+## Notes
 
+- The report remains in the standard workflow order: Research Objective and Task
+  Design -> Dataset Description and Task Feasibility -> Data Preprocessing and
+  Feature Construction -> Statistical Exploration and Visualization -> Modeling,
+  Tuning, and Evaluation -> Findings, Limitations, and Reflection -> Appendix A.
+- The core results CSV files were not redesigned or replaced.
+- Final visual layout should still be opened once in Word/WPS after manual
+  screenshot and code insertion.

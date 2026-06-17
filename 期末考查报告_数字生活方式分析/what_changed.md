@@ -1,59 +1,68 @@
-# What Changed
+# What Changed in This Small Fix Pass
 
-This revision is a full rewrite of the final Word report structure, not a small wording polish.
+This pass keeps the workflow-style report created in commit `61f68b3`. It does
+not redesign the experiments and does not change the validated core metrics.
 
-## Main Report Changes
+## Report Structure
 
-- Removed Abstract, Keywords, References, Appendix B, Appendix C, and Appendix D.
-- Removed "Chapter" style headings.
-- Rebuilt the report as a standard data-analysis workflow:
-  Objective -> Dataset -> Preprocessing -> EDA -> Modeling -> Conclusion -> Appendix A.
-- Kept the school course-exam cover and blank personal-information placeholders.
-- Rewrote the English body in a shorter, more student-like course-report style.
-- Added clear Purpose / Interpretation / Conclusion explanations under every figure and table screenshot placeholder.
-- Kept only Appendix A as the place for complete runnable code.
+- Kept the main workflow: Report Workflow -> Research Objective and Task Design
+  -> Dataset Description and Task Feasibility -> Data Preprocessing and Feature
+  Construction -> Statistical Exploration and Visualization -> Modeling, Tuning,
+  and Evaluation -> Findings, Limitations, and Reflection -> Appendix A.
+- Did not restore Abstract, Keywords, References, Chapter wording, or Appendix
+  B/C/D.
+- Made section titles more formal while keeping them short and easy for the
+  teacher to scan.
+- Removed the strong comparison with `pfm_train` / `pfm_test`; the dataset
+  section now lightly states that other candidate materials were reviewed.
 
-## Figure Changes
+## Figures
 
-- Generated a new final figure set under `figures/final_report/`.
-- Kept exactly 10 useful figures:
-  - Fig1 High Risk and No Risk Distribution
-  - Fig2 Core Numeric Feature Distributions
-  - Fig3 Correlation Heatmap
-  - Fig4 High Risk vs No Risk Behavioral Differences
-  - Fig5 Classification Threshold Tuning
-  - Fig6 Confusion Matrix
-  - Fig7 Precision-Recall Curve
-  - Fig8 Digital Dependence Observed vs Predicted
-  - Fig9 K Selection for KMeans
-  - Fig10 Cluster Profile Heatmap
-- Removed meaningless old visual content from the Word body, including id-style or static showcase material.
-- Multi-line figures use different markers where applicable.
-- High Risk / No Risk labels are used instead of raw 0/1 labels in final report figures.
+- Regenerated final report figures in `figures/final_report/`.
+- Kept useful figures only and added two meaningful evidence figures:
+  - Fig9 Productivity Weak Prediction: Observed vs Predicted Scores.
+  - Fig12 PCA Variance and Two-Dimensional Structure.
+- Final report now contains 12 figures, not a hard-coded 10-figure limit.
+- Multi-line plots use different markers where needed:
+  - Precision: circle.
+  - Recall: triangle.
+  - F1: square.
+  - Inertia / SSE: x.
+  - Silhouette: diamond.
+- High Risk / No Risk labels are used instead of raw 0/1 labels where appropriate.
 
-## Excel Screenshot Tables
+## Screenshot Tables
 
-- Created `screenshot_tables/` with 10 screenshot-ready Excel workbooks.
-- These workbooks are intended for manual screenshots by the student.
-- Word contains clear placeholders such as:
-  `[INSERT TABLE1 SCREENSHOT HERE: screenshot_tables/table1_raw_dataset_preview.xlsx]`
+- Kept the Excel screenshot-table workflow.
+- Generated 11 screenshot-ready workbooks in `screenshot_tables/`.
+- Added `table11_pca_explained_variance.xlsx` for PCA evidence.
+- Word keeps table screenshot placeholders instead of large handwritten tables.
 
-## Code Materials
+## Code Files
 
-- Created `report_code_snippets.md` with 8 short code blocks for the main text.
-- Created `appendix_A_complete_code.py` as the complete runnable code source for Appendix A.
-- Created `screenshot_todo.md` to tell the student where to paste screenshots and code.
+- Rechecked and reformatted the report code support files:
+  - `report_code_snippets.md`
+  - `appendix_A_complete_code.py`
+  - `scripts/generate_final_report_figures.py`
+  - `scripts/export_screenshot_tables.py`
+- Fixed copyable code snippets so they use normal Markdown code fences and
+  readable Python formatting.
+- Confirmed the feature engineering formula is consistent:
+  `activity_sleep_interaction = physical_activity_days * sleep_hours`.
+- `appendix_A_complete_code.py` now runs from the repository root and regenerates
+  final figures plus screenshot tables.
 
-## Metrics Kept Unchanged
+## Checks
 
-- Classification: Gradient Boosting, threshold=0.14, Recall=0.6420, F1=0.5355, PR-AUC=0.5084.
-- Main regression target: digital_dependence_score, R²=0.9839, MSE=3.1471, MAE=0.9982.
-- Weak regression target: productivity_score, R²=-0.0041.
-- Clustering: KMeans, k=3, Silhouette=0.1860.
-
-## Scripts Added
-
-- `scripts/generate_final_report_figures.py`
-- `scripts/export_screenshot_tables.py`
-- `scripts/build_workflow_word_report.py`
-
+- `py_compile` passed for the appendix code and generation scripts.
+- `appendix_A_complete_code.py` ran successfully in the `qintian-DL` conda
+  environment.
+- The final DOCX was rebuilt successfully.
+- Structural DOCX inspection passed:
+  - 12 inserted images.
+  - 11 table screenshot placeholders.
+  - 8 core code placeholders.
+  - No Abstract / Keywords / References / Chapter / static showcase / web_demo.
+- Visual rendering was attempted, but this local environment has no LibreOffice
+  / converter executable. Open the DOCX once in Word/WPS for final visual QA
+  after inserting screenshots and code.

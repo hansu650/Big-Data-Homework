@@ -1,0 +1,5 @@
+task,main_result,metric_1,metric_2,metric_3
+classification_high_risk,Gradient Boosting threshold=0.14,Recall=0.6420,F1=0.5355,PR-AUC=0.5084
+regression_digital_dependence,Gradient Boosting,R2=0.9839,MSE=3.1471,MAE=0.9982
+regression_productivity,weak prediction / negative result,R2=-0.0041,,
+clustering_lifestyle_profiles,KMeans k=3,Silhouette=0.1860,,
