@@ -282,7 +282,21 @@ def add_dataset(doc: Document) -> None:
         doc,
         "Other candidate materials were reviewed, but the final dataset was selected because it better supports the complete workflow of classification, regression, clustering, preprocessing, and visualization.",
     )
-    add_heading(doc, "2.2 Field Structure", 2)
+    add_heading(doc, "2.2 Raw Data Evidence", 2)
+    add_para(
+        doc,
+        "The raw data evidence is kept as an Excel screenshot file instead of a large Word table. This makes the report closer to a real analysis process: first inspect the original table, then clean it, transform it, visualize it, and finally model it.",
+    )
+    add_table_placeholder(
+        doc,
+        1,
+        "Raw Dataset Preview",
+        "screenshot_tables/table1_raw_dataset_preview.xlsx",
+        "This table screenshot shows the original CSV structure before preprocessing.",
+        "The raw dataset contains digital behavior variables, lifestyle variables, and target variables.",
+        "The raw data structure supports classification, regression, and clustering, so the dataset meets the multi-task requirement.",
+    )
+    add_heading(doc, "2.3 Field Structure", 2)
     add_table_placeholder(
         doc,
         2,
@@ -292,15 +306,10 @@ def add_dataset(doc: Document) -> None:
         "The dataset includes behavior variables, lifestyle variables, background variables, and target variables such as high_risk_flag, digital_dependence_score, and productivity_score.",
         "The field design is suitable for a full workflow because it provides both input features and several possible target variables.",
     )
-    add_heading(doc, "2.3 Task Feasibility", 2)
+    add_heading(doc, "2.4 Task Feasibility", 2)
     add_para(
         doc,
         "The dataset supports high_risk_flag classification, digital_dependence_score regression, productivity_score weak-prediction checking, and clustering based on behavior and lifestyle features. This is why it fits the final report better than a dataset that only supports one classification task.",
-    )
-    add_heading(doc, "2.4 Raw Data Evidence", 2)
-    add_para(
-        doc,
-        "The raw data evidence is kept as an Excel screenshot file instead of a large Word table. This makes the report closer to a real analysis process: first inspect the original table, then clean it, transform it, visualize it, and finally model it.",
     )
 
 
@@ -312,15 +321,6 @@ def add_preprocessing(doc: Document) -> None:
     )
     add_heading(doc, "3.1 Data Loading", 2)
     add_para(doc, "This step reads the original CSV and confirms the basic shape of the dataset. The output is 3500 rows and 24 fields.")
-    add_table_placeholder(
-        doc,
-        1,
-        "Raw Dataset Preview",
-        "screenshot_tables/table1_raw_dataset_preview.xlsx",
-        "This table screenshot shows the original CSV structure before preprocessing.",
-        "The raw dataset contains digital behavior variables, lifestyle variables, and target variables.",
-        "The raw data structure supports classification, regression, and clustering, so the dataset meets the multi-task requirement.",
-    )
     add_code_placeholder(doc, 1, "Data Loading and Basic Inspection")
     add_code_explanation(
         doc,
@@ -365,8 +365,8 @@ def add_preprocessing(doc: Document) -> None:
     add_table_placeholder(
         doc,
         5,
-        "Range Check",
-        "screenshot_tables/table5_range_check.xlsx",
+        "Range and Rationality Check",
+        "screenshot_tables/table5_range_and_rationality_check.xlsx",
         "This screenshot shows min, max, mean, reasonable range, and pass status for key numerical fields.",
         "The checked variables stay inside the expected ranges, so no serious abnormal record is removed.",
         "The range check supports later statistical analysis because the main numerical fields are usable.",
@@ -402,12 +402,12 @@ def add_preprocessing(doc: Document) -> None:
         doc,
         7,
         "Feature Selection and Leakage Control",
-        "screenshot_tables/table7_feature_selection_leakage_control.xlsx",
+        "screenshot_tables/table7_feature_selection_and_leakage_control.xlsx",
         "This screenshot records dropped columns and retained features for the main tasks.",
         "The classification task removes outcome columns. The clustering task uses only digital behavior and lifestyle numerical features.",
         "This step makes the modeling results more credible because the input features match the purpose of each task.",
     )
-    add_code_placeholder(doc, 4, "Leakage Control and Feature Selection")
+    add_code_placeholder(doc, 4, "Leakage Control and Task-Specific Feature Selection")
     add_code_explanation(
         doc,
         "define task-specific drop columns and clustering feature lists",
@@ -422,9 +422,9 @@ def add_preprocessing(doc: Document) -> None:
     )
     add_table_placeholder(
         doc,
-        11,
+        8,
         "PCA Explained Variance",
-        "screenshot_tables/table11_pca_explained_variance.xlsx",
+        "screenshot_tables/table8_pca_explained_variance.xlsx",
         "This screenshot records the explained variance ratio and cumulative explained variance of PCA components.",
         "PC1 and PC2 explain about 42.41% of the total variance, so a two-dimensional PCA view only captures part of the high-dimensional behavior structure.",
         "The PCA evidence supports dimensionality-reduction discussion, but PCA is used only for auxiliary understanding rather than replacing the original modeling features.",
@@ -436,6 +436,15 @@ def add_eda(doc: Document) -> None:
     add_para(
         doc,
         "This section uses statistical summaries and visualizations to understand the mathematical structure of the dataset before modeling. The goal is to connect raw variables with later modeling choices instead of using figures as decoration.",
+    )
+    add_table_placeholder(
+        doc,
+        9,
+        "Descriptive Statistical Summary",
+        "screenshot_tables/table9_descriptive_statistical_summary.xlsx",
+        "This screenshot provides mathematical descriptive statistics before visual analysis.",
+        "The variables have different means, ranges, and standard deviations. For example, notifications, phone unlocks, social media time, and device hours are measured on different scales.",
+        "The descriptive statistics support later visualization and also explain why scaling is needed before PCA and clustering.",
     )
     add_heading(doc, "4.1 Target Distribution", 2)
     add_figure_block(
@@ -465,7 +474,7 @@ def add_eda(doc: Document) -> None:
         "fig3_correlation_heatmap.png",
         "This heatmap explores the mathematical relationships between numerical variables before modeling.",
         "Some digital behavior variables are related to digital_dependence_score and high_risk_flag, while productivity_score shows weaker relationships.",
-        "The correlation pattern supports using behavior variables for digital dependence prediction but also warns that correlation is not causation.",
+        "This result explains why digital_dependence_score is easier to predict than productivity_score, because the correlation pattern around productivity_score is much weaker. The heatmap also warns that correlation is not causation.",
     )
     add_heading(doc, "4.4 High Risk and No Risk Group Difference", 2)
     add_figure_block(
@@ -475,7 +484,7 @@ def add_eda(doc: Document) -> None:
         "fig4_high_vs_no_risk_boxplots.png",
         "This figure compares behavior and lifestyle variables between High Risk and No Risk samples.",
         "The High Risk group tends to differ in device behavior and digital dependence, while some variables overlap between groups.",
-        "The overlap explains why the classifier is useful as a screening reference but should not be treated as a perfect separator.",
+        "The overlap between High Risk and No Risk groups explains why the classifier cannot be perfect. It also supports threshold tuning instead of relying on a default decision boundary.",
     )
     add_heading(doc, "4.5 EDA Summary", 2)
     add_para(
@@ -491,19 +500,27 @@ def add_modeling(doc: Document) -> None:
         doc,
         "The supervised tasks use train/test split, random_state=42, cross-validation, and GridSearchCV-style hyperparameter tuning. Different tasks use different evaluation metrics. Classification uses Precision, Recall, F1, PR-AUC, ROC-AUC, Balanced Accuracy, and confusion matrix. Regression uses R², MSE, RMSE, and MAE. Clustering uses elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin.",
     )
+    add_para(
+        doc,
+        "The model selection logic is different for each task. Classification focuses on recall-oriented screening and PR-AUC; regression focuses on R², MSE, and MAE; clustering focuses on silhouette, elbow trend, and profile interpretability.",
+    )
     add_heading(doc, "5.2 High Risk Classification", 2)
     add_para(
         doc,
-        "The classification target is high_risk_flag. Logistic Regression, Random Forest, and Gradient Boosting are compared. The final model is Gradient Boosting with threshold=0.14. Accuracy alone is not enough because the High Risk group is smaller and missed High Risk samples matter more in a screening task.",
+        "The classification target is high_risk_flag. To avoid target leakage, digital_dependence_score, productivity_score, anxiety_score, depression_score, stress_level, happiness_score, focus_score, id, and high_risk_flag itself are excluded from the classification input. Logistic Regression, Random Forest, and Gradient Boosting are compared.",
+    )
+    add_para(
+        doc,
+        "Gradient Boosting is selected because it gives the most suitable overall screening performance under the selected evaluation logic, especially PR-AUC and the final threshold-based Recall/F1 trade-off. Accuracy alone is not enough because the High Risk group is smaller and missed High Risk samples matter more in a screening task.",
     )
     add_table_placeholder(
         doc,
-        8,
-        "Classification Metrics",
-        "screenshot_tables/table8_classification_metrics.xlsx",
-        "This screenshot records the classification metrics and threshold policies.",
-        "The final threshold=0.14 gives Recall=0.6420, F1=0.5355, and PR-AUC=0.5084.",
-        "The result is not perfect, but it makes sense as a recall-oriented High Risk screening strategy.",
+        10,
+        "Classification Model Comparison and Threshold Results",
+        "screenshot_tables/table10_classification_model_comparison_and_threshold_results.xlsx",
+        "This screenshot records candidate model comparison, threshold strategies, final test metrics, and confusion-matrix counts.",
+        "The final Gradient Boosting threshold=0.14 gives Recall=0.6420, F1=0.5355, and PR-AUC=0.5084.",
+        "The result is not perfect, but it makes sense as a recall-oriented High Risk screening strategy rather than a final individual-level judgment.",
     )
     add_figure_block(
         doc,
@@ -512,7 +529,7 @@ def add_modeling(doc: Document) -> None:
         "fig5_threshold_tuning.png",
         "This figure explains why the final classifier does not use the default threshold of 0.50.",
         "When the threshold decreases, Recall increases because more samples are predicted as High Risk. Precision may decrease because more No Risk samples are also marked as High Risk.",
-        "The threshold of 0.14 is selected to find more true High Risk samples, even though it increases false positives.",
+        "The selected threshold is not chosen because it gives the highest Accuracy, but because it better matches the screening purpose. The threshold of 0.14 is selected to find more true High Risk samples, even though it increases false positives.",
     )
     add_figure_block(
         doc,
@@ -532,7 +549,7 @@ def add_modeling(doc: Document) -> None:
         "The selected threshold lies on the curve as a recall-oriented point. PR-AUC=0.5084 means the model has some ability to rank High Risk samples above No Risk samples.",
         "The curve supports using PR-AUC together with Recall and F1 instead of relying only on Accuracy.",
     )
-    add_code_placeholder(doc, 5, "Classification Training and Threshold Tuning")
+    add_code_placeholder(doc, 5, "Classification Model Comparison and Threshold Tuning")
     add_code_explanation(
         doc,
         "train the classifier with cross-validation and choose a recall-oriented threshold",
@@ -547,16 +564,20 @@ def add_modeling(doc: Document) -> None:
     add_heading(doc, "5.3 Digital Dependence and Productivity Regression", 2)
     add_para(
         doc,
-        "The main regression target is digital_dependence_score. The best model reaches R²=0.9839, MSE=3.1471, and MAE=0.9982. This means the current behavior and lifestyle features strongly represent digital dependence in this benchmark dataset. The auxiliary productivity_score task has R²=-0.0041, so it is kept as a weak-prediction result.",
+        "The main regression target is digital_dependence_score. Gradient Boosting reaches R²=0.9839, MSE=3.1471, and MAE=0.9982. It is selected because it gives the strongest overall performance under the report's main criterion, especially R² and MSE.",
+    )
+    add_para(
+        doc,
+        "Although linear models may have a slightly lower MAE in some results, Gradient Boosting is kept as the final comparison model because it achieves the strongest overall R²/MSE performance and remains consistent with the non-linear behavior-feature setting. The auxiliary productivity_score task has R²=-0.0041, so it is kept as a weak-prediction result.",
     )
     add_table_placeholder(
         doc,
-        9,
-        "Regression Metrics",
-        "screenshot_tables/table9_regression_metrics.xlsx",
-        "This screenshot compares the regression results for digital_dependence_score and productivity_score.",
+        11,
+        "Regression Model Comparison",
+        "screenshot_tables/table11_regression_model_comparison.xlsx",
+        "This screenshot compares models for digital_dependence_score and productivity_score using R², MSE, RMSE, MAE, and cross-validation scores.",
         "digital_dependence_score is strongly predicted, but productivity_score is not explained well by the current features.",
-        "The contrast is important because it shows that model performance depends on whether the selected features contain enough information for the target variable.",
+        "The contrast is important because it shows that the same feature set can strongly represent digital dependence but cannot explain productivity well.",
     )
     add_figure_block(
         doc,
@@ -573,10 +594,10 @@ def add_modeling(doc: Document) -> None:
         "Productivity Weak Prediction: Observed vs Predicted Scores",
         "fig9_productivity_observed_predicted.png",
         "This figure checks whether the current feature set can predict productivity_score as well as digital_dependence_score.",
-        "The points are widely scattered instead of staying close to the diagonal reference line. This pattern is consistent with the weak R²=-0.0041 result.",
+        "The points are widely scattered instead of staying close to the diagonal reference line. The nearly horizontal prediction pattern suggests that the model tends to predict values near the average productivity level instead of capturing individual productivity differences. This pattern is consistent with the weak R²=-0.0041 result.",
         "The weak prediction is still meaningful because productivity may depend on motivation, task difficulty, learning environment, self-control, and work context, which are not fully captured by the current digital behavior features.",
     )
-    add_code_placeholder(doc, 6, "Regression Evaluation")
+    add_code_placeholder(doc, 6, "Regression Model Evaluation")
     add_code_explanation(
         doc,
         "calculate R², MSE, RMSE, and MAE for regression predictions",
@@ -593,14 +614,18 @@ def add_modeling(doc: Document) -> None:
         doc,
         "Clustering is used to build exploratory digital lifestyle profiles. The input uses only digital behavior and lifestyle numerical features. It does not use high_risk_flag, digital_dependence_score, or productivity_score as clustering input because those variables are outcomes for interpretation, not grouping features.",
     )
+    add_para(
+        doc,
+        "KMeans, AgglomerativeClustering, and GaussianMixture are compared. Candidate k values are evaluated with the elbow method, Silhouette, Calinski-Harabasz, and Davies-Bouldin. KMeans k=3 is selected because it gives the most suitable silhouette among the tested KMeans settings and produces three readable lifestyle profiles.",
+    )
     add_table_placeholder(
         doc,
-        10,
-        "Clustering Profiles",
-        "screenshot_tables/table10_clustering_profiles.xlsx",
-        "This screenshot records KMeans k=3, Silhouette=0.1860, and the compact cluster profiles.",
+        12,
+        "Clustering Model Comparison and Cluster Profiles",
+        "screenshot_tables/table12_clustering_model_comparison_and_cluster_profiles.xlsx",
+        "This screenshot records KMeans, AgglomerativeClustering, GaussianMixture, k-selection metrics, and the compact cluster profiles.",
         "Cluster 0 is a High social-media-use profile, Cluster 1 is a High device-dependence profile, and Cluster 2 is a Low-load balanced profile.",
-        "The profiles are readable, but the low silhouette score means the cluster boundaries are weak.",
+        "The profiles are readable, but Silhouette=0.1860 is low, so the result is an exploratory summary rather than a strict grouping rule.",
     )
     add_figure_block(
         doc,
@@ -609,7 +634,7 @@ def add_modeling(doc: Document) -> None:
         "fig10_kmeans_k_selection.png",
         "This figure combines elbow information and silhouette score to choose k.",
         "The inertia curve decreases as k increases, while the silhouette curve is highest around k=3 among the tested values.",
-        "k=3 is selected because it gives a readable profile structure and the best silhouette result, but Silhouette=0.1860 still requires cautious interpretation.",
+        "Although k=3 is selected, the silhouette value is still low. Therefore, k selection supports exploration, not strict segmentation.",
     )
     add_figure_block(
         doc,
@@ -623,13 +648,13 @@ def add_modeling(doc: Document) -> None:
     add_figure_block(
         doc,
         12,
-        "PCA Variance and Two-Dimensional Structure",
+        "PCA Explained Variance for Dimensionality Reduction",
         "fig12_pca_explained_variance.png",
-        "This figure provides dimensionality-reduction evidence for the PCA extension used in preprocessing and clustering interpretation.",
-        "The first two principal components explain about 42.41% of the total variance. Therefore, a two-dimensional view captures part of the structure but not the whole high-dimensional dataset.",
-        "PCA is useful for auxiliary structure understanding, but it should not replace the original feature space for classification, regression, or final clustering evaluation.",
+        "This figure records how much variance is explained by the leading principal components.",
+        "The first two principal components explain about 42.41% of the total variance.",
+        "PCA is useful for auxiliary visualization and structure understanding, but it should not replace the original feature space for modeling.",
     )
-    add_code_placeholder(doc, 7, "Clustering and K Selection")
+    add_code_placeholder(doc, 7, "Clustering Model Comparison and k Selection")
     add_code_explanation(
         doc,
         "standardize clustering features and compare k values using inertia and silhouette",
@@ -657,6 +682,10 @@ def add_conclusion(doc: Document) -> None:
         "Clustering forms three readable lifestyle profiles, but Silhouette=0.1860 shows that the boundaries are weak.",
     ]:
         add_bullet(doc, item)
+    add_para(
+        doc,
+        "The whole workflow leads to a consistent conclusion. The data-quality checks show that the dataset can be used without deleting records. Feature engineering transforms raw counts and minutes into behavior-intensity variables. EDA then shows class imbalance, group overlap, and different correlation strengths among target variables. Based on these findings, the classification model is designed as a recall-oriented High Risk screening reference, the regression model successfully represents digital dependence but not productivity, and clustering provides readable but weakly separated lifestyle profiles. Therefore, the final value of the report is not perfect prediction, but a complete and explainable data analysis workflow.",
+    )
     add_heading(doc, "6.2 Practical Value", 2)
     add_para(
         doc,
@@ -694,14 +723,6 @@ def add_appendix(doc: Document) -> None:
     )
     add_para(doc, "appendix_A_complete_code.py")
     add_placeholder(doc, "[PASTE COMPLETE RUNNABLE CODE HERE]")
-    add_code_placeholder(doc, 8, "Export Figures and Screenshot Tables")
-    add_code_explanation(
-        doc,
-        "export final PNG figures and screenshot-ready Excel tables",
-        "the final report needs visual evidence and process evidence",
-        "figures/final_report/ and screenshot_tables/ files",
-        "the student's final screenshot and code-paste workflow",
-    )
 
 
 def build_report() -> None:

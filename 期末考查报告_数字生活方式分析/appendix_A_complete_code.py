@@ -81,6 +81,16 @@ def add_engineered_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def define_feature_sets(engineered: pd.DataFrame) -> dict[str, list[str]]:
+    outcome_cols = [
+        "anxiety_score",
+        "depression_score",
+        "stress_level",
+        "happiness_score",
+        "focus_score",
+        "high_risk_flag",
+        "productivity_score",
+        "digital_dependence_score",
+    ]
     classification_drop = [
         "id",
         "high_risk_flag",
@@ -92,17 +102,18 @@ def define_feature_sets(engineered: pd.DataFrame) -> dict[str, list[str]]:
         "productivity_score",
         "digital_dependence_score",
     ]
-    regression_drop = [
-        "id",
-        "digital_dependence_score",
-        "high_risk_flag",
-        "anxiety_score",
-        "depression_score",
-        "stress_level",
-        "happiness_score",
-        "focus_score",
-        "productivity_score",
-    ]
+
+    def regression_drop_for(target: str) -> list[str]:
+        drop_cols = {"id", target}
+        drop_cols.update(outcome_cols)
+        if target == "digital_dependence_score":
+            drop_cols.add("productivity_score")
+        if target == "productivity_score":
+            drop_cols.add("digital_dependence_score")
+        return sorted(drop_cols)
+
+    digital_dependence_drop = regression_drop_for("digital_dependence_score")
+    productivity_drop = regression_drop_for("productivity_score")
     clustering_features = [
         "device_hours_per_day",
         "phone_unlocks",
@@ -121,16 +132,20 @@ def define_feature_sets(engineered: pd.DataFrame) -> dict[str, list[str]]:
         "social_to_study_ratio",
     ]
     classification_features = [c for c in engineered.columns if c not in classification_drop]
-    regression_features = [c for c in engineered.columns if c not in regression_drop]
+    digital_dependence_features = [c for c in engineered.columns if c not in digital_dependence_drop]
+    productivity_features = [c for c in engineered.columns if c not in productivity_drop]
     print("\nClassification drop columns:", classification_drop)
     print("Classification feature count:", len(classification_features))
-    print("Regression feature count:", len(regression_features))
+    print("Digital dependence regression feature count:", len(digital_dependence_features))
+    print("Productivity regression feature count:", len(productivity_features))
     print("Clustering features:", clustering_features)
     return {
         "classification_drop": classification_drop,
         "classification_features": classification_features,
-        "regression_drop": regression_drop,
-        "regression_features": regression_features,
+        "digital_dependence_drop": digital_dependence_drop,
+        "digital_dependence_features": digital_dependence_features,
+        "productivity_drop": productivity_drop,
+        "productivity_features": productivity_features,
         "clustering_features": clustering_features,
     }
 

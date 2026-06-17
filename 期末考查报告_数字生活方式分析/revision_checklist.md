@@ -1,49 +1,48 @@
 # Revision Checklist
 
-All checks below refer to the current workflow-style Word report and supporting
-files generated after the small fix pass.
+This checklist is for the current workflow-style Word report and supporting
+evidence files.
 
 | # | Check item | Result |
 |---|---|---|
 | 1 | DOCX has no Abstract. | PASS |
 | 2 | DOCX has no Keywords. | PASS |
 | 3 | DOCX has no References. | PASS |
-| 4 | DOCX has only Appendix A. | PASS |
-| 5 | DOCX has no Appendix B/C/D. | PASS |
-| 6 | DOCX has no Chapter word. | PASS |
+| 4 | DOCX has no Chapter word. | PASS |
+| 5 | DOCX has only Appendix A. | PASS |
+| 6 | DOCX has no Appendix B/C/D. | PASS |
 | 7 | DOCX has no static showcase / web_demo / HTML preview. | PASS |
-| 8 | DOCX has no project-structure screenshot placeholder. | PASS |
-| 9 | DOCX has no notebook screenshot placeholder. | PASS |
-| 10 | Figure numbering is Fig1, Fig2, Fig3... | PASS |
-| 11 | Table numbering is Table1, Table2, Table3... | PASS |
-| 12 | No Figure 4-1 / Figure 5-10 / Table C-1 remains. | PASS |
-| 13 | High Risk and No Risk labels are used instead of 0/1 wherever appropriate. | PASS |
-| 14 | ID distribution plot is not used. | PASS |
-| 15 | Every figure has Purpose / Interpretation / Conclusion. | PASS |
-| 16 | Every screenshot table has Purpose / Interpretation / Conclusion. | PASS |
-| 17 | report_code_snippets.md has real Markdown line breaks and code fences. | PASS |
-| 18 | appendix_A_complete_code.py has real Python line breaks and passes py_compile. | PASS |
-| 19 | generate_final_report_figures.py passes py_compile. | PASS |
-| 20 | export_screenshot_tables.py passes py_compile. | PASS |
-| 21 | appendix_A_complete_code.py can run from the repository root. | PASS |
-| 22 | Excel screenshot tables are generated successfully. | PASS |
-| 23 | Final figures are generated successfully. | PASS |
-| 24 | No ~$*.xlsx or ~$*.docx temporary files remain. | PASS |
-| 25 | Core classification metrics unchanged: Recall=0.6420, F1=0.5355, PR-AUC=0.5084. | PASS |
-| 26 | Core regression metrics unchanged: R²=0.9839, MSE=3.1471, MAE=0.9982. | PASS |
-| 27 | productivity_score R²=-0.0041 is kept and explained as weak prediction. | PASS |
-| 28 | KMeans k=3 and Silhouette=0.1860 are unchanged. | PASS |
-| 29 | PCA first two components explain about 42.41% variance. | PASS |
-| 30 | The final Word report can be opened by python-docx structural inspection. | PASS |
-| 31 | DOCX contains 12 inserted figures and 11 screenshot-table placeholders. | PASS |
-| 32 | Visual DOCX rendering was attempted. | PASS WITH NOTE: local converter / LibreOffice is unavailable in this environment. |
+| 8 | DOCX has no project-structure screenshot or notebook screenshot placeholder. | PASS |
+| 9 | Figures are numbered Fig1, Fig2, Fig3... | PASS |
+| 10 | Tables are numbered Table1, Table2, Table3... in first-appearance order. | PASS |
+| 11 | Every figure has Purpose / Interpretation / Conclusion. | PASS |
+| 12 | Every screenshot table has Purpose / Interpretation / Conclusion. | PASS |
+| 13 | High Risk and No Risk labels are used instead of 0/1 where appropriate. | PASS |
+| 14 | No id distribution plot is used. | PASS |
+| 15 | Table screenshot Excel files can be opened normally. | PASS |
+| 16 | Excel files have clear sheet names, frozen header row, readable column widths. | PASS |
+| 17 | No ~$*.xlsx or ~$*.docx temporary files remain. | PASS |
+| 18 | report_code_snippets.md has real Markdown line breaks and code fences. | PASS |
+| 19 | appendix_A_complete_code.py has real Python line breaks. | PASS |
+| 20 | appendix_A_complete_code.py passes py_compile. | PASS |
+| 21 | export_screenshot_tables.py passes py_compile. | PASS |
+| 22 | generate_final_report_figures.py passes py_compile. | PASS |
+| 23 | Core classification metrics unchanged: Recall=0.6420, F1=0.5355, PR-AUC=0.5084. | PASS |
+| 24 | Core regression metrics unchanged: R²=0.9839, MSE=3.1471, MAE=0.9982. | PASS |
+| 25 | productivity_score R²=-0.0041 is kept and explained as weak prediction. | PASS |
+| 26 | KMeans k=3 and Silhouette=0.1860 are unchanged. | PASS |
+| 27 | PCA first two components explain about 42.41% variance. | PASS |
+| 28 | The conclusion forms a clear workflow loop from preprocessing to EDA to modeling to reflection. | PASS |
+| 29 | screenshot_todo.md tells the student exactly which Excel/table/code to insert. | PASS |
+| 30 | Final Word report opens normally by python-docx structural inspection. | PASS |
 
-## Notes
+## Structural QA Notes
 
-- The report remains in the standard workflow order: Research Objective and Task
-  Design -> Dataset Description and Task Feasibility -> Data Preprocessing and
-  Feature Construction -> Statistical Exploration and Visualization -> Modeling,
-  Tuning, and Evaluation -> Findings, Limitations, and Reflection -> Appendix A.
-- The core results CSV files were not redesigned or replaced.
-- Final visual layout should still be opened once in Word/WPS after manual
-  screenshot and code insertion.
+- The DOCX contains 12 inserted figures.
+- The DOCX contains 12 screenshot-table placeholders.
+- The DOCX contains 7 main-text code placeholders and one Appendix A complete-code placeholder.
+- `appendix_A_complete_code.py` ran successfully from the repository root in the
+  `qintian-DL` conda environment.
+- The local environment still has no LibreOffice / converter executable, so
+  final visual rendering should be checked in Word/WPS after manual screenshot
+  and code insertion.

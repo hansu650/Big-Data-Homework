@@ -70,20 +70,28 @@ engineered["social_to_study_ratio"] = engineered["social_media_mins"] / (
 )
 ```
 
-## Code4 Leakage Control and Feature Selection
+## Code4 Leakage Control and Task-Specific Feature Selection
 
 ```python
+outcome_cols = [
+    "anxiety_score", "depression_score", "stress_level",
+    "happiness_score", "focus_score", "high_risk_flag",
+    "productivity_score", "digital_dependence_score",
+]
 classification_drop = [
     "id", "high_risk_flag", "anxiety_score", "depression_score",
     "stress_level", "happiness_score", "focus_score",
     "productivity_score", "digital_dependence_score",
 ]
 
-regression_drop = [
-    "id", "digital_dependence_score", "high_risk_flag",
-    "anxiety_score", "depression_score", "stress_level",
-    "happiness_score", "focus_score", "productivity_score",
-]
+def regression_drop_for(target):
+    drop_cols = {"id", target}
+    drop_cols.update(outcome_cols)
+    if target == "digital_dependence_score":
+        drop_cols.add("productivity_score")
+    if target == "productivity_score":
+        drop_cols.add("digital_dependence_score")
+    return sorted(drop_cols)
 
 clustering_features = [
     "device_hours_per_day", "phone_unlocks", "notifications_per_day",
@@ -92,9 +100,12 @@ clustering_features = [
     "notifications_per_device_hour", "unlocks_per_device_hour",
     "device_to_sleep_ratio", "activity_sleep_interaction", "social_to_study_ratio",
 ]
+
+digital_dependence_drop = regression_drop_for("digital_dependence_score")
+productivity_drop = regression_drop_for("productivity_score")
 ```
 
-## Code5 Classification Training and Threshold Tuning
+## Code5 Classification Model Comparison and Threshold Tuning
 
 ```python
 from sklearn.model_selection import StratifiedKFold, GridSearchCV, train_test_split
@@ -134,7 +145,7 @@ pred = (proba >= 0.14).astype(int)
 print(precision_recall_fscore_support(y_test, pred, average="binary"))
 ```
 
-## Code6 Regression Evaluation
+## Code6 Regression Model Evaluation
 
 ```python
 import numpy as np
@@ -156,10 +167,12 @@ print(regression_metrics(dd_pred["actual"], dd_pred["predicted"]))
 print(regression_metrics(prod_pred["actual"], prod_pred["predicted"]))
 ```
 
-## Code7 Clustering and K Selection
+## Code7 Clustering Model Comparison and k Selection
 
 ```python
 from sklearn.cluster import KMeans
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.mixture import GaussianMixture
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 
@@ -168,28 +181,17 @@ X_scaled = StandardScaler().fit_transform(X_cluster)
 
 scores = []
 for k in range(2, 9):
-    model = KMeans(n_clusters=k, random_state=42, n_init=10)
-    labels = model.fit_predict(X_scaled)
-    scores.append({
-        "k": k,
-        "inertia": model.inertia_,
-        "silhouette": silhouette_score(X_scaled, labels),
-    })
+    km = KMeans(n_clusters=k, random_state=42, n_init=10)
+    km_labels = km.fit_predict(X_scaled)
+    agg = AgglomerativeClustering(n_clusters=k)
+    agg_labels = agg.fit_predict(X_scaled)
+    gmm = GaussianMixture(n_components=k, random_state=42)
+    gmm_labels = gmm.fit_predict(X_scaled)
+    scores.extend([
+        {"algorithm": "KMeans", "k": k, "silhouette": silhouette_score(X_scaled, km_labels)},
+        {"algorithm": "Agglomerative", "k": k, "silhouette": silhouette_score(X_scaled, agg_labels)},
+        {"algorithm": "GaussianMixture", "k": k, "silhouette": silhouette_score(X_scaled, gmm_labels)},
+    ])
 
 print(pd.DataFrame(scores))
-```
-
-## Code8 Export Figures and Screenshot Tables
-
-```python
-import runpy
-
-figure_script = PROJECT_ROOT / "scripts" / "generate_final_report_figures.py"
-table_script = PROJECT_ROOT / "scripts" / "export_screenshot_tables.py"
-
-runpy.run_path(str(figure_script), run_name="__main__")
-runpy.run_path(str(table_script), run_name="__main__")
-
-print("Final figures saved to:", PROJECT_ROOT / "figures" / "final_report")
-print("Screenshot tables saved to:", PROJECT_ROOT / "screenshot_tables")
 ```

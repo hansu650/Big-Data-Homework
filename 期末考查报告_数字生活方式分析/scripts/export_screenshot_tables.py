@@ -104,6 +104,8 @@ RANGE_RULES = {
 
 def ensure_dir() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for old_file in OUTPUT_DIR.glob("table*.xlsx"):
+        old_file.unlink()
 
 
 def clean_value(value):
@@ -242,7 +244,10 @@ def table5_range_check(raw: pd.DataFrame) -> None:
                 "passed": "PASS" if passed else "CHECK",
             }
         )
-    save_workbook(OUTPUT_DIR / "table5_range_check.xlsx", {"range_check": pd.DataFrame(rows)})
+    save_workbook(
+        OUTPUT_DIR / "table5_range_and_rationality_check.xlsx",
+        {"range_rationality": pd.DataFrame(rows)},
+    )
 
 
 def table6_engineered_features(raw: pd.DataFrame) -> pd.DataFrame:
@@ -273,67 +278,30 @@ def table6_engineered_features(raw: pd.DataFrame) -> pd.DataFrame:
 
 def table7_feature_selection(engineered: pd.DataFrame) -> None:
     classification_drop = get_excluded_columns("classification")
-    regression_drop = get_excluded_columns("regression", target_column="digital_dependence_score")
+    regression_dd_drop = get_excluded_columns("regression", target_column="digital_dependence_score")
+    regression_prod_drop = get_excluded_columns("regression", target_column="productivity_score")
     clustering_features = get_clustering_feature_columns(engineered)
     sheets = {
         "classification_drop_columns": pd.DataFrame({"drop_column": classification_drop}),
         "classification_input_features": pd.DataFrame({"input_feature": get_input_features(engineered, classification_drop)}),
-        "regression_drop_columns": pd.DataFrame(
-            {"drop_column": regression_drop}
+        "regression_dd_drop_columns": pd.DataFrame(
+            {"drop_column": regression_dd_drop}
         ),
-        "regression_input_features": pd.DataFrame({"input_feature": get_input_features(engineered, regression_drop)}),
+        "regression_dd_input_features": pd.DataFrame(
+            {"input_feature": get_input_features(engineered, regression_dd_drop)}
+        ),
+        "regression_prod_drop_columns": pd.DataFrame(
+            {"drop_column": regression_prod_drop}
+        ),
+        "regression_prod_input_features": pd.DataFrame(
+            {"input_feature": get_input_features(engineered, regression_prod_drop)}
+        ),
         "clustering_features": pd.DataFrame({"clustering_feature": clustering_features}),
     }
-    save_workbook(OUTPUT_DIR / "table7_feature_selection_leakage_control.xlsx", sheets)
+    save_workbook(OUTPUT_DIR / "table7_feature_selection_and_leakage_control.xlsx", sheets)
 
 
-def table8_classification_metrics() -> None:
-    metrics = pd.read_csv(RESULTS_DIR / "classification_tuned_metrics.csv")
-    metrics = metrics[metrics["dataset"].eq("test")].copy()
-    metrics = metrics[
-        [
-            "model",
-            "threshold_policy",
-            "threshold",
-            "precision",
-            "recall",
-            "f1",
-            "roc_auc",
-            "pr_auc",
-            "balanced_accuracy",
-            "tn",
-            "fp",
-            "fn",
-            "tp",
-        ]
-    ]
-    save_workbook(OUTPUT_DIR / "table8_classification_metrics.xlsx", {"classification_metrics": metrics})
-
-
-def table9_regression_metrics() -> None:
-    dd = pd.read_csv(RESULTS_DIR / "regression_digital_dependence_metrics.csv")
-    prod = pd.read_csv(RESULTS_DIR / "regression_productivity_metrics.csv")
-    target_comp = pd.read_csv(RESULTS_DIR / "regression_target_comparison.csv")
-    sheets = {
-        "target_comparison": target_comp,
-        "digital_dependence": dd[["model", "target", "mae", "mse", "rmse", "r2", "cv_best_r2"]],
-        "productivity": prod[["model", "target", "mae", "mse", "rmse", "r2", "cv_best_r2"]],
-    }
-    save_workbook(OUTPUT_DIR / "table9_regression_metrics.xlsx", sheets)
-
-
-def table10_clustering_profiles() -> None:
-    profiles = pd.read_csv(RESULTS_DIR / "clustering_lifestyle_profiles_compact.csv")
-    model = pd.read_csv(RESULTS_DIR / "clustering_kmeans_scores.csv")
-    best = model[model["k"].eq(3)][["k", "inertia", "silhouette", "calinski_harabasz", "davies_bouldin"]]
-    sheets = {
-        "kmeans_k3_score": best,
-        "cluster_profiles": profiles,
-    }
-    save_workbook(OUTPUT_DIR / "table10_clustering_profiles.xlsx", sheets)
-
-
-def table11_pca_explained_variance() -> None:
+def table8_pca_explained_variance() -> None:
     pca = pd.read_csv(RESULTS_DIR / "pca_explained_variance.csv")
     pca = pca[
         [
@@ -353,7 +321,158 @@ def table11_pca_explained_variance() -> None:
         "PC1 + PC2 explain about 42.41%; useful for visualization only.",
         "",
     )
-    save_workbook(OUTPUT_DIR / "table11_pca_explained_variance.xlsx", {"pca_variance": pca})
+    save_workbook(OUTPUT_DIR / "table8_pca_explained_variance.xlsx", {"pca_variance": pca})
+
+
+def table9_descriptive_statistics(raw: pd.DataFrame) -> None:
+    columns = [
+        "device_hours_per_day",
+        "phone_unlocks",
+        "notifications_per_day",
+        "social_media_mins",
+        "study_mins",
+        "sleep_hours",
+        "sleep_quality",
+        "productivity_score",
+        "digital_dependence_score",
+    ]
+    summary = raw[columns].describe(percentiles=[0.25, 0.5, 0.75]).T.reset_index()
+    summary = summary.rename(
+        columns={
+            "index": "field_name",
+            "25%": "Q1",
+            "50%": "median",
+            "75%": "Q3",
+        }
+    )
+    summary = summary[
+        ["field_name", "count", "mean", "std", "min", "Q1", "median", "Q3", "max"]
+    ]
+    save_workbook(
+        OUTPUT_DIR / "table9_descriptive_statistical_summary.xlsx",
+        {"descriptive_summary": summary},
+    )
+
+
+def table10_classification_comparison() -> None:
+    metrics = pd.read_csv(RESULTS_DIR / "classification_tuned_metrics.csv")
+    model_compare = metrics[
+        (metrics["dataset"].eq("validation"))
+        & (metrics["threshold_policy"].eq("default_0_50"))
+    ].copy()
+    model_compare = model_compare[
+        [
+            "dataset",
+            "model",
+            "threshold_policy",
+            "threshold",
+            "accuracy",
+            "precision",
+            "recall",
+            "f1",
+            "roc_auc",
+            "pr_auc",
+            "balanced_accuracy",
+        ]
+    ]
+    threshold = pd.read_csv(RESULTS_DIR / "classification_threshold_tuning.csv")
+    threshold = threshold[
+        [
+            "dataset",
+            "model",
+            "policy",
+            "threshold",
+            "accuracy",
+            "precision",
+            "recall",
+            "f1",
+            "roc_auc",
+            "pr_auc",
+            "balanced_accuracy",
+        ]
+    ]
+    final_test = metrics[
+        (metrics["dataset"].eq("test"))
+        & (metrics["model"].eq("gradient_boosting"))
+        & (metrics["threshold"].round(2).eq(0.14))
+    ].copy()
+    final_test = final_test[
+        [
+            "dataset",
+            "model",
+            "threshold_policy",
+            "threshold",
+            "accuracy",
+            "precision",
+            "recall",
+            "f1",
+            "roc_auc",
+            "pr_auc",
+            "balanced_accuracy",
+            "tn",
+            "fp",
+            "fn",
+            "tp",
+        ]
+    ]
+    matrix = pd.read_csv(RESULTS_DIR / "classification_final_confusion_matrix.csv")
+    matrix = matrix.rename(columns={matrix.columns[0]: "actual_label"})
+    sheets = {
+        "classification_model_comparison": model_compare,
+        "threshold_strategy_comparison": threshold,
+        "final_test_metrics": final_test,
+        "confusion_matrix_counts": matrix,
+    }
+    save_workbook(
+        OUTPUT_DIR / "table10_classification_model_comparison_and_threshold_results.xlsx",
+        sheets,
+    )
+
+
+def table11_regression_comparison() -> None:
+    dd = pd.read_csv(RESULTS_DIR / "regression_digital_dependence_metrics.csv")
+    prod = pd.read_csv(RESULTS_DIR / "regression_productivity_metrics.csv")
+    target_comp = pd.read_csv(RESULTS_DIR / "regression_target_comparison.csv")
+    metric_cols = [
+        "model",
+        "target",
+        "cv_best_r2",
+        "cv_best_mse",
+        "cv_best_mae",
+        "mae",
+        "mse",
+        "rmse",
+        "r2",
+    ]
+    sheets = {
+        "target_comparison": target_comp,
+        "digital_dependence_models": dd[metric_cols],
+        "productivity_models": prod[metric_cols],
+    }
+    save_workbook(OUTPUT_DIR / "table11_regression_model_comparison.xlsx", sheets)
+
+
+def table12_clustering_comparison() -> None:
+    model_comp = pd.read_csv(RESULTS_DIR / "clustering_model_comparison.csv")
+    kmeans = pd.read_csv(RESULTS_DIR / "clustering_kmeans_scores.csv")
+    profiles = pd.read_csv(RESULTS_DIR / "clustering_lifestyle_profiles_compact.csv")
+    common_cols = [
+        "algorithm",
+        "k",
+        "inertia",
+        "silhouette",
+        "calinski_harabasz",
+        "davies_bouldin",
+    ]
+    sheets = {
+        "model_comparison": model_comp[common_cols],
+        "kmeans_k_scores": kmeans,
+        "cluster_profiles": profiles,
+    }
+    save_workbook(
+        OUTPUT_DIR / "table12_clustering_model_comparison_and_cluster_profiles.xlsx",
+        sheets,
+    )
 
 
 def main() -> None:
@@ -366,10 +485,11 @@ def main() -> None:
     table5_range_check(raw)
     engineered = table6_engineered_features(raw)
     table7_feature_selection(engineered)
-    table8_classification_metrics()
-    table9_regression_metrics()
-    table10_clustering_profiles()
-    table11_pca_explained_variance()
+    table8_pca_explained_variance()
+    table9_descriptive_statistics(raw)
+    table10_classification_comparison()
+    table11_regression_comparison()
+    table12_clustering_comparison()
     print(f"Generated screenshot Excel tables in {OUTPUT_DIR}")
 
 
