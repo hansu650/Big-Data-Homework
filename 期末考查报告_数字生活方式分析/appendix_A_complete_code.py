@@ -1,7 +1,10 @@
-"""Complete runnable code source for Appendix A.
+﻿"""Complete runnable code source for Appendix A.
 
-Run from the repository root:
-    python 期末考查报告_数字生活方式分析/appendix_A_complete_code.py
+Run from the project directory:
+    python appendix_A_complete_code.py
+
+Or run from the repository root:
+    python <project_dir>/appendix_A_complete_code.py
 
 This file rebuilds the final report evidence files without changing the
 validated core CSV metrics. It loads the raw dataset, checks data quality,
@@ -222,4 +225,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
 
