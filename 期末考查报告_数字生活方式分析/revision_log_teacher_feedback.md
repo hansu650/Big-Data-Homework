@@ -10,6 +10,8 @@
 ## Deleted or Replaced Items
 
 - Removed the model-comparison Excel screenshots from the formal body.
+- Converted Table1-Table9 body tables into screenshot placeholders that point to `screenshot_tables/*.xlsx`, so the student can insert their own Excel/CSV screenshots later.
+- Kept Python-generated figures inserted directly in the Word body.
 - Table10 Classification Model Comparison and Threshold Results was replaced by Fig5.
 - Table11 Regression Model Comparison was replaced by Fig11.
 - Table12 Clustering Model Comparison and Cluster Profiles was replaced by Fig12 and Fig13.

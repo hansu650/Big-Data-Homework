@@ -32,6 +32,17 @@ PRE_EDIT_BACKUP = FINAL_SUBMIT_DIR / "大数据分析与应用期末考查报告
 OUTPUT_DOCX = FINAL_SUBMIT_DIR / "大数据分析与应用期末考查报告_老师反馈修改版.docx"
 REVISION_LOG = PROJECT_ROOT / "revision_log_teacher_feedback.md"
 VISUAL_AUDIT = RESULTS_DIR / "report_visual_audit.csv"
+TABLE_SCREENSHOT_FILES = {
+    1: "screenshot_tables/table1_raw_dataset_preview.xlsx",
+    2: "screenshot_tables/table2_dataset_fields.xlsx",
+    3: "screenshot_tables/table3_missing_value_check.xlsx",
+    4: "screenshot_tables/table4_duplicate_check.xlsx",
+    5: "screenshot_tables/table5_range_and_rationality_check.xlsx",
+    6: "screenshot_tables/table6_engineered_features_preview.xlsx",
+    7: "screenshot_tables/table7_feature_selection_and_leakage_control.xlsx",
+    8: "screenshot_tables/table8_pca_explained_variance.xlsx",
+    9: "screenshot_tables/table9_descriptive_statistical_summary.xlsx",
+}
 
 
 def find_source_docx() -> Path:
@@ -154,28 +165,20 @@ def add_table_caption(doc: Document, table_id: int, title: str) -> None:
     set_run_font(run, size=9.5, bold=True, color="111827")
 
 
+def add_table_placeholder(doc: Document, table_id: int) -> None:
+    source = TABLE_SCREENSHOT_FILES[table_id]
+    paragraph = doc.add_paragraph()
+    paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    paragraph.paragraph_format.space_before = Pt(4)
+    paragraph.paragraph_format.space_after = Pt(6)
+    run = paragraph.add_run(f"[INSERT TABLE{table_id} SCREENSHOT HERE: {source}]")
+    set_run_font(run, size=10, bold=True, color="B91C1C")
+
+
 def add_dataframe_table(doc: Document, table_id: int, title: str, df: pd.DataFrame, intro: str, analysis: str) -> None:
     add_para(doc, intro)
     add_table_caption(doc, table_id, title)
-    table = doc.add_table(rows=1, cols=len(df.columns))
-    table_style_names = {style.name for style in doc.styles if style.type == 3}
-    if "Table Grid" in table_style_names:
-        table.style = "Table Grid"
-    header = table.rows[0].cells
-    for idx, column in enumerate(df.columns):
-        header[idx].text = str(column)
-    for _, row in df.iterrows():
-        cells = table.add_row().cells
-        for idx, value in enumerate(row):
-            if isinstance(value, float):
-                cells[idx].text = f"{value:.3f}"
-            else:
-                cells[idx].text = str(value)
-    for row in table.rows:
-        for cell in row.cells:
-            for paragraph in cell.paragraphs:
-                for run in paragraph.runs:
-                    set_run_font(run, size=7.8)
+    add_table_placeholder(doc, table_id)
     add_para(doc, analysis)
 
 
@@ -701,15 +704,15 @@ def build_report(source: Path) -> dict[str, int | str | bool]:
 def write_visual_audit() -> None:
     rows: list[dict[str, str | bool]] = []
     tables = {
-        "Table1": ("Raw Dataset Preview", "table", "keep", "native Word table from raw CSV", "Does the report start from raw data?", "raw CSV preview", "The raw table contains behavior, lifestyle, and target fields in one structured dataset."),
-        "Table2": ("Dataset Fields", "table", "keep", "native Word table from raw CSV", "Which fields are inputs, background fields, or targets?", "field dtype and role mapping", "Target and outcome-style fields can be separated before modeling."),
-        "Table3": ("Missing Value Check", "table", "keep", "native Word table from raw CSV", "Are missing values present?", "missing counts by column", "All 24 fields contain zero missing values."),
-        "Table4": ("Duplicate Check", "table", "keep", "native Word table from raw CSV", "Are duplicated records present?", "duplicate row/id counts", "All 3,500 records can be retained."),
-        "Table5": ("Range and Rationality Check", "table", "keep", "native Word table from raw CSV", "Are key numeric ranges reasonable?", "min/max/mean by field", "Wide but interpretable ranges support later modeling without deletion."),
-        "Table6": ("Engineered Features Preview", "table", "keep", "native Word table from processed CSV", "Were engineered features generated correctly?", "processed feature preview", "Behavior-intensity variables are available for modeling."),
-        "Table7": ("Feature Selection and Leakage Control", "table", "keep", "native Word table", "Which fields are excluded for each task?", "task-specific exclusion rules", "Outcome-style fields are controlled before modeling."),
-        "Table8": ("PCA Explained Variance", "table", "keep", "results/pca_explained_variance.csv", "How much variance does PCA summarize?", "explained variance ratios", "PC1+PC2 explain 42.41%, so PCA is auxiliary."),
-        "Table9": ("Descriptive Statistical Summary", "table", "keep", "native Word table from raw CSV", "What are the variable ranges and scales?", "descriptive statistics", "Different scales explain why scaling is needed for PCA and clustering."),
+        "Table1": ("Raw Dataset Preview", "table", "keep", "screenshot_tables/table1_raw_dataset_preview.xlsx", "Does the report start from raw data?", "raw CSV preview", "The raw table contains behavior, lifestyle, and target fields in one structured dataset."),
+        "Table2": ("Dataset Fields", "table", "keep", "screenshot_tables/table2_dataset_fields.xlsx", "Which fields are inputs, background fields, or targets?", "field dtype and role mapping", "Target and outcome-style fields can be separated before modeling."),
+        "Table3": ("Missing Value Check", "table", "keep", "screenshot_tables/table3_missing_value_check.xlsx", "Are missing values present?", "missing counts by column", "All 24 fields contain zero missing values."),
+        "Table4": ("Duplicate Check", "table", "keep", "screenshot_tables/table4_duplicate_check.xlsx", "Are duplicated records present?", "duplicate row/id counts", "All 3,500 records can be retained."),
+        "Table5": ("Range and Rationality Check", "table", "keep", "screenshot_tables/table5_range_and_rationality_check.xlsx", "Are key numeric ranges reasonable?", "min/max/mean by field", "Wide but interpretable ranges support later modeling without deletion."),
+        "Table6": ("Engineered Features Preview", "table", "keep", "screenshot_tables/table6_engineered_features_preview.xlsx", "Were engineered features generated correctly?", "processed feature preview", "Behavior-intensity variables are available for modeling."),
+        "Table7": ("Feature Selection and Leakage Control", "table", "keep", "screenshot_tables/table7_feature_selection_and_leakage_control.xlsx", "Which fields are excluded for each task?", "task-specific exclusion rules", "Outcome-style fields are controlled before modeling."),
+        "Table8": ("PCA Explained Variance", "table", "keep", "screenshot_tables/table8_pca_explained_variance.xlsx", "How much variance does PCA summarize?", "explained variance ratios", "PC1+PC2 explain 42.41%, so PCA is auxiliary."),
+        "Table9": ("Descriptive Statistical Summary", "table", "keep", "screenshot_tables/table9_descriptive_statistical_summary.xlsx", "What are the variable ranges and scales?", "descriptive statistics", "Different scales explain why scaling is needed for PCA and clustering."),
     }
     figures = {
         "Fig1": ("High Risk vs No Risk Sample Structure", "figure", "revise", "figures/final_report/fig1_high_risk_no_risk_distribution.png", "Is the classification target imbalanced?", "class counts and ratios", "High Risk is 20.14%, so Accuracy alone can be misleading."),
@@ -779,7 +782,7 @@ def try_render_docx() -> str:
 def structural_check() -> dict[str, object]:
     doc = Document(str(OUTPUT_DOCX))
     text = "\n".join(p.text for p in doc.paragraphs)
-    forbidden = ["Summary:", "Purpose:", "Observation:", "Meaning:", "[INSERT", "[PASTE", "TODO", "Table10", "Table11", "Table12"]
+    forbidden = ["Summary:", "Purpose:", "Observation:", "Meaning:", "[PASTE", "TODO", "Table10", "Table11", "Table12"]
     return {
         "forbidden_hits": {term: text.count(term) for term in forbidden if term in text},
         "figure_count": len(set(re.findall(r"Fig\d+", text))),
@@ -818,6 +821,8 @@ def write_revision_log(source: Path, build_info: dict[str, int | str | bool], re
 ## Deleted or Replaced Items
 
 - Removed the model-comparison Excel screenshots from the formal body.
+- Converted Table1-Table9 body tables into screenshot placeholders that point to `screenshot_tables/*.xlsx`, so the student can insert their own Excel/CSV screenshots later.
+- Kept Python-generated figures inserted directly in the Word body.
 - Table10 Classification Model Comparison and Threshold Results was replaced by Fig5.
 - Table11 Regression Model Comparison was replaced by Fig11.
 - Table12 Clustering Model Comparison and Cluster Profiles was replaced by Fig12 and Fig13.
