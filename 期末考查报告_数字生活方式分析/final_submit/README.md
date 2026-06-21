@@ -6,8 +6,8 @@ This folder stores the final submission files for the **Big Data Analysis and Ap
 
 | File | Purpose |
 |---|---|
-| [大数据分析与应用期末考查报告.pdf](大数据分析与应用期末考查报告.pdf) | Final PDF report for submission and quick reading. |
-| [大数据分析与应用期末考查报告.docx](大数据分析与应用期末考查报告.docx) | Editable final Word report. |
+| [秦天-大数据分析与应用期末考查报告-202431123002054.pdf](秦天-大数据分析与应用期末考查报告-202431123002054.pdf) | Final PDF report for submission and quick reading. |
+| [秦天-大数据分析与应用期末考查报告-202431123002054.docx](秦天-大数据分析与应用期末考查报告-202431123002054.docx) | Editable final Word report. |
 
 ## Related Project Materials
 
