@@ -13,6 +13,7 @@ The final project analyzes a 2025 Digital Lifestyle Benchmark Dataset with a com
 
 | Item | Link |
 |---|---|
+| GitHub project page | [Open the final project folder on GitHub](https://github.com/hansu650/Big-Data-Homework/tree/main/%E6%9C%9F%E6%9C%AB%E8%80%83%E6%9F%A5%E6%8A%A5%E5%91%8A_%E6%95%B0%E5%AD%97%E7%94%9F%E6%B4%BB%E6%96%B9%E5%BC%8F%E5%88%86%E6%9E%90) |
 | Final project folder | [期末考查报告_数字生活方式分析/](期末考查报告_数字生活方式分析/) |
 | Final PDF report | [final_submit/大数据分析与应用期末考查报告.pdf](期末考查报告_数字生活方式分析/final_submit/大数据分析与应用期末考查报告.pdf) |
 | Final Word report | [final_submit/大数据分析与应用期末考查报告.docx](期末考查报告_数字生活方式分析/final_submit/大数据分析与应用期末考查报告.docx) |
