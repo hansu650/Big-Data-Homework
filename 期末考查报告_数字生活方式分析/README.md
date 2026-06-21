@@ -123,7 +123,22 @@ flowchart LR
 
 这些建议来自 synthetic benchmark data，只能作为方向性分析，不是因果证明，也不是个人诊断。
 
-## 9. Reproduction
+## 9. Environment
+
+The experiment was conducted in a **CPU-based local Python environment on Windows**. The Python version was **3.9.13**, managed with the conda environment **qintian-DL**.
+
+Main packages used in this project:
+
+- `pandas`
+- `numpy`
+- `scipy`
+- `scikit-learn`
+- `matplotlib`
+- `openpyxl`
+- `python-docx`
+- `joblib`
+
+## 10. Reproduction
 
 ```bash
 git clone https://github.com/hansu650/Big-Data-Homework.git
@@ -132,7 +147,7 @@ pip install -r requirements.txt
 python appendix_A_complete_code.py
 ```
 
-## 10. Repository Structure
+## 11. Repository Structure
 
 ```text
 期末考查报告_数字生活方式分析/
@@ -153,7 +168,7 @@ python appendix_A_complete_code.py
 └─ README.md
 ```
 
-## 11. Final Submission
+## 12. Final Submission
 
 | File | Link |
 |---|---|
@@ -164,7 +179,7 @@ python appendix_A_complete_code.py
 | Workflow summary CSV | [`results/final_workflow_report_summary.csv`](results/final_workflow_report_summary.csv) |
 | Final report figures | [`figures/final_report/`](figures/final_report/) |
 
-## 12. Interpretation Boundaries
+## 13. Interpretation Boundaries
 
 - Classification is a **screening reference**, not a final personal judgment.
 - Digital dependence is a **prediction relationship**, not a causal conclusion.
