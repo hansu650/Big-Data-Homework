@@ -1,20 +1,49 @@
 # Big Data Homework
 
-本仓库用于整理《大数据分析与应用》课程作业、实验资料与期末考查报告项目。
+This repository collects coursework, experiment materials, and the final course project for **Big Data Analysis and Applications**.
 
-## 目录说明
+## Featured Final Project
 
-- `3-13/`、`3-20/`、`3-27/`、`4-3/`、`4-10/`：按日期整理的课堂或阶段作业。
-- `实验一/`、`实验二/`、`实验三/`、`实验四/`：课程实验代码与资料。
-- `期末报告资料/`：期末报告相关课件、模板、参考资料和可用数据集。
-- `期末考查报告_数字生活方式分析/`：本次期末考查报告的完整可复现实验项目，包含代码、notebook、结果表格、图表和 LaTeX 报告骨架。
-- `历史零散文件/`：从原本本地根目录收拢的零散旧文件。
+> **Digital Lifestyle Analysis:**<br>
+> **High-Risk Screening, Digital Dependence Prediction, and Lifestyle Profile Clustering**
 
-## 期末考查报告项目
+The final project analyzes a 2025 Digital Lifestyle Benchmark Dataset with a complete data-analysis workflow: dataset checking, preprocessing, feature engineering, EDA, classification, regression, clustering, and final report writing.
 
-期末项目题目：
+**Quick links**
 
-《数字生活方式对身心风险与效率表现的影响分析--基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究》
+| Item | Link |
+|---|---|
+| Final project folder | [期末考查报告_数字生活方式分析/](期末考查报告_数字生活方式分析/) |
+| Final PDF report | [final_submit/大数据分析与应用期末考查报告.pdf](期末考查报告_数字生活方式分析/final_submit/大数据分析与应用期末考查报告.pdf) |
+| Final Word report | [final_submit/大数据分析与应用期末考查报告.docx](期末考查报告_数字生活方式分析/final_submit/大数据分析与应用期末考查报告.docx) |
+| Complete runnable code | [appendix_A_complete_code.py](期末考查报告_数字生活方式分析/appendix_A_complete_code.py) |
 
-进入项目目录后，可按其中 `README.md` 的说明安装依赖并依次运行 notebooks。
+### Project Tasks
 
+- **High Risk classification**: screen `high_risk_flag` with a recall-oriented threshold.
+- **Digital dependence regression**: predict `digital_dependence_score`.
+- **Lifestyle clustering**: summarize digital lifestyle profiles with clustering methods.
+
+### Locked Key Results
+
+| Task | Final result |
+|---|---|
+| Classification | Gradient Boosting, threshold=0.14, Recall=0.6420, F1=0.5355, PR-AUC=0.5084 |
+| Digital dependence regression | R²=0.9839, MSE=3.1471, MAE=0.9982 |
+| Productivity regression | R²=-0.0041 |
+| Clustering | KMeans k=3, Silhouette=0.1860 |
+| PCA | PC1+PC2=42.41% |
+
+## Repository Layout
+
+| Path | Description |
+|---|---|
+| `期末考查报告_数字生活方式分析/` | Final course project with data, notebooks, code, figures, results, and final submission files. |
+| `期末报告资料/` | Course report materials, templates, references, and related datasets. |
+| `实验一/`, `实验二/`, `实验三/`, `实验四/` | Course experiment folders and related materials. |
+| `3-13/`, `3-20/`, `3-27/`, `4-3/`, `4-10/` | Date-organized coursework or class-stage materials. |
+| `历史零散文件/` | Archived older local files collected from the original workspace. |
+
+## Notes
+
+The final project keeps the core experiment values fixed and documents both strong and weak results. The High Risk classifier is used as a screening reference, digital dependence regression is interpreted as prediction rather than causality, productivity prediction is treated as a weak result, and clustering is used for exploratory profile analysis.

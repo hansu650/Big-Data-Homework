@@ -1,83 +1,135 @@
-# Big Data Analysis Final Report Project
+# Digital Lifestyle Analysis
 
-题目：《数字生活方式下的高风险识别、数字依赖预测与用户画像分析——基于 2025 Digital Lifestyle Benchmark 数据集的分类、回归与聚类研究》
+**High-Risk Screening, Digital Dependence Prediction, and Lifestyle Profile Clustering**
 
-本项目用于《大数据分析与应用》期末考查报告的实验代码、结果输出和 LaTeX 报告框架。项目坚持 CPU 运行、非深度学习方法、可复现实验设置，并统一使用 `random_state=42`。
+This folder contains the final course project for **Big Data Analysis and Applications**. It includes the dataset workflow, notebooks, source code, result files, final figures, complete runnable code, and final submission documents.
 
-## Project Structure
+## 1. Project Overview
+
+The project studies digital lifestyle behavior with a structured benchmark dataset. The analysis follows a complete course-report workflow:
+
+1. dataset selection and compliance checking;
+2. data cleaning and feature engineering;
+3. statistical analysis and visualization;
+4. machine learning model training and evaluation;
+5. interpretation of useful results and limitations.
+
+The final report focuses on three tasks: **High Risk screening**, **digital dependence prediction**, and **lifestyle profile clustering**.
+
+## 2. Research Questions
+
+- Can `high_risk_flag` be screened with behavior and lifestyle features?
+- Can `digital_dependence_score` be predicted from digital-use and lifestyle variables?
+- Does `productivity_score` behave as a weak-prediction target under the same feature setting?
+- Can clustering summarize readable digital lifestyle profiles?
+
+## 3. Dataset
+
+The project uses the **2025 Digital Lifestyle Benchmark Dataset**.
+
+| Item | Description |
+|---|---|
+| Dataset type | Structured CSV |
+| Records | 3,500 synthetic records |
+| Fields | 24 fields |
+| Sources | Kaggle / Hugging Face |
+| License | CC BY 4.0 |
+| Local CSV | [`data/raw/digital_lifestyle_benchmark_2025.csv`](data/raw/digital_lifestyle_benchmark_2025.csv) |
+
+The dataset is suitable for benchmark experiments, education, EDA, and reproducible course analysis. It is **not** used for real personal diagnosis or individual-level intervention.
+
+## 4. Analysis Workflow
 
 ```text
-final_report_project/
+Dataset checking
+  -> Missing/duplicate/range checks
+  -> Feature engineering
+  -> Leakage-controlled feature selection
+  -> EDA and visualization
+  -> Classification, regression, clustering
+  -> Final report and interpretation
+```
+
+Important implementation materials:
+
+- [`notebooks/`](notebooks/) records the step-by-step analysis process.
+- [`src/`](src/) stores reusable helper code.
+- [`appendix_A_complete_code.py`](appendix_A_complete_code.py) provides the complete runnable script.
+- [`results/`](results/) stores generated result CSV files.
+- [`figures/final_report/`](figures/final_report/) stores final report figures.
+
+## 5. Key Results
+
+| Task | Model or method | Locked result |
+|---|---|---|
+| High Risk classification | Gradient Boosting, threshold=0.14 | Recall=0.6420, F1=0.5355, PR-AUC=0.5084 |
+| Digital dependence regression | Gradient Boosting | R²=0.9839, MSE=3.1471, MAE=0.9982 |
+| Productivity regression | Regression comparison | R²=-0.0041 |
+| Lifestyle clustering | KMeans k=3 | Silhouette=0.1860 |
+| PCA evidence | PC1+PC2 | 42.41% explained variance |
+
+## 6. Figure Preview
+
+### Classification model comparison
+
+![Classification model comparison](figures/final_report/fig5_classification_model_comparison.png)
+
+### Threshold tuning for High Risk screening
+
+![Threshold tuning](figures/final_report/fig6_threshold_tuning.png)
+
+### Digital dependence observed vs predicted
+
+![Digital dependence observed vs predicted](figures/final_report/fig9_digital_dependence_observed_predicted.png)
+
+### Three lifestyle cluster profiles
+
+![Cluster profile heatmap](figures/final_report/fig13_cluster_profile_heatmap.png)
+
+## 7. Repository Structure
+
+```text
+期末考查报告_数字生活方式分析/
 ├─ data/
-│  ├─ raw/
-│  └─ processed/
 ├─ notebooks/
 ├─ src/
+├─ scripts/
 ├─ figures/
+│  └─ final_report/
 ├─ results/
-├─ report/
-│  ├─ sections/
-│  └─ tables/
-└─ requirements.txt
+├─ screenshot_tables/
+├─ final_submit/
+├─ overleaf_final/
+├─ appendix_A_complete_code.py
+├─ report_code_snippets.md
+├─ requirements.txt
+└─ README.md
 ```
 
-## Dataset
-
-优先数据集为 Hugging Face 上的 2025 Digital Lifestyle Benchmark Dataset：
-
-- Dataset page: https://huggingface.co/datasets/tarekmasryo/digital-lifestyle-benchmark-dataset
-- Canonical CSV: `data/digital_lifestyle_benchmark_2025.csv`
-- License: CC BY 4.0
-
-`notebooks/00_dataset_selection_and_compliance.ipynb` 会下载原始 CSV 到 `data/raw/`，并输出数据来源、许可、字段检查和基础规模信息。若网络不可用，可以手动把 CSV 放入：
-
-```text
-data/raw/digital_lifestyle_benchmark_2025.csv
-```
-
-## Reproducibility
+## 8. Reproduction
 
 ```bash
+cd 期末考查报告_数字生活方式分析
 pip install -r requirements.txt
+python appendix_A_complete_code.py
 ```
 
-建议按下面顺序运行 notebook：
+The script regenerates the main workflow outputs used by the final report. Some final Word/PDF formatting steps are handled manually in Word/WPS for submission.
 
-1. `notebooks/00_dataset_selection_and_compliance.ipynb`
-2. `notebooks/01_data_preprocessing_and_eda.ipynb`
-3. `notebooks/02_classification_high_risk.ipynb`
-4. `notebooks/03_regression_productivity.ipynb`
-5. `notebooks/04_clustering_lifestyle_profiles.ipynb`
-6. `notebooks/05_result_summary_for_report.ipynb`
+## 9. Final Submission Files
 
-所有实验结果会保存为 CSV 到 `results/`，所有图表会保存为 PNG 到 `figures/`，方便在 LaTeX 报告中引用。
+| File | Link |
+|---|---|
+| Final PDF report | [`final_submit/大数据分析与应用期末考查报告.pdf`](final_submit/大数据分析与应用期末考查报告.pdf) |
+| Final Word report | [`final_submit/大数据分析与应用期末考查报告.docx`](final_submit/大数据分析与应用期末考查报告.docx) |
+| Complete runnable code | [`appendix_A_complete_code.py`](appendix_A_complete_code.py) |
+| Workflow summary CSV | [`results/final_workflow_report_summary.csv`](results/final_workflow_report_summary.csv) |
+| Final report figures | [`figures/final_report/`](figures/final_report/) |
 
-## Target Leakage Rule
+## 10. Interpretation Boundaries
 
-分类任务预测 `high_risk_flag` 时，主模型不使用以下潜在泄漏或结果型变量：
-
-```text
-anxiety_score, depression_score, stress_level, happiness_score,
-focus_score, productivity_score, digital_dependence_score
-```
-
-聚类任务也仅基于数字行为与生活习惯变量建模，高风险、数字依赖和效率变量只在聚类后用于画像解释。
-
-## Current Report Status
-
-`report/` 目录只提供结构化 LaTeX 骨架、图表占位和方法说明。正式结论需要在真实模型结果跑完后再补写，避免提前编造实验结论。
-
-## Stage 2 Modeling Validation
-
-第二阶段已补充实验可信度修复：
-
-- 分类任务增加 GridSearchCV/RandomizedSearchCV 调参、PR-AUC、Balanced Accuracy 与阈值调优。
-- 回归任务同时评估 `productivity_score` 和 `digital_dependence_score`，并补齐 MAE、MSE、RMSE、R2。
-- 聚类任务改为只使用数字行为与生活习惯数值特征，并增加 KMeans、AgglomerativeClustering、GaussianMixture 对比。
-- EDA 增加按风险分组箱线图、类别风险率图和行为-结果关系图。
-
-第二阶段摘要见：
-
-```text
-results/stage2_experiment_design_fix_summary.md
-```
+- The High Risk classifier is a **screening reference**, not a final personal judgment.
+- The digital dependence regression result is a **prediction relationship**, not causal evidence.
+- `productivity_score` is a **weak-prediction result**, which shows the boundary of the current feature set.
+- The clustering output gives **exploratory lifestyle profiles**, not strict natural population groups.
+- The first two PCA components explain **42.41%** of the variance, so a two-dimensional PCA view cannot replace the full feature space.
