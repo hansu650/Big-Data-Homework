@@ -5,10 +5,14 @@
 
   <p>
     <img alt="Course" src="https://img.shields.io/badge/Course-Big%20Data%20Analysis%20and%20Applications-blue">
-    <img alt="Python" src="https://img.shields.io/badge/Python-3.x-3776AB">
+    <img alt="Python" src="https://img.shields.io/badge/Python-3.9.13-3776AB">
+    <img alt="Conda" src="https://img.shields.io/badge/Conda-qintian--DL-44A833">
+    <img alt="Hardware" src="https://img.shields.io/badge/Hardware-CPU%20local-lightgrey">
     <img alt="scikit-learn" src="https://img.shields.io/badge/scikit--learn-ML-orange">
     <img alt="Status" src="https://img.shields.io/badge/Status-Final%20Report-brightgreen">
   </p>
+
+  <p><strong>Environment:</strong> Windows · Python 3.9.13 · conda qintian-DL · CPU local environment</p>
 </div>
 
 ## 快速入口
