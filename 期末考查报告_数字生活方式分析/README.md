@@ -1,101 +1,148 @@
 # Digital Lifestyle Analysis
 
-**High-Risk Screening, Digital Dependence Prediction, and Lifestyle Profile Clustering**
+## High-Risk Screening, Digital Dependence Prediction, and Lifestyle Profile Clustering
 
-This folder contains the final course project for **Big Data Analysis and Applications**. It includes the dataset workflow, notebooks, source code, result files, final figures, complete runnable code, and final submission documents.
+这是《大数据分析与应用》课程期末项目。项目使用 **3,500 条 fully synthetic records** 和 **24 fields**，完成 classification、regression、clustering 三类任务，并形成完整、可复现的数据分析流程。
 
 ## 1. Project Overview
 
-The project studies digital lifestyle behavior with a structured benchmark dataset. The analysis follows a complete course-report workflow:
+本项目分析数字生活方式中的设备使用、社交媒体、睡眠、运动、通知和学习行为。报告从原始 CSV 出发，经过数据检查、特征工程、统计可视化、模型比较、阈值调节和结果解释，最终形成 Word/PDF 课程报告与完整代码。
 
-1. dataset selection and compliance checking;
-2. data cleaning and feature engineering;
-3. statistical analysis and visualization;
-4. machine learning model training and evaluation;
-5. interpretation of useful results and limitations.
+核心目标不是证明所有模型都很强，而是把数据证据、模型结果和解释边界连接起来。
 
-The final report focuses on three tasks: **High Risk screening**, **digital dependence prediction**, and **lifestyle profile clustering**.
+## 2. Research Question
 
-## 2. Research Questions
-
-- Can `high_risk_flag` be screened with behavior and lifestyle features?
-- Can `digital_dependence_score` be predicted from digital-use and lifestyle variables?
-- Does `productivity_score` behave as a weak-prediction target under the same feature setting?
-- Can clustering summarize readable digital lifestyle profiles?
+Under an increasingly digital lifestyle, which daily behaviors should be treated as priority warning signs of digital dependence, and how can these signals guide personal self-management and public digital-wellbeing support?
 
 ## 3. Dataset
 
-The project uses the **2025 Digital Lifestyle Benchmark Dataset**.
-
 | Item | Description |
 |---|---|
-| Dataset type | Structured CSV |
-| Records | 3,500 synthetic records |
+| Dataset | 2025 Digital Lifestyle Benchmark Dataset |
+| Records | 3,500 fully synthetic records |
 | Fields | 24 fields |
+| Format | CSV |
 | Sources | Kaggle / Hugging Face |
-| License | CC BY 4.0 |
-| Local CSV | [`data/raw/digital_lifestyle_benchmark_2025.csv`](data/raw/digital_lifestyle_benchmark_2025.csv) |
+| Dataset license | CC BY 4.0 |
+| Local raw CSV | [`data/raw/digital_lifestyle_benchmark_2025.csv`](data/raw/digital_lifestyle_benchmark_2025.csv) |
+| Local processed CSV | [`data/processed/digital_lifestyle_benchmark_2025_processed.csv`](data/processed/digital_lifestyle_benchmark_2025_processed.csv) |
 
-The dataset is suitable for benchmark experiments, education, EDA, and reproducible course analysis. It is **not** used for real personal diagnosis or individual-level intervention.
+该数据集适合 benchmark、education 和 EDA，不用于真实个人诊断。数据集许可是 CC BY 4.0，但这不代表整个代码仓库采用该许可证。
 
 ## 4. Analysis Workflow
 
-```text
-Dataset checking
-  -> Missing/duplicate/range checks
-  -> Feature engineering
-  -> Leakage-controlled feature selection
-  -> EDA and visualization
-  -> Classification, regression, clustering
-  -> Final report and interpretation
+```mermaid
+flowchart LR
+    A["Raw CSV"] --> B["Data Cleaning"]
+    B --> C["Feature Engineering"]
+    C --> D["EDA and Visualization"]
+    D --> E1["Classification"]
+    D --> E2["Regression"]
+    D --> E3["Clustering"]
+    E1 --> F1["High Risk screening"]
+    E2 --> F2["Dependence prediction"]
+    E3 --> F3["Lifestyle profiles"]
+    F1 --> G["Evaluation"]
+    F2 --> G
+    F3 --> G
+    G --> H["Interpretation Boundaries"]
 ```
 
-Important implementation materials:
+## 5. Key Findings
 
-- [`notebooks/`](notebooks/) records the step-by-step analysis process.
-- [`src/`](src/) stores reusable helper code.
-- [`appendix_A_complete_code.py`](appendix_A_complete_code.py) provides the complete runnable script.
-- [`results/`](results/) stores generated result CSV files.
-- [`figures/final_report/`](figures/final_report/) stores final report figures.
+1. **Sustained device use** 和 **sleep balance** 比 notification volume 更有预警价值。
+2. High Risk 分类适合作为 **early screening**，但不能作为最终个人判断。
+3. `digital_dependence_score` 可以被当前数字行为和生活方式特征很好预测。
+4. `productivity_score` 是 **weak prediction / negative result**，说明同一组特征不能解释所有结果。
+5. 三个 lifestyle clusters 只能作为 **exploratory profiles**，不是严格自然群体。
 
-## 5. Key Results
+## 6. Model Results
 
-| Task | Model or method | Locked result |
-|---|---|---|
-| High Risk classification | Gradient Boosting, threshold=0.14 | Recall=0.6420, F1=0.5355, PR-AUC=0.5084 |
-| Digital dependence regression | Gradient Boosting | R²=0.9839, MSE=3.1471, MAE=0.9982 |
-| Productivity regression | Regression comparison | R²=-0.0041 |
-| Lifestyle clustering | KMeans k=3 | Silhouette=0.1860 |
-| PCA evidence | PC1+PC2 | 42.41% explained variance |
+| Task | Final Method | Key Result | Interpretation |
+|---|---|---|---|
+| High Risk Classification | Gradient Boosting, threshold=0.14 | Recall=0.6420, F1=0.5355, PR-AUC=0.5084 | Recall-oriented screening reference |
+| Digital Dependence Regression | Gradient Boosting | R²=0.9839, MSE=3.1471, MAE=0.9982 | Strong in-dataset prediction |
+| Productivity Regression | Gradient Boosting | R²=-0.0041 | Weak prediction / negative result |
+| Lifestyle Clustering | KMeans, k=3 | Silhouette=0.1860 | Exploratory profiles |
+| PCA | PCA | PC1+PC2=42.41% | Auxiliary visualization only |
 
-## 6. Figure Preview
+## 7. Visual Results
 
-### Classification model comparison
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="figures/final_report/fig4_high_vs_no_risk_boxplots.png">
+        <img src="figures/final_report/fig4_high_vs_no_risk_boxplots.png" alt="High Risk group comparison" width="100%">
+      </a>
+      <br><strong>Fig4:</strong> Device-use intensity and sleep balance provide stronger group signals than notification volume.
+    </td>
+    <td align="center" width="50%">
+      <a href="figures/final_report/fig5_classification_model_comparison.png">
+        <img src="figures/final_report/fig5_classification_model_comparison.png" alt="Classification model comparison" width="100%">
+      </a>
+      <br><strong>Fig5:</strong> No model dominates all default-threshold metrics.
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="figures/final_report/fig6_threshold_tuning.png">
+        <img src="figures/final_report/fig6_threshold_tuning.png" alt="Threshold tuning" width="100%">
+      </a>
+      <br><strong>Fig6:</strong> Lower thresholds improve Recall but create more false alarms.
+    </td>
+    <td align="center" width="50%">
+      <a href="figures/final_report/fig9_digital_dependence_observed_predicted.png">
+        <img src="figures/final_report/fig9_digital_dependence_observed_predicted.png" alt="Digital dependence observed vs predicted" width="100%">
+      </a>
+      <br><strong>Fig9:</strong> Digital dependence is strongly predicted inside the benchmark data.
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="figures/final_report/fig10_productivity_observed_predicted.png">
+        <img src="figures/final_report/fig10_productivity_observed_predicted.png" alt="Productivity observed vs predicted" width="100%">
+      </a>
+      <br><strong>Fig10:</strong> Productivity predictions collapse toward the mean.
+    </td>
+    <td align="center" width="50%">
+      <a href="figures/final_report/fig13_cluster_profile_heatmap.png">
+        <img src="figures/final_report/fig13_cluster_profile_heatmap.png" alt="Cluster profiles" width="100%">
+      </a>
+      <br><strong>Fig13:</strong> The profiles are readable but not strictly separated.
+    </td>
+  </tr>
+</table>
 
-![Classification model comparison](figures/final_report/fig5_classification_model_comparison.png)
+## 8. Practical Interpretation
 
-### Threshold tuning for High Risk screening
+**Individual:** monitor device time, long social-media sessions, and sleep balance.
 
-![Threshold tuning](figures/final_report/fig6_threshold_tuning.png)
+**School or Community:** use screening for voluntary follow-up and differentiated guidance.
 
-### Digital dependence observed vs predicted
+**Public:** support digital-wellbeing education, screen-time summaries, and sleep-health reminders.
 
-![Digital dependence observed vs predicted](figures/final_report/fig9_digital_dependence_observed_predicted.png)
+这些建议来自 synthetic benchmark data，只能作为方向性分析，不是因果证明，也不是个人诊断。
 
-### Three lifestyle cluster profiles
+## 9. Reproduction
 
-![Cluster profile heatmap](figures/final_report/fig13_cluster_profile_heatmap.png)
+```bash
+git clone https://github.com/hansu650/Big-Data-Homework.git
+cd Big-Data-Homework/期末考查报告_数字生活方式分析
+pip install -r requirements.txt
+python appendix_A_complete_code.py
+```
 
-## 7. Repository Structure
+## 10. Repository Structure
 
 ```text
 期末考查报告_数字生活方式分析/
 ├─ data/
+│  ├─ raw/
+│  └─ processed/
 ├─ notebooks/
 ├─ src/
 ├─ scripts/
-├─ figures/
-│  └─ final_report/
+├─ figures/final_report/
 ├─ results/
 ├─ screenshot_tables/
 ├─ final_submit/
@@ -106,30 +153,21 @@ Important implementation materials:
 └─ README.md
 ```
 
-## 8. Reproduction
-
-```bash
-cd 期末考查报告_数字生活方式分析
-pip install -r requirements.txt
-python appendix_A_complete_code.py
-```
-
-The script regenerates the main workflow outputs used by the final report. Some final Word/PDF formatting steps are handled manually in Word/WPS for submission.
-
-## 9. Final Submission Files
+## 11. Final Submission
 
 | File | Link |
 |---|---|
 | Final PDF report | [`final_submit/大数据分析与应用期末考查报告.pdf`](final_submit/大数据分析与应用期末考查报告.pdf) |
 | Final Word report | [`final_submit/大数据分析与应用期末考查报告.docx`](final_submit/大数据分析与应用期末考查报告.docx) |
+| Final submit folder guide | [`final_submit/README.md`](final_submit/README.md) |
 | Complete runnable code | [`appendix_A_complete_code.py`](appendix_A_complete_code.py) |
 | Workflow summary CSV | [`results/final_workflow_report_summary.csv`](results/final_workflow_report_summary.csv) |
 | Final report figures | [`figures/final_report/`](figures/final_report/) |
 
-## 10. Interpretation Boundaries
+## 12. Interpretation Boundaries
 
-- The High Risk classifier is a **screening reference**, not a final personal judgment.
-- The digital dependence regression result is a **prediction relationship**, not causal evidence.
-- `productivity_score` is a **weak-prediction result**, which shows the boundary of the current feature set.
-- The clustering output gives **exploratory lifestyle profiles**, not strict natural population groups.
-- The first two PCA components explain **42.41%** of the variance, so a two-dimensional PCA view cannot replace the full feature space.
+- Classification is a **screening reference**, not a final personal judgment.
+- Digital dependence is a **prediction relationship**, not a causal conclusion.
+- `productivity_score` is a **negative result**, showing the boundary of the feature set.
+- Clustering provides **exploratory profiles**, not strictly separated natural groups.
+- PCA PC1+PC2 explains **42.41%**, so two-dimensional PCA is auxiliary visualization only.
