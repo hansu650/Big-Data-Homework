@@ -15,12 +15,11 @@
 
 | 入口 | 链接 |
 |---|---|
-| **Final Report PDF** | [期末考查报告_数字生活方式分析/final_submit/秦天-大数据分析与应用期末考查报告-202431123002054.pdf](期末考查报告_数字生活方式分析/final_submit/秦天-大数据分析与应用期末考查报告-202431123002054.pdf) |
-| **Final Report DOCX** | [期末考查报告_数字生活方式分析/final_submit/秦天-大数据分析与应用期末考查报告-202431123002054.docx](期末考查报告_数字生活方式分析/final_submit/秦天-大数据分析与应用期末考查报告-202431123002054.docx) |
-| **Project Details** | [期末考查报告_数字生活方式分析/](期末考查报告_数字生活方式分析/) |
-| **Complete Runnable Code** | [期末考查报告_数字生活方式分析/appendix_A_complete_code.py](期末考查报告_数字生活方式分析/appendix_A_complete_code.py) |
-| **Final Figures** | [期末考查报告_数字生活方式分析/figures/final_report/](期末考查报告_数字生活方式分析/figures/final_report/) |
-| **GitHub Project Page** | [Open final project folder on GitHub](https://github.com/hansu650/Big-Data-Homework/tree/main/%E6%9C%9F%E6%9C%AB%E8%80%83%E6%9F%A5%E6%8A%A5%E5%91%8A_%E6%95%B0%E5%AD%97%E7%94%9F%E6%B4%BB%E6%96%B9%E5%BC%8F%E5%88%86%E6%9E%90) |
+| **先看项目说明** | [期末项目 README：研究问题、分析流程、核心结果与图表](期末考查报告_数字生活方式分析/README.md) |
+| **完整可运行代码** | [appendix_A_complete_code.py](期末考查报告_数字生活方式分析/appendix_A_complete_code.py) |
+| **最终图表目录** | [figures/final_report/](期末考查报告_数字生活方式分析/figures/final_report/) |
+| 项目文件夹 | [期末考查报告_数字生活方式分析/](期末考查报告_数字生活方式分析/) |
+| 最终 Word 报告 | [秦天-大数据分析与应用期末考查报告-202431123002054.docx](期末考查报告_数字生活方式分析/final_submit/秦天-大数据分析与应用期末考查报告-202431123002054.docx) |
 
 ## 项目结论
 
